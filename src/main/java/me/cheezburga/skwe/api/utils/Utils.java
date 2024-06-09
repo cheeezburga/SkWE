@@ -3,13 +3,11 @@ package me.cheezburga.skwe.api.utils;
 import ch.njol.skript.aliases.ItemType;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.extension.factory.PatternFactory;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.*;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.BlockDataMeta;
 import org.jetbrains.annotations.Nullable;
@@ -54,10 +52,21 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Create a WorldEdit Mask from an input object
+     *
+     * @param o         input object
+     * @param context   nullable ParserContext
+     * @return          WorldEdit Mask
+     */
     @Nullable
-    public static Mask maskFrom(Object o) {
-        ParserContext context = new ParserContext();
-        context.setActor(BukkitAdapter.adapt(Bukkit.getConsoleSender()));
+    public static Mask maskFrom(Object o, @Nullable ParserContext context) {
+        if (context == null)
+            context = new ParserContext();
+
+        if (context.getActor() == null)
+            context.setActor(BukkitAdapter.adapt(Bukkit.getConsoleSender()));
+
         if (o instanceof String string) {
             return WorldEdit.getInstance().getMaskFactory().parseFromInput(string, context);
         } else if (o instanceof ItemType item) {
