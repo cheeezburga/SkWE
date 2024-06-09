@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+}
+
+group = 'me.cheezburga'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    maven {url = "https://repo.papermc.io/repository/maven-public/"}
+    maven {url = "https://repo.skriptlang.org/releases"}
+    maven {url = "https://jitpack.io"}
+    maven {url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"}
+    maven {url = "https://maven.enginehub.org/repo/"}
+}
+
+dependencies {
+    compileOnly "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
+    compileOnly("com.github.SkriptLang:Skript:2.7.0") { transitive = false }
+
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { transitive = false }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1'
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+def oldestJava = 17
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}

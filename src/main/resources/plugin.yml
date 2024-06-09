@@ -1,0 +1,8 @@
+name: SkWE
+version: '1.0'
+main: me.cheezburga.skwe.SkWE
+api-version: '1.17'
+prefix: SkWE
+loadAfter: [WorldEdit]
+depend: [Skript, FastAsyncWorldEdit]
+author: cheezburga
