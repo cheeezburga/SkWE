@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -57,23 +58,24 @@ public class EffReplace extends Effect {
         Object prePattern = this.prePattern.getSingle(event);
         Pattern pattern = Utils.patternFrom(prePattern);
         Object preMask = this.preMask.getSingle(event);
-        Mask mask = Utils.maskFrom(preMask);
-        if (pattern == null || mask == null)
-            return;
 
         WorldEdit worldEdit = WorldEdit.getInstance();
 
         World world = BukkitAdapter.adapt(l1.getWorld());
-        BlockVector3 min, max;
-        CuboidRegion region = new CuboidRegion(world, min = Utils.bv3From(l1), max = Utils.bv3From(l2));
-        int changed = -1;
+        CuboidRegion region = new CuboidRegion(world, Utils.bv3From(l1), Utils.bv3From(l2));
         try (EditSession session = worldEdit.newEditSession(world)) {
-            changed = session.replaceBlocks((Region) region, mask, pattern);
+            ParserContext context = new ParserContext();
+            context.setExtent(session);
+            context.setWorld(world);
+            Mask mask = Utils.maskFrom(preMask, context);
+            if (pattern == null || mask == null)
+                return;
+
+            session.replaceBlocks(region, mask, pattern);
             SkWE.getInstance().getLocalSession().remember(session);
             if (this.player != null && this.player.getSingle(event) != null)
                 worldEdit.getSessionManager().findByName(this.player.getSingle(event).getName()).remember(session);
         }
-        Bukkit.getLogger().info("Replaced " + changed + " blocks between " + min + " and " + max + " with mask " + mask + " pattern " + pattern);
     }
 
     @Override
