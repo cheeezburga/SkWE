@@ -11,9 +11,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import me.cheezburga.skwe.SkWE;
 import me.cheezburga.skwe.api.utils.Utils;
@@ -55,18 +53,19 @@ public class EffReplace extends Effect {
         if (l1 == null || l2 == null || (l1.getWorld() != l2.getWorld()))
             return;
 
-        Object prePattern = this.prePattern.getSingle(event);
-        Pattern pattern = Utils.patternFrom(prePattern);
-        Object preMask = this.preMask.getSingle(event);
-
         WorldEdit worldEdit = WorldEdit.getInstance();
 
         World world = BukkitAdapter.adapt(l1.getWorld());
-        CuboidRegion region = new CuboidRegion(world, Utils.bv3From(l1), Utils.bv3From(l2));
+        CuboidRegion region = new CuboidRegion(world, Utils.blockVector3From(l1), Utils.blockVector3From(l2));
+
         try (EditSession session = worldEdit.newEditSession(world)) {
             ParserContext context = new ParserContext();
             context.setExtent(session);
             context.setWorld(world);
+
+            Object prePattern = this.prePattern.getSingle(event);
+            Pattern pattern = Utils.patternFrom(prePattern);
+            Object preMask = this.preMask.getSingle(event);
             Mask mask = Utils.maskFrom(preMask, context);
             if (pattern == null || mask == null)
                 return;
