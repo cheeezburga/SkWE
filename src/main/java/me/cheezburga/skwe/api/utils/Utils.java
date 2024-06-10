@@ -7,8 +7,11 @@ import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.inventory.meta.BlockDataMeta;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,26 +21,38 @@ public class Utils {
     public static final String pluginPrefix = net.md_5.bungee.api.ChatColor.of("#00FFFF") + "[SkWE]" + ChatColor.RESET;
     public static final String patternPrefix = "(use (world[ ]edit|we) to|world[ ]edit|we)";
 
-    public static BlockVector3 bv3From(Location location) {
+    /**
+     * Takes a Bukkit Location and returns the respective WorldEdit BlockVector3
+     *
+     * @param location  input Location
+     * @return          WorldEdit BlockVector3
+     */
+    public static BlockVector3 blockVector3From(Location location) {
         return BlockVector3.at(location.getX(), location.getY(), location.getZ());
     }
 
-    public static Location locationFrom(BlockVector3 vector) {
-        return new Location(null, vector.getX(), vector.getY(), vector.getZ());
-    }
-
-    public static Location locationFrom(BlockVector3 vector, Player player) {
-        return locationFrom(vector, player.getWorld());
-    }
-
-    public static Location locationFrom(BlockVector3 vector, World world) {
+    /**
+     * Takes a BlockVector3 and a nullable World and returns the respective Bukkit Location
+     *
+     * @param vector    input BlockVector3
+     * @param world     nullable World
+     * @return Bukkit   Location
+     */
+    public static Location locationFrom(BlockVector3 vector, @Nullable World world) {
         return new Location(world, vector.getX(), vector.getY(), vector.getZ());
     }
 
+    /**
+     * Creates a WorldEdit Pattern from an input object
+     *
+     * @param o     input object
+     * @return      WorldEdit Pattern
+     */
     @Nullable
     public static Pattern patternFrom(Object o) {
         ParserContext context = new ParserContext();
         context.setActor(BukkitAdapter.adapt(Bukkit.getConsoleSender()));
+
         if (o instanceof String string) {
             return WorldEdit.getInstance().getPatternFactory().parseFromInput(string, context);
         } else if (o instanceof ItemType item) {
@@ -79,9 +94,5 @@ public class Utils {
             return mask;
         }
         return null;
-    }
-
-    public static void updatePlayerPosition(Player player, Location loc, int position) {
-
     }
 }
