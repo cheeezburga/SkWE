@@ -6,13 +6,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.world.World;
@@ -23,8 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static me.cheezburga.skwe.api.utils.Utils.locationFrom;
 
 public class ExprPlayerPosition extends SimplePropertyExpression<Player, Location> {
 
@@ -42,34 +38,53 @@ public class ExprPlayerPosition extends SimplePropertyExpression<Player, Locatio
 
     @Override
     public Location convert(Player player) {
-        WorldEditPlugin plugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-        LocalSession session = WorldEdit.getInstance().getSessionManager().findByName(player.getName());
-        World world = session.getSelectionWorld();
+        WorldEdit worldEdit = WorldEdit.getInstance();
         try {
-            if (world != null) {
-                RegionSelector region = session.getRegionSelector(world);
-                if (pos == 1)
-                    return Utils.locationFrom(region.getPrimaryPosition(), BukkitAdapter.adapt(world));
-                // TODO: POS 2
-                // should this use a different method? getSelection maybe?
+            LocalSession session = worldEdit.getSessionManager().findByName(player.getName());
+            if (session != null) {
+                World world = session.getSelectionWorld();
+                if (world != null) {
+                    CuboidRegion region = (CuboidRegion) session.getRegionSelector(world).getIncompleteRegion();
+                    if (pos == 1) {
+                        return Utils.locationFrom(region.getPos1(), BukkitAdapter.adapt(world));
+                    }
+                    else if (pos == 2) {
+                        return Utils.locationFrom(region.getPos2(), BukkitAdapter.adapt(world));
+                    }
+                }
             }
-        } catch (IncompleteRegionException e) {
-            return null;
-        }
+        } catch (Exception ignored) {}
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    @Nullable
-    public Class<?>[] acceptChange(ChangeMode mode) {
+    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)
             return CollectionUtils.array(Location.class);
         return null;
     }
 
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        return;
+        Location newLoc = (delta != null && delta[0] instanceof Location loc) ? loc : null;
+        WorldEdit worldEdit = WorldEdit.getInstance();
+        for (Player player : getExpr().getArray(event)) {
+            try {
+                LocalSession session = worldEdit.getSessionManager().findByName(player.getName());
+                if (session != null) {
+                    World world = session.getSelectionWorld();
+                    if (world != null) {
+                        CuboidRegion region = (CuboidRegion) session.getSelection(world);
+                        if (pos == 1)
+                            region.setPos1(Utils.blockVector3From(newLoc));
+                        else if (pos == 2)
+                            region.setPos2(Utils.blockVector3From(newLoc));
+                    }
+                }
+            } catch (Exception ignored) {}
+        }
     }
 
     @Override
