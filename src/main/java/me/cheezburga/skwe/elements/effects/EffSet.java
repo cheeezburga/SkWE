@@ -60,7 +60,7 @@ public class EffSet extends Effect {
         WorldEdit worldEdit = WorldEdit.getInstance();
 
         World world = BukkitAdapter.adapt(l1.getWorld());
-        CuboidRegion region = new CuboidRegion(world, Utils.bv3From(l1), Utils.bv3From(l2));
+        CuboidRegion region = new CuboidRegion(world, Utils.blockVector3From(l1), Utils.blockVector3From(l2));
         try (EditSession session = worldEdit.newEditSession(world)) {
             session.setBlocks((Region) region, pattern);
             // should every single operation be remembered by the global session,
