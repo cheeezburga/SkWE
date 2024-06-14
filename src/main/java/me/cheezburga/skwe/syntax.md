@@ -84,40 +84,96 @@ Parameters to the `EditSession#makePyramid` method: `location`, `pattern`, `size
 
 ### Loading a schematic
 
-To a clipboard? Should a clipboard be a Skript type?
-Probably not, but something to consider I suppose?
+Proposed syntax: `load schem[atic] %string% (in|to|into) (%object%|%players%'[s] clipboard)`
+
+Proposed example: `load schematic "asdf" into {_asdf}`
+
+* Should loading a schematic into a variable cache it, so it could available at a later time?
+* Maybe there should be a separate effect to cache them, if the user wants (e.g. if they want to use them often)?
+* But what happens then if the schematic changes, or is deleted, etc.?
 
 ### Pasting a schematic
 
+Proposed syntax: `(paste|place) schem[atic] %string% at %locations% [as %-player%]`
+
+Proposed example: `paste schematic "asdf" at player's location as player`
+
+* Should probably allow rotations and masks and stuff
+* Should be remembered by the global LocalSession as well?
+* Maybe even have a 2nd global LocalSession specifically for schematics?
+
 ### Saving a schematic
 
-As a certain file type? To a certain directory?
+Proposed syntax: `save blocks within %location% and %location% to [a] [new] schem[atic] named %string%`
+
+Proposed example: `save blocks within {1} and {2} to a new schematic named "adsf"`
+
+* As a certain file type? Will research this
+* To a certain directory? Will research this
+* What happens though if there's already a schematic with that name? Should it silently fail, should it override, should it override but save a copy of the one being overwritten elsewhere?
 
 ### Deleting a schematic file
 
+Proposed syntax: `delete schem[atic] %string%`
 
-## Unsorted stuff atm
-WALLS? SHOULDNT GO IN SHAPES SURELY?
-```applescript
-		# schematics | should be undoable too?
-		load schematic "schem" into {_x}
-		paste schematic {_x} as player
+Proposed example: `delete schematic "asdf"`
 
-		save blocks within {1} and {2} as schematic "asdf"
-		delete schematic "asdf" # will this be a problem if its called in the same tick?
+* Should mostly be fine, but what if we go down the caching path, what if it's been cached?
 
-		# history
-		send last 5 global operations
-		send last 5 operations of player
-		clear history of player
+## Selection
 
-		# properties of player's selection
-		send volume of player's selection
-		send world of player's selection
-		send center of player's selection
-		send chunks of player's selection
-		send height/length/width of player's selection
-```
+Most (if not all) of these are just getters on a player's selection.
+
+The properties that should be gettable are: `volume`, `world`, `center`, `chunks` and `height/length/width`.
+
+These should all probably be in the one expression, similar to how SkBee handles BossBar properties.
+
+## Clipboard manipulation
+
+### Make player copy their selection
+
+Proposed syntax: `make %players%'[s] copy their selection[s]`
+
+Proposed example: `make player copy their selection`
+
+* Should just silently fail if their selection is incomplete
+
+### Load schematic into clipboard
+
+See [Loading a schematic](#loading-a-schematic). Might need some further thought but that's how its currently planned.
+
+### Clear a player's clipboard
+
+Should this just be an expression which has the reset changer allowed?
+Might require that `clipboard` be a Skript type?
+
+Proposed syntax: `clear %players%'[s] clipboard`
+
+Proposed example: `clear player's clipboard`
+
+## History manipulation
+
+Should you be able to like, get a player's history as a Skript type? Could allow for some cool comparisons maybe, and would allow for debugging stuff like `send last 5 operations by player`.
+
+### Clear a player's history
+
+Similar to the clipboard one, should this also be an expression?
+
+Proposed syntax: `clear %players%'[s] history`
+
+Proposed example: `clear player's history`
+
+## Unsorted
+
+### Walls
+
+Just not really sure where this belongs at the moment. Should definitely be a thing though.
+
+Most of the syntax should allow a specified player(s) to remember the actions. Some of these are missing at the moment, but stuff like shapes should, etc.
+
+# Not related to syntax
+
+#### A function to (maybe?) test a certain effects' async-ness.
 
 ```applescript
 # function to test its async-ness?
