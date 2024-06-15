@@ -1,4 +1,4 @@
-package me.cheezburga.skwe.elements.effects;
+package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;
@@ -20,8 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-
-import static me.cheezburga.skwe.api.utils.Utils.patternPrefix;
 
 public class EffReplace extends Effect {
 
