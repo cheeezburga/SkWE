@@ -1,4 +1,4 @@
-package me.cheezburga.skwe.elements.effects;
+package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;
@@ -20,8 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static me.cheezburga.skwe.api.utils.Utils.patternPrefix;
 
 public class EffSet extends Effect {
 
@@ -61,14 +59,18 @@ public class EffSet extends Effect {
 
         World world = BukkitAdapter.adapt(l1.getWorld());
         CuboidRegion region = new CuboidRegion(world, Utils.blockVector3From(l1), Utils.blockVector3From(l2));
-        try (EditSession session = worldEdit.newEditSession(world)) {
-            session.setBlocks((Region) region, pattern);
-            // should every single operation be remembered by the global session,
-            // even if the player is specified? currently they are, but idk.
-            SkWE.getInstance().getLocalSession().remember(session);
-            if (this.player != null && this.player.getSingle(event) != null)
-                worldEdit.getSessionManager().findByName(this.player.getSingle(event).getName()).remember(session);
-        }
+        Runnable runnable = () -> {
+            try (EditSession session = worldEdit.newEditSession(world)) {
+                session.setBlocks((Region) region, pattern);
+                // should every single operation be remembered by the global session,
+                // even if the player is specified? currently they are, but idk.
+                SkWE.getInstance().getLocalSession().remember(session);
+                if (this.player != null && this.player.getSingle(event) != null)
+                    worldEdit.getSessionManager().findByName(this.player.getSingle(event).getName()).remember(session);
+            }
+        };
+        //TODO: this should only run async if fawe is found. if normal we is found, run it normally
+        Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
     }
 
     @Override
