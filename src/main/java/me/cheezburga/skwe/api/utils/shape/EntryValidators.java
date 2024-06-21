@@ -1,6 +1,5 @@
-package me.cheezburga.skwe.api.utils;
+package me.cheezburga.skwe.api.utils.shape;
 
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
@@ -8,8 +7,9 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
-public class ShapeEntryValidators {
+public class EntryValidators {
 
+    //TODO: make this a static map and get the respective value instead of creating one every time
     public static EntryValidatorBuilder get(WorldEditShape shape) {
         switch (shape) {
             case CIRCLE, SPHERE -> { return sphere(); }
