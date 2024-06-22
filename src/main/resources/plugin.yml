@@ -4,5 +4,6 @@ main: me.cheezburga.skwe.SkWE
 api-version: '1.17'
 prefix: SkWE
 loadAfter: [WorldEdit]
-depend: [Skript, FastAsyncWorldEdit]
+depend: [Skript, WorldEdit]
+softdepend: [FastAsyncWorldEdit]
 author: cheezburga
