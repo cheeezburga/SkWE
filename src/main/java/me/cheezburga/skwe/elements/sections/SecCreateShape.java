@@ -7,16 +7,12 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.ContextlessEvent;
-import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import me.cheezburga.skwe.SkWE;
+import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.shape.EntryValidators;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
-import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -125,13 +121,12 @@ public class SecCreateShape extends Section {
             }
 
             if (runnable != null)
-                //TODO: this should use a RunnableUtils method which runs it based on what plugin is found (fawe or we)
-                Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+                RunnableUtils.run(runnable);
         }
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return null;
+        return "create worldedit shape";
     }
 }
