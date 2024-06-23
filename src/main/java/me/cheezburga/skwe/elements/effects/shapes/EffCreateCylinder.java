@@ -5,13 +5,10 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import me.cheezburga.skwe.SkWE;
+import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
-import org.bukkit.Bukkit;
+import me.cheezburga.skwe.api.utils.shape.Runnables;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -19,9 +16,8 @@ import org.jetbrains.annotations.Nullable;
 public class EffCreateCylinder extends Effect {
 
     static {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("FastAsyncWorldEdit"))
-            Skript.registerEffect(EffCreateCylinder.class,
-                    "create [a] [:hollow] cylinder ([made] out of|with [pattern]) %-itemtype/string% [with radius %-number%] [with height %-number%] [with thickness %-number%] at %locations%");
+        Skript.registerEffect(EffCreateCylinder.class,
+                "create [a] [:hollow] cylinder ([made] out of|with [pattern]) %itemtype/string% [with radius %-number%] [with height %-number%] [with thickness %-number%] at %locations%");
     }
 
     private boolean hollow;
@@ -43,25 +39,16 @@ public class EffCreateCylinder extends Effect {
 
     @Override
     protected void execute(Event event) {
-        Number r = radius.getOptionalSingle(event).orElse(5); //TODO: replace with config
-        Number h = height.getOptionalSingle(event).orElse(1); //TODO: replace with config
-        Number t = thickness.getOptionalSingle(event).orElse(0); //TODO: replace with config
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
         if (pattern == null)
             return;
 
-        WorldEdit we = WorldEdit.getInstance();
+        double r = radius.getOptionalSingle(event).orElse(5).doubleValue(); //TODO: replace with config, or just fail
+        int h = height.getOptionalSingle(event).orElse(1).intValue(); //TODO: replace with config, or just fail
+        double t = thickness.getOptionalSingle(event).orElse(0).doubleValue(); //TODO: replace with config
 
         for (Location loc : locations.getArray(event)) {
-            Runnable runnable = () -> {
-                try (EditSession session = we.newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
-                    session.makeCylinder(Utils.blockVector3From(loc), pattern, r.doubleValue(), r.doubleValue(), h.intValue(), t.doubleValue(), !hollow);
-
-                    SkWE.getInstance().getLocalSession().remember(session);
-                }
-            };
-            //TODO: instance check
-            Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+            RunnableUtils.run(Runnables.getCylinderRunnable(loc, pattern, hollow, r, r, h, t));
         }
     }
 

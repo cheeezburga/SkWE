@@ -10,7 +10,9 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.SkWE;
+import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
+import me.cheezburga.skwe.api.utils.shape.Runnables;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -19,9 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class EffCreatePyramid extends Effect {
 
     static {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("FastAsyncWorldEdit"))
-            Skript.registerEffect(EffCreatePyramid.class,
-                    "create [a] [:hollow] pyramid ([made] out of|with [pattern]) %-itemtype/string% [with size %-number%] at %locations%");
+        Skript.registerEffect(EffCreatePyramid.class,
+                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) %itemtype/string% [with size %-number%] at %locations%");
     }
 
     private boolean hollow;
@@ -41,23 +42,14 @@ public class EffCreatePyramid extends Effect {
 
     @Override
     protected void execute(Event event) {
-        Number r = size.getOptionalSingle(event).orElse(5); //TODO: replace with config
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
         if (pattern == null)
             return;
 
-        WorldEdit we = WorldEdit.getInstance();
+        int s = size.getOptionalSingle(event).orElse(5).intValue(); //TODO: replace with config, or just fail
 
         for (Location loc : locations.getArray(event)) {
-            Runnable runnable = () -> {
-                try (EditSession session = we.newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
-                    session.makePyramid(Utils.blockVector3From(loc), pattern, r.intValue(), !hollow);
-
-                    SkWE.getInstance().getLocalSession().remember(session);
-                }
-            };
-            //TODO: instance check
-            Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+            RunnableUtils.run(Runnables.getPyramidRunnable(loc, pattern, hollow, s));
         }
     }
 
