@@ -119,7 +119,7 @@ public class Types {
                                 f.putPrimitive(String.format("vertice-%dY", i), vertices[i].getY());
                                 f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
                             }
-                            f.putObject("region", "poly");
+                            f.putObject("region", "convex");
                         }
                         return f;
                     }
