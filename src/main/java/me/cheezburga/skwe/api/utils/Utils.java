@@ -4,6 +4,7 @@ import ch.njol.skript.aliases.ItemType;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.ParserContext;
+import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -94,5 +95,20 @@ public class Utils {
             return mask;
         }
         return null;
+    }
+
+    /**
+     * Create a WorldEdit ParserContext from an Extent and World
+     *
+     * @param extent    Extent object
+     * @param world     World object
+     * @return          WorldEdit ParserContext
+     */
+    @Nullable
+    public static ParserContext contextFrom(Extent extent, World world) {
+        ParserContext context = new ParserContext();
+        context.setExtent(extent);
+        context.setWorld(BukkitAdapter.adapt(world));
+        return context;
     }
 }
