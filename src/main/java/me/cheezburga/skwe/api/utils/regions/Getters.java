@@ -4,6 +4,7 @@ import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
+import com.sk89q.worldedit.regions.ConvexPolyhedralRegion;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
@@ -27,6 +28,14 @@ public class Getters {
 
     public static PolyhedralRegion getPolyRegion(Location... vertices) {
         PolyhedralRegion region = new PolyhedralRegion(BukkitAdapter.adapt(vertices[0].getWorld()));
+        for (Location loc : vertices) {
+            region.addVertex(Utils.blockVector3From(loc));
+        }
+        return region;
+    }
+
+    public static ConvexPolyhedralRegion getConvexPolyRegion(Location... vertices) {
+        ConvexPolyhedralRegion region = new ConvexPolyhedralRegion(BukkitAdapter.adapt(vertices[0].getWorld()));
         for (Location loc : vertices) {
             region.addVertex(Utils.blockVector3From(loc));
         }
