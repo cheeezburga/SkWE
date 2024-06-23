@@ -29,8 +29,8 @@ public class EffReplace extends Effect {
     @SuppressWarnings({"NullableProblems","unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
-        this.wrapper = (Expression<RegionWrapper>) exprs[0];
-        this.preMask = exprs[1];
+        this.wrapper = (Expression<RegionWrapper>) (matchedPattern == 0 ? exprs[0] : exprs[1]);
+        this.preMask = matchedPattern == 0 ? exprs[1] : exprs[0];
         this.prePattern = exprs[2];
         return true;
     }
