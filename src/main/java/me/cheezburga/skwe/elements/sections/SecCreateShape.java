@@ -25,12 +25,11 @@ import java.util.List;
 public class SecCreateShape extends Section {
 
     static {
-        Skript.registerSection(SecCreateShape.class, "create [a] %*worldeditshape% at %locations% [as %-player%]");
+        Skript.registerSection(SecCreateShape.class, "create [a] %*worldeditshape% at %locations%");
     }
 
     private WorldEditShape shape;
     private Expression<Location> locs;
-    private Expression<Player> player;
 
     private Expression<Pattern> pattern;
     private Expression<Boolean> hollow;
@@ -68,7 +67,6 @@ public class SecCreateShape extends Section {
         if (radiusZ == null && (shape != WorldEditShape.PYRAMID)) radiusZ = radius;
 
         locs = (Expression<Location>) exprs[1];
-        player = (Expression<Player>) exprs[2];
 
         return true;
     }
@@ -110,14 +108,13 @@ public class SecCreateShape extends Section {
         h = (height == null) ? 5 : height.intValue();
 
         boolean hollow = Boolean.FALSE.equals(this.hollow.getSingle(event));
-        @Nullable Player player = this.player.getSingle(event);
 
         for (Location loc : locs.getArray(event)) {
             Runnable runnable = null;
             switch (shape) {
-                case CIRCLE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ, player);
-                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h, t, player);
-                case PYRAMID -> runnable = Runnables.getPyramidRunnable(loc, pattern, hollow, (int) rX, player);
+                case CIRCLE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);
+                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h, t);
+                case PYRAMID -> runnable = Runnables.getPyramidRunnable(loc, pattern, hollow, (int) rX);
             }
 
             if (runnable != null)
