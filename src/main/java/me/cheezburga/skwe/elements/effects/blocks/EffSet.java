@@ -5,77 +5,68 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.Pattern;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.World;
 import me.cheezburga.skwe.SkWE;
+import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
+import me.cheezburga.skwe.api.utils.blocks.Runnables;
+import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+
 public class EffSet extends Effect {
 
     static {
-        if (Bukkit.getServer().getPluginManager().isPluginEnabled("FastAsyncWorldEdit"))
-            Skript.registerEffect(EffSet.class,
-                    "(use (world[ ]edit|we) to|world[ ]edit|we) set blocks (within|from) %location% (to|and) %location% to %itemtype/string% [as %-player%]");
+        Skript.registerEffect(EffSet.class,
+                "(use (world[ ]edit|we) to|world[ ]edit|we) set blocks in %worldeditregion% to %itemtype/string%");
     }
 
-    private Expression<Location> loc1, loc2;
+    private Expression<RegionWrapper> wrapper;
     private Expression<?> prePattern;
-    private Expression<Player> player;
 
     @Override
     @SuppressWarnings({"NullableProblems","unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.loc1 = (Expression<Location>) exprs[0];
-        this.loc2 = (Expression<Location>) exprs[1];
-        this.prePattern = exprs[2];
-        this.player = (Expression<Player>) exprs[3];
+        this.wrapper = (Expression<RegionWrapper>) exprs[0];
+        this.prePattern = exprs[1];
         return true;
     }
 
     @Override
-    protected void execute(Event event) {
-        Location l1 = this.loc1.getSingle(event);
-        Location l2 = this.loc2.getSingle(event);
-        if (l1 == null || l2 == null || (l1.getWorld() != l2.getWorld()))
-            return;
+    protected void execute(@NotNull Event event) {
+        if (wrapper == null || prePattern == null) return;
+
+        RegionWrapper wrapper = this.wrapper.getSingle(event);
+        if (wrapper == null) return;
 
         Object prePattern = this.prePattern.getSingle(event);
         Pattern pattern = Utils.patternFrom(prePattern);
-        if (pattern == null)
-            return;
+        if (pattern == null) return;
 
-        WorldEdit worldEdit = WorldEdit.getInstance();
+        PolyhedralRegion r = (PolyhedralRegion) wrapper.getRegion();
+        Bukkit.getServer().broadcast(Component.text("Size: " + r.getVertices().size() + ", volume: " + r.getVolume()));
 
-        World world = BukkitAdapter.adapt(l1.getWorld());
-        CuboidRegion region = new CuboidRegion(world, Utils.blockVector3From(l1), Utils.blockVector3From(l2));
-        Runnable runnable = () -> {
-            try (EditSession session = worldEdit.newEditSession(world)) {
-                session.setBlocks((Region) region, pattern);
-                // should every single operation be remembered by the global session,
-                // even if the player is specified? currently they are, but idk.
-                SkWE.getInstance().getLocalSession().remember(session);
-                if (this.player != null && this.player.getSingle(event) != null)
-                    worldEdit.getSessionManager().findByName(this.player.getSingle(event).getName()).remember(session);
-            }
-        };
-        //TODO: this should only run async if fawe is found. if normal we is found, run it normally
-        Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+        RunnableUtils.run(Runnables.getSetRunnable(wrapper.getWorld(), wrapper.getRegion(), pattern));
     }
 
     @Override
     @NotNull
     public String toString(@Nullable Event event, boolean debug) {
-        return "use fawe to set blocks within " + loc1.toString(event, debug) + " and " + loc2.toString(event, debug) + " to " + prePattern.toString(event, debug);
+        return "use fawe to set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug);
     }
 }
