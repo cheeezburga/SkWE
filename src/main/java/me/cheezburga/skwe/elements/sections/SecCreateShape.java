@@ -14,7 +14,6 @@ import me.cheezburga.skwe.api.utils.shape.EntryValidators;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
