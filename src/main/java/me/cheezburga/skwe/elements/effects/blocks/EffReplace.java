@@ -49,7 +49,7 @@ public class EffReplace extends Effect {
         Object preMask = this.preMask.getSingle(event);
         if (preMask == null) return;
 
-        RunnableUtils.run(Runnables.getReplaceRunnable(wrapper.getWorld(), wrapper.getRegion(), pattern, preMask));
+        RunnableUtils.run(Runnables.getReplaceRunnable(wrapper.world(), wrapper.region(), pattern, preMask));
     }
 
     @Override

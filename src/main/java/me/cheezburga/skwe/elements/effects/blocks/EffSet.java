@@ -43,7 +43,7 @@ public class EffSet extends Effect {
         Pattern pattern = Utils.patternFrom(prePattern);
         if (pattern == null) return;
 
-        RunnableUtils.run(Runnables.getSetRunnable(wrapper.getWorld(), wrapper.getRegion(), pattern));
+        RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern));
     }
 
     @Override
