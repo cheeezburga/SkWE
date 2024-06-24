@@ -19,7 +19,6 @@ import me.cheezburga.skwe.api.utils.EnumWrapper;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.Getters;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -68,8 +67,8 @@ public class Types {
                     @Override
                     public @NotNull Fields serialize(RegionWrapper regionWrapper) throws NotSerializableException {
                         Fields f = new Fields();
-                        f.putObject("world", regionWrapper.getWorld());
-                        Region region = regionWrapper.getRegion();
+                        f.putObject("world", regionWrapper.world());
+                        Region region = regionWrapper.region();
                         if (region instanceof CuboidRegion cuboid) {
                             BlockVector3 min = cuboid.getMinimumPoint();
                             BlockVector3 max = cuboid.getMaximumPoint();
