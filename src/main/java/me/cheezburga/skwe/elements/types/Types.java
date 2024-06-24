@@ -19,6 +19,7 @@ import me.cheezburga.skwe.api.utils.EnumWrapper;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.Getters;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
@@ -102,15 +103,6 @@ public class Types {
                             f.putPrimitive("radiusY", radius.getY());
                             f.putPrimitive("radiusZ", radius.getZ());
                             f.putObject("region", "ellipsoid");
-                        } else if (region instanceof PolyhedralRegion poly) {
-                            BlockVector3[] vertices = poly.getVertices().toArray(new BlockVector3[0]);
-                            f.putPrimitive("size", vertices.length);
-                            for (int i = 0; i < vertices.length; i++) {
-                                f.putPrimitive(String.format("vertice-%dX", i), vertices[i].getX());
-                                f.putPrimitive(String.format("vertice-%dY", i), vertices[i].getY());
-                                f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
-                            }
-                            f.putObject("region", "poly");
                         } else if (region instanceof ConvexPolyhedralRegion convex) {
                             BlockVector3[] vertices = convex.getVertices().toArray(new BlockVector3[0]);
                             f.putPrimitive("size", vertices.length);
@@ -120,6 +112,15 @@ public class Types {
                                 f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
                             }
                             f.putObject("region", "convex");
+                        } else if (region instanceof PolyhedralRegion poly) {
+                            BlockVector3[] vertices = poly.getVertices().toArray(new BlockVector3[0]);
+                            f.putPrimitive("size", vertices.length);
+                            for (int i = 0; i < vertices.length; i++) {
+                                f.putPrimitive(String.format("vertice-%dX", i), vertices[i].getX());
+                                f.putPrimitive(String.format("vertice-%dY", i), vertices[i].getY());
+                                f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
+                            }
+                            f.putObject("region", "poly");
                         }
                         return f;
                     }
@@ -163,7 +164,12 @@ public class Types {
                                     vertices.add(new Location(world, x, y, z));
                                 }
                                 Location[] v = vertices.toArray(new Location[0]);
-                                region = (regionType.equals("poly")) ? Getters.getPolyRegion(v) : Getters.getConvexPolyRegion(v);
+                                if (regionType.equals("poly")) {
+                                    region = Getters.getPolyRegion(v);
+                                } else if (regionType.equals("convex")) {
+                                    region = Getters.getConvexPolyRegion(v);
+                                }
+                                // region = (regionType.equals("poly")) ? Getters.getPolyRegion(v) : Getters.getConvexPolyRegion(v);
                             }
                         }
                         return new RegionWrapper(region, world);
