@@ -8,23 +8,7 @@ import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.World;
 
-public class RegionWrapper {
-
-    final private Region region;
-    final private World world;
-
-    public RegionWrapper(Region region, World world) {
-        this.region = region;
-        this.world = world;
-    }
-
-    public World getWorld() {
-        return this.world;
-    }
-
-    public Region getRegion() {
-        return this.region;
-    }
+public record RegionWrapper(Region region, World world) {
 
     private String getRegionType() {
         if (this.region instanceof CuboidRegion) {
