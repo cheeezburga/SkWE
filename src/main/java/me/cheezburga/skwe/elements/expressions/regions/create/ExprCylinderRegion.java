@@ -1,4 +1,4 @@
-package me.cheezburga.skwe.elements.expressions.regions;
+package me.cheezburga.skwe.elements.expressions.regions.create;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
@@ -15,41 +15,44 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ExprEllipsoidRegion extends SimpleExpression<RegionWrapper> {
+public class ExprCylinderRegion extends SimpleExpression<RegionWrapper> {
 
     static {
-        Skript.registerExpression(ExprEllipsoidRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] (ellips(e|oid)|spher(e|ical)) region at %location% with radi(i|us) %numbers%");
+        Skript.registerExpression(ExprCylinderRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
+                "[a] [new] cyl[ind(er|rical)] region at %location% with radi(i|us) %numbers% [and] with height %number%");
     }
 
     private Expression<Location> center;
-    private Expression<Number> radii;
+    private Expression<Number> radii, height;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.center = (Expression<Location>) exprs[0];
         this.radii = (Expression<Number>) exprs[1];
+        this.height = (Expression<Number>) exprs[2];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
-        if (this.center == null || this.radii == null) return null;
+        if (this.center == null || this.radii == null || this.height == null) return null;
 
         Location center = this.center.getSingle(event);
         if (center == null) return null;
 
-        double rX, rY, rZ;
+        Number height = this.height.getSingle(event);
+        if (height == null) return null;
+
+        double rX, rZ;
         Number[] radii = this.radii.getArray(event);
         if (radii.length == 0) return null;
         rX = radii[0].doubleValue();
-        rY = (radii.length == 2) ? radii[1].doubleValue() : rX;
-        rZ = (radii.length == 3) ? radii[2].doubleValue() : rX;
+        rZ = (radii.length == 2) ? radii[1].doubleValue() : rX;
 
         World world = center.getWorld();
-        Region region = Getters.getEllipsoidRegion(center, rX, rY, rZ);
+        Region region = Getters.getCylinderRegion(center, rX, rZ, height.intValue());
         RegionWrapper wrapper = new RegionWrapper(region, world);
 
         return new RegionWrapper[]{wrapper};
@@ -67,7 +70,7 @@ public class ExprEllipsoidRegion extends SimpleExpression<RegionWrapper> {
 
     @Override
     public @NotNull String toString(@Nullable Event event, boolean debug) {
-        return "ellipsoid region at " + center.toString(event, debug) + " with radii " + radii.toString(event, debug);
+        return "cylinder region at " + center.toString(event, debug) + " with radii " + radii.toString(event, debug) + " and height " + height.toString(event,debug);
     }
 
 }

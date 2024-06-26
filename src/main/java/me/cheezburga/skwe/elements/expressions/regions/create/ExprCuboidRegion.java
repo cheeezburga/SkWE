@@ -1,4 +1,4 @@
-package me.cheezburga.skwe.elements.expressions.regions;
+package me.cheezburga.skwe.elements.expressions.regions.create;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
