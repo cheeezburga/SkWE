@@ -131,9 +131,9 @@ public class Types {
 
                     @Override
                     protected RegionWrapper deserialize(@NotNull Fields f) throws StreamCorruptedException {
-                        Region region = new CuboidRegion(BlockVector3.ZERO, BlockVector3.ZERO);
                         String regionType = f.getObject("region", String.class);
                         assert regionType != null;
+                        Region region = new CuboidRegion(BlockVector3.ZERO, BlockVector3.ZERO);
                         World world = f.getObject("world", World.class);
                         switch (regionType) {
                             case "cuboid" -> {
@@ -163,12 +163,7 @@ public class Types {
                                     vertices.add(new Location(world, x, y, z));
                                 }
                                 Location[] v = vertices.toArray(new Location[0]);
-                                if (regionType.equals("poly")) {
-                                    region = Getters.getPolyRegion(v);
-                                } else if (regionType.equals("convex")) {
-                                    region = Getters.getConvexPolyRegion(v);
-                                }
-                                // region = (regionType.equals("poly")) ? Getters.getPolyRegion(v) : Getters.getConvexPolyRegion(v);
+                                region = (regionType.equals("poly")) ? Getters.getPolyRegion(v) : Getters.getConvexPolyRegion(v);
                             }
                         }
                         return new RegionWrapper(region, world);
