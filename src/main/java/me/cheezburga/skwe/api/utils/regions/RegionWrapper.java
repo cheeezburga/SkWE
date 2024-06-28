@@ -1,6 +1,5 @@
 package me.cheezburga.skwe.api.utils.regions;
 
-import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.regions.ConvexPolyhedralRegion;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
@@ -17,8 +16,6 @@ public record RegionWrapper(Region region, World world) {
             return "cylinder";
         } else if (this.region instanceof EllipsoidRegion) {
             return "ellipsoid";
-        } else if (this.region instanceof PolyhedralRegion) {
-            return "polyhedral";
         } else if (this.region instanceof ConvexPolyhedralRegion) {
             return "convex polyhedral";
         }

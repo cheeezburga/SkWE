@@ -1,6 +1,5 @@
 package me.cheezburga.skwe.api.utils.regions;
 
-import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
@@ -26,15 +25,9 @@ public class Getters {
         return new EllipsoidRegion(BukkitAdapter.adapt(center.getWorld()), Utils.blockVector3From(center), Vector3.at(radiusX, radiusY, radiusZ));
     }
 
-    public static PolyhedralRegion getPolyRegion(Location... vertices) {
-        PolyhedralRegion region = new PolyhedralRegion(BukkitAdapter.adapt(vertices[0].getWorld()));
-        for (Location loc : vertices) {
-            region.addVertex(Utils.blockVector3From(loc));
-        }
-        return region;
-    }
-
     public static ConvexPolyhedralRegion getConvexPolyRegion(Location... vertices) {
+        // TODO: figure out why the fuck this only sometimes works
+        // TODO: it seems random, might be a worldedit/fawe thing that im just not understanding
         ConvexPolyhedralRegion region = new ConvexPolyhedralRegion(BukkitAdapter.adapt(vertices[0].getWorld()));
         for (Location loc : vertices) {
             region.addVertex(Utils.blockVector3From(loc));

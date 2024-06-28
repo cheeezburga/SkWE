@@ -6,7 +6,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.regions.ConvexPolyhedralRegion;
 import com.sk89q.worldedit.regions.Region;
 import me.cheezburga.skwe.api.utils.Utils;
@@ -45,8 +44,6 @@ public class ExprVertices extends SimpleExpression<Location> {
 
         if (region instanceof ConvexPolyhedralRegion convex)
             return convex.getVertices().stream().map(vector -> Utils.locationFrom(vector, world)).toList().toArray(Location[]::new);
-        else if (region instanceof PolyhedralRegion poly)
-            return poly.getVertices().stream().map(vector -> Utils.locationFrom(vector, world)).toList().toArray(Location[]::new);
         return null;
     }
 

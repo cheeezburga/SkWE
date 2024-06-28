@@ -35,6 +35,7 @@ public class EffCreatePyramid extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
@@ -48,6 +49,7 @@ public class EffCreatePyramid extends Effect {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return "create a " + (hollow ? "hollow " : "") + "pyramid with size " + size.toString(event, debug) + " at locations " + locations.toString(event, debug);

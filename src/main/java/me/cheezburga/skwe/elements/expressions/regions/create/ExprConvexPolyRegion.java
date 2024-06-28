@@ -21,25 +21,25 @@ public class ExprConvexPolyRegion extends SimpleExpression<RegionWrapper> {
                 "[a] [new] convex [poly[hedral]] region (at|with|using) %locations%");
     }
 
-    private Expression<Location> locs;
+    private Expression<Location> locations;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.locs = (Expression<Location>) exprs[0];
+        this.locations = (Expression<Location>) exprs[0];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
-        if (this.locs == null) return null;
+        if (this.locations == null) return null;
 
-        Location[] locs = this.locs.getArray(event);
-        if (locs.length == 0) return null;
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length == 0) return null;
 
-        Region region = Getters.getConvexPolyRegion(locs);
-        RegionWrapper wrapper = new RegionWrapper(region, locs[0].getWorld());
+        Region region = Getters.getConvexPolyRegion(locations);
+        RegionWrapper wrapper = new RegionWrapper(region, locations[0].getWorld());
 
         return new RegionWrapper[]{wrapper};
     }
@@ -56,7 +56,7 @@ public class ExprConvexPolyRegion extends SimpleExpression<RegionWrapper> {
 
     @Override
     public @NotNull String toString(@Nullable Event event, boolean debug) {
-        return "convex polyhedral region at " + locs.toString(event, debug);
+        return "convex polyhedral region at " + locations.toString(event, debug);
     }
 
 }

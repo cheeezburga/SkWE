@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.api.utils.blocks;
 
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.ParserContext;
@@ -16,8 +17,10 @@ public class Runnables {
     public static Runnable getSetRunnable(World world, Region region, Pattern pattern) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world))) {
-                session.setBlocks(region, pattern);
-                SkWE.getInstance().getLocalSession().remember(session);
+                try {
+                    session.setBlocks(region, pattern);
+                    SkWE.getInstance().getLocalSession().remember(session);
+                } catch (MaxChangedBlocksException ignored) {}
             }
         };
     }
@@ -28,8 +31,10 @@ public class Runnables {
                 Mask mask = Utils.maskFrom(preMask, Utils.contextFrom(session, world));
                 if (mask == null) return;
 
-                session.replaceBlocks(region, mask, pattern);
-                SkWE.getInstance().getLocalSession().remember(session);
+                try {
+                    session.replaceBlocks(region, mask, pattern);
+                    SkWE.getInstance().getLocalSession().remember(session);
+                } catch (MaxChangedBlocksException ignored) {}
             }
         };
     }

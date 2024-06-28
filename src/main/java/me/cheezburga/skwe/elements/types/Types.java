@@ -6,7 +6,6 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
-import com.fastasyncworldedit.core.regions.PolyhedralRegion;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
@@ -23,7 +22,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,7 +63,7 @@ public class Types {
                 })
                 .serializer(new Serializer<>() {
                     @Override
-                    public @NotNull Fields serialize(RegionWrapper regionWrapper) throws NotSerializableException {
+                    public @NotNull Fields serialize(RegionWrapper regionWrapper) {
                         Fields f = new Fields();
                         f.putObject("world", regionWrapper.world());
                         Region region = regionWrapper.region();
@@ -106,20 +104,11 @@ public class Types {
                             BlockVector3[] vertices = convex.getVertices().toArray(new BlockVector3[0]);
                             f.putPrimitive("size", vertices.length);
                             for (int i = 0; i < vertices.length; i++) {
-                                f.putPrimitive(String.format("vertice-%dX", i), vertices[i].getX());
-                                f.putPrimitive(String.format("vertice-%dY", i), vertices[i].getY());
-                                f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
+                                f.putPrimitive(String.format("vertex-%dX", i), vertices[i].getX());
+                                f.putPrimitive(String.format("vertex-%dY", i), vertices[i].getY());
+                                f.putPrimitive(String.format("vertex-%dZ", i), vertices[i].getZ());
                             }
                             f.putObject("region", "convex");
-                        } else if (region instanceof PolyhedralRegion poly) {
-                            BlockVector3[] vertices = poly.getVertices().toArray(new BlockVector3[0]);
-                            f.putPrimitive("size", vertices.length);
-                            for (int i = 0; i < vertices.length; i++) {
-                                f.putPrimitive(String.format("vertice-%dX", i), vertices[i].getX());
-                                f.putPrimitive(String.format("vertice-%dY", i), vertices[i].getY());
-                                f.putPrimitive(String.format("vertice-%dZ", i), vertices[i].getZ());
-                            }
-                            f.putObject("region", "poly");
                         }
                         return f;
                     }
@@ -153,17 +142,17 @@ public class Types {
                                 Vector3 radius = Vector3.at(f.getPrimitive("radiusX", double.class), f.getPrimitive("radiusY", double.class), f.getPrimitive("radiusZ", double.class));
                                 region = Getters.getEllipsoidRegion(Utils.locationFrom(center, world), radius.getX(), radius.getY(), radius.getZ());
                             }
-                            case "poly", "convex" -> {
+                            case "convex" -> {
                                 int size = f.getPrimitive("size", int.class);
                                 Set<Location> vertices = new HashSet<>();
                                 for (int i = 0; i < size; i++) {
-                                    int x = f.getPrimitive(String.format("vertice-%dX", i), int.class);
-                                    int y = f.getPrimitive(String.format("vertice-%dY", i), int.class);
-                                    int z = f.getPrimitive(String.format("vertice-%dZ", i), int.class);
+                                    int x = f.getPrimitive(String.format("vertex-%dX", i), int.class);
+                                    int y = f.getPrimitive(String.format("vertex-%dY", i), int.class);
+                                    int z = f.getPrimitive(String.format("vertex-%dZ", i), int.class);
                                     vertices.add(new Location(world, x, y, z));
                                 }
                                 Location[] v = vertices.toArray(new Location[0]);
-                                region = (regionType.equals("poly")) ? Getters.getPolyRegion(v) : Getters.getConvexPolyRegion(v);
+                                region = Getters.getConvexPolyRegion(v);
                             }
                         }
                         return new RegionWrapper(region, world);

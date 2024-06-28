@@ -3,6 +3,7 @@ package me.cheezburga.skwe.api.utils;
 import ch.njol.skript.aliases.ItemType;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.mask.Mask;
@@ -54,16 +55,20 @@ public class Utils {
         ParserContext context = new ParserContext();
         context.setActor(BukkitAdapter.adapt(Bukkit.getConsoleSender()));
 
-        if (o instanceof String string) {
-            return WorldEdit.getInstance().getPatternFactory().parseFromInput(string, context);
-        } else if (o instanceof ItemType item) {
-            if (item.getItemMeta() instanceof BlockDataMeta meta) {
-                Material material = item.getMaterial();
-                if (material.isBlock())
-                    return WorldEdit.getInstance().getPatternFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
+        try {
+            if (o instanceof String string) {
+                return WorldEdit.getInstance().getPatternFactory().parseFromInput(string, context);
+            } else if (o instanceof ItemType item) {
+                if (item.getItemMeta() instanceof BlockDataMeta meta) {
+                    Material material = item.getMaterial();
+                    if (material.isBlock())
+                        return WorldEdit.getInstance().getPatternFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
+                }
+            } else if (o instanceof Pattern pattern) {
+                return pattern;
             }
-        } else if (o instanceof Pattern pattern) {
-            return pattern;
+        } catch (InputParseException e) {
+            return null;
         }
         return null;
     }
@@ -83,17 +88,19 @@ public class Utils {
         if (context.getActor() == null)
             context.setActor(BukkitAdapter.adapt(Bukkit.getConsoleSender()));
 
-        if (o instanceof String string) {
-            return WorldEdit.getInstance().getMaskFactory().parseFromInput(string, context);
-        } else if (o instanceof ItemType item) {
-            if (item.getItemMeta() instanceof BlockDataMeta meta) {
-                Material material = item.getMaterial();
-                if (material.isBlock())
-                    return WorldEdit.getInstance().getMaskFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
+        try {
+            if (o instanceof String string) {
+                return WorldEdit.getInstance().getMaskFactory().parseFromInput(string, context);
+            } else if (o instanceof ItemType item) {
+                if (item.getItemMeta() instanceof BlockDataMeta meta) {
+                    Material material = item.getMaterial();
+                    if (material.isBlock())
+                        return WorldEdit.getInstance().getMaskFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
+                }
+            } else if (o instanceof Mask mask) {
+                return mask;
             }
-        } else if (o instanceof Mask mask) {
-            return mask;
-        }
+        } catch (InputParseException e) { return null; }
         return null;
     }
 
@@ -104,7 +111,6 @@ public class Utils {
      * @param world     World object
      * @return          WorldEdit ParserContext
      */
-    @Nullable
     public static ParserContext contextFrom(Extent extent, World world) {
         ParserContext context = new ParserContext();
         context.setExtent(extent);

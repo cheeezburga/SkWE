@@ -15,6 +15,7 @@ import me.cheezburga.skwe.api.utils.shape.Runnables;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
@@ -28,17 +29,17 @@ public class SecCreateShape extends Section {
     }
 
     private WorldEditShape shape;
-    private Expression<Location> locs;
+    private Expression<Location> locations;
 
     private Expression<Pattern> pattern;
     private Expression<Boolean> hollow;
-    private Expression<Number> radius, radiusY, radiusZ, height, thickness;
+    private Expression<Number> radius, radiusY, radiusZ, height;
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         shape = ((Expression<WorldEditShape>) exprs[0]).getSingle(ContextlessEvent.get());
-        if (shape == null) return false; // needed? will skript throw an error before it reaches here if it isnt valid?
+        if (shape == null) return false; // needed? will skript throw an error before it reaches here if it isn't valid?
         EntryValidatorBuilder builder = EntryValidators.get(shape);
         EntryContainer container = builder.build().validate(sectionNode);
         if (container == null) return false;
@@ -50,7 +51,6 @@ public class SecCreateShape extends Section {
         switch (shape) {
             case CYLINDER:
                 height = (Expression<Number>) container.getOptional("height", false);
-                thickness = (Expression<Number>) container.getOptional("thickness", true);
             case CIRCLE:
             case SPHERE:
                 radius = (Expression<Number>) container.getOptional("radius", false);
@@ -65,13 +65,13 @@ public class SecCreateShape extends Section {
         if (radiusY == null && (shape == WorldEditShape.CIRCLE || shape == WorldEditShape.SPHERE)) radiusY = radius;
         if (radiusZ == null && (shape != WorldEditShape.PYRAMID)) radiusZ = radius;
 
-        locs = (Expression<Location>) exprs[1];
+        locations = (Expression<Location>) exprs[1];
 
         return true;
     }
 
     @Override
-    protected @Nullable TriggerItem walk(Event event) {
+    protected @Nullable TriggerItem walk(@NotNull Event event) {
         execute(event);
         return super.walk(event, false);
     }
@@ -80,13 +80,12 @@ public class SecCreateShape extends Section {
         Pattern pattern = this.pattern.getSingle(event);
         if (pattern == null) return;
 
-        Number radius = null, radiusY = null, radiusZ = null, height = null, thickness = null;
-        double rX, rY, rZ, h, t;
+        Number radius = null, radiusY = null, radiusZ = null, height = null;
+        double rX, rY, rZ, h;
 
         switch (shape) {
             case CYLINDER:
                 height = this.height.getSingle(event);
-                thickness = this.thickness.getSingle(event);
             case SPHERE:
             case CIRCLE:
             case PYRAMID:
@@ -103,16 +102,15 @@ public class SecCreateShape extends Section {
         rX = radius.doubleValue();
         rY = (radiusY == null) ? rX : radiusY.doubleValue();
         rZ = (radiusZ == null) ? rX : radiusZ.doubleValue();
-        t = (thickness == null) ? 0 : thickness.doubleValue();
         h = (height == null) ? 5 : height.intValue();
 
         boolean hollow = Boolean.FALSE.equals(this.hollow.getSingle(event));
 
-        for (Location loc : locs.getArray(event)) {
+        for (Location loc : locations.getArray(event)) {
             Runnable runnable = null;
             switch (shape) {
                 case CIRCLE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);
-                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h, t);
+                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h);
                 case PYRAMID -> runnable = Runnables.getPyramidRunnable(loc, pattern, hollow, (int) rX);
             }
 
@@ -121,6 +119,7 @@ public class SecCreateShape extends Section {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return "create worldedit shape";

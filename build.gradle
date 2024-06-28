@@ -19,9 +19,8 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT"
     compileOnly("com.github.SkriptLang:Skript:2.7.0") { transitive = false }
 
-    implementation(platform("com.intellectualsites.bom:bom-newest:1.45"))
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
-    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { transitive = false }
+    implementation("com.sk89q.worldedit:worldedit-core:7.2.20")
+    implementation("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1'
 }
