@@ -13,11 +13,13 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 public class EffCreateCylinder extends Effect {
 
     static {
         Skript.registerEffect(EffCreateCylinder.class,
-                "create [a] [:hollow] cylinder ([made] out of|with [pattern]) %itemtype/string% [with radius %-number%] [with height %-number%] at %locations%");
+                "create [a] [:hollow] cylinder ([made] out of|with [pattern]) %itemtype/string% [with radi(us|i) %-numbers%] [with height %-number%] at %locations%");
     }
 
     private boolean hollow;
@@ -25,7 +27,7 @@ public class EffCreateCylinder extends Effect {
     private Expression<Number> radius, height;
     private Expression<Location> locations;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         hollow = parseResult.hasTag("hollow");
@@ -43,11 +45,20 @@ public class EffCreateCylinder extends Effect {
         if (pattern == null)
             return;
 
-        double r = radius.getOptionalSingle(event).orElse(5).doubleValue(); //TODO: replace with config, or just fail
+        double rX, rZ;
+        double[] radii = Arrays.stream(radius.getArray(event)).mapToDouble(Number::doubleValue).toArray();
+        if (radii.length == 0) {
+            rX = rZ = 5; // TODO: replace with config or make non-optional and fail
+        } else if (radii.length == 1) {
+            rX = rZ = radii[0];
+        } else {
+            rX = radii[0]; rZ = radii[1];
+        }
+
         int h = height.getOptionalSingle(event).orElse(1).intValue(); //TODO: replace with config, or just fail
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getCylinderRunnable(loc, pattern, hollow, r, r, h));
+            RunnableUtils.run(Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, h));
         }
     }
 

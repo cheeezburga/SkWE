@@ -13,11 +13,13 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+
 public class EffCreateSphere extends Effect {
 
     static {
         Skript.registerEffect(EffCreateSphere.class,
-                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) %itemtype/string% [with radius %-number%] at %locations%");
+                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) %itemtype/string% [with radi(us|i) %-numbers%] at %locations%");
     }
 
     private boolean hollow;
@@ -42,10 +44,20 @@ public class EffCreateSphere extends Effect {
         if (pattern == null)
             return;
 
-        double r = radius.getOptionalSingle(event).orElse(5).doubleValue(); //TODO: replace with config, or just fail
+        double rX, rY, rZ;
+        double[] radii = Arrays.stream(radius.getArray(event)).mapToDouble(Number::doubleValue).toArray();
+        if (radii.length == 0) {
+            rX = rY = rZ = 5; // TODO: replace with config or make non-optional and fail
+        } else if (radii.length == 1) {
+            rX = rY = rZ = radii[0];
+        } else if (radii.length == 2) {
+            rX = rZ = radii[0]; rY = radii[1];
+        } else {
+            rX = radii[0]; rY = radii[1]; rZ = radii[2];
+        }
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getSphereRunnable(loc, pattern, hollow, r, r, r));
+            RunnableUtils.run(Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ));
         }
     }
 
