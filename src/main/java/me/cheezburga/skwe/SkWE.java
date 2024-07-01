@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-import static me.cheezburga.skwe.api.utils.Utils.pluginPrefix;
+import static me.cheezburga.skwe.api.utils.Utils.PLUGIN_PREFIX;
 
 @SuppressWarnings("unused")
 public class SkWE extends JavaPlugin {
@@ -26,23 +26,24 @@ public class SkWE extends JavaPlugin {
         instance = this;
 
         try {
-            Bukkit.getConsoleSender().sendMessage(pluginPrefix + ChatColor.GREEN + " Enabling SkWE...");
+            Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Enabling SkWE...");
             skriptAddon = Skript.registerAddon(this).setLanguageFileDirectory("lang");
             Plugin worldEdit = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
             if (worldEdit != null) {
-                Bukkit.getConsoleSender().sendMessage(pluginPrefix + ChatColor.GREEN + " Found WorldEdit, checking for FAWE...");
+                Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Found WorldEdit, checking for FAWE...");
                 try {
                     Class.forName("com.fastasyncworldedit.core.Fawe");
                     HAS_FAWE = true;
                     localSession = new LocalSession();
-                    Bukkit.getConsoleSender().sendMessage(pluginPrefix + ChatColor.GREEN + " Found FAWE!");
+                    Bukkit.getLogger().info("Tried making new LocalSession: " + localSession);
+                    Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Found FAWE!");
                 } catch (ClassNotFoundException e) {
                     HAS_FAWE = false;
-                    Bukkit.getConsoleSender().sendMessage(pluginPrefix + ChatColor.RED + " Couldn't find FAWE, syntax will still be enabled but might be more limited.");
+                    Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.RED + " Couldn't find FAWE, syntax will still be enabled but might be more limited.");
                 }
                 skriptAddon.loadClasses("me.cheezburga.skwe.elements");
             }
-            Bukkit.getConsoleSender().sendMessage(pluginPrefix + ChatColor.GREEN + " Finished enabling SkWE!");
+            Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Finished enabling SkWE!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
