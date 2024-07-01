@@ -20,8 +20,9 @@ import org.jetbrains.annotations.Nullable;
 public class Utils {
 
     @SuppressWarnings("deprecation")
-    public static final String pluginPrefix = net.md_5.bungee.api.ChatColor.of("#00FFFF") + "[SkWE]" + ChatColor.RESET;
-    public static final String patternPrefix = "(use (world[ ]edit|we) to|world[ ]edit|we)";
+    public static final String PLUGIN_PREFIX = net.md_5.bungee.api.ChatColor.of("#00FFFF") + "[SkWE]" + ChatColor.RESET;
+    public static final String PATTERN_PREFIX = "(use (world[ ]edit|we) to|world[ ]edit|we)";
+    public static final Pattern AIR_PATTERN = patternFrom("air");
 
     /**
      * Takes a Bukkit Location and returns the respective WorldEdit BlockVector3
