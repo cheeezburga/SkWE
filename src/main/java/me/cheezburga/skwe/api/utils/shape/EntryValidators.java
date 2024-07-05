@@ -12,7 +12,7 @@ public class EntryValidators {
     //TODO: make this a static map and get the respective value instead of creating one every time
     public static EntryValidatorBuilder get(WorldEditShape shape) {
         switch (shape) {
-            case CIRCLE, SPHERE -> { return sphere(); }
+            case ELLIPSE, ELLIPSOID, SPHERE -> { return sphere(); }
             case CYLINDER -> { return cylinder(); }
             case PYRAMID -> { return pyramid(); }
             default -> { return base(); }
@@ -39,7 +39,6 @@ public class EntryValidators {
         builder.addEntryData(new ExpressionEntryData<>("radius", null, false, Number.class));
         builder.addEntryData(new ExpressionEntryData<>("radiusZ", null, true, Number.class)); // default will just be the radius key
         builder.addEntryData(new ExpressionEntryData<>("height", null, false, Number.class));
-        builder.addEntryData(new ExpressionEntryData<>("thickness", new SimpleLiteral<>(0, false), true, Number.class));
         return builder;
     }
 

@@ -51,7 +51,8 @@ public class SecCreateShape extends Section {
         switch (shape) {
             case CYLINDER:
                 height = (Expression<Number>) container.getOptional("height", false);
-            case CIRCLE:
+            case ELLIPSE:
+            case ELLIPSOID:
             case SPHERE:
                 radius = (Expression<Number>) container.getOptional("radius", false);
                 radiusZ = (Expression<Number>) container.getOptional("radiusZ", false);
@@ -86,8 +87,9 @@ public class SecCreateShape extends Section {
         switch (shape) {
             case CYLINDER:
                 height = this.height.getSingle(event);
+            case ELLIPSE:
+            case ELLIPSOID:
             case SPHERE:
-            case CIRCLE:
             case PYRAMID:
                 radius = this.radius.getSingle(event);
                 if (shape != WorldEditShape.PYRAMID) {
@@ -109,7 +111,7 @@ public class SecCreateShape extends Section {
         for (Location loc : locations.getArray(event)) {
             Runnable runnable = null;
             switch (shape) {
-                case CIRCLE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);
+                case ELLIPSOID, ELLIPSE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);
                 case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h);
                 case PYRAMID -> runnable = Runnables.getPyramidRunnable(loc, pattern, hollow, (int) rX);
             }
