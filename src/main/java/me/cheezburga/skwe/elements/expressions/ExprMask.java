@@ -49,6 +49,6 @@ public class ExprMask extends SimpleExpression<Mask> {
 
     @Override
     public @NotNull String toString(Event event, boolean debug) {
-        return "pattern from " + this.preMask.toString(event, debug);
+        return "mask from " + this.preMask.toString(event, debug);
     }
 }
