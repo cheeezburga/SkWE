@@ -63,7 +63,7 @@ public class SecCreateShape extends Section {
                 radius = (Expression<Number>) container.getOptional("size", false);
         }
         if (radius == null || height == null) return false;
-        if (radiusY == null && (shape == WorldEditShape.CIRCLE || shape == WorldEditShape.SPHERE)) radiusY = radius;
+        if (radiusY == null && (shape == WorldEditShape.ELLIPSE || shape == WorldEditShape.ELLIPSOID || shape == WorldEditShape.SPHERE)) radiusY = radius;
         if (radiusZ == null && (shape != WorldEditShape.PYRAMID)) radiusZ = radius;
 
         locations = (Expression<Location>) exprs[1];
@@ -126,4 +126,5 @@ public class SecCreateShape extends Section {
     public String toString(@Nullable Event event, boolean debug) {
         return "create worldedit shape";
     }
+
 }
