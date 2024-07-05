@@ -2,53 +2,58 @@ package me.cheezburga.skwe;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import com.sk89q.worldedit.LocalSession;
+import me.cheezburga.skwe.api.utils.UpdateChecker;
+import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 
-import static me.cheezburga.skwe.api.utils.Utils.PLUGIN_PREFIX;
-
-@SuppressWarnings("unused")
 public class SkWE extends JavaPlugin {
 
     private static SkWE instance;
     public static boolean HAS_FAWE;
     private SkriptAddon skriptAddon;
-    private LocalSession localSession;
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
         instance = this;
 
         try {
-            Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Enabling SkWE...");
             skriptAddon = Skript.registerAddon(this).setLanguageFileDirectory("lang");
+            Utils.log("&aLooking for WorldEdit or FAWE...");
             Plugin worldEdit = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
             if (worldEdit != null) {
-                Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Found WorldEdit, checking for FAWE...");
+                Utils.log("&aFound a WorldEdit instance, checking for FAWE...");
                 try {
                     Class.forName("com.fastasyncworldedit.core.Fawe");
                     HAS_FAWE = true;
-                    localSession = new LocalSession();
-                    Bukkit.getLogger().info("Tried making new LocalSession: " + localSession);
-                    Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Found FAWE!");
+                    Utils.log("&aFound FAWE!");
                 } catch (ClassNotFoundException e) {
                     HAS_FAWE = false;
-                    Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.RED + " Couldn't find FAWE, syntax will still be enabled but might be more limited.");
+                    Utils.log("&cCouldn't find FAWE, syntax will still be enabled but will be more limited.");
                 }
                 skriptAddon.loadClasses("me.cheezburga.skwe.elements");
+            } else {
+                Utils.log("&cCouldn't find WorldEdit or FAWE! Disabling SkWE...");
+                getServer().getPluginManager().disablePlugin(this);
             }
-            Bukkit.getConsoleSender().sendMessage(PLUGIN_PREFIX + ChatColor.GREEN + " Finished enabling SkWE!");
+            Utils.log("&aFinished enabling SkWE!");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to load SkWE: " + e);
         }
-        // syntax enabled/disabled stuff
-        // metrics
+        loadMetrics();
+        // checkUpdate(getDescription().getVersion());
+    }
+
+    private void loadMetrics() {
+        Metrics metrics = new Metrics(this, 22535);
+        metrics.addCustomChart(new Metrics.SimplePie("skriptVersion", () -> Skript.getVersion().toString()));
+    }
+
+    private void checkUpdate(String version) {
+        UpdateChecker.checkForUpdate(version);
     }
 
     public static SkWE getInstance() {
@@ -59,7 +64,4 @@ public class SkWE extends JavaPlugin {
         return skriptAddon;
     }
 
-    public LocalSession getLocalSession() {
-        return localSession;
-    }
 }
