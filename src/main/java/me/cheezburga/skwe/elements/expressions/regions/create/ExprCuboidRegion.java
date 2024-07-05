@@ -19,7 +19,7 @@ public class ExprCuboidRegion extends SimpleExpression<RegionWrapper> {
 
     static {
         Skript.registerExpression(ExprCuboidRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] [cuboid] region (between|within) %location% and %location%");
+                "[a] [new] [cuboid] region (between|within|from) %location% (and|to) %location%");
     }
 
     private Expression<Location> loc1;
