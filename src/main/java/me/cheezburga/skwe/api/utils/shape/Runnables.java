@@ -5,7 +5,6 @@ import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import me.cheezburga.skwe.SkWE;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.Location;
 
@@ -18,7 +17,6 @@ public class Runnables {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
                     session.makeSphere(Utils.blockVector3From(loc), pattern, radius, radiusY, radiusZ, !hollow);
-                    SkWE.getInstance().getLocalSession().remember(session);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };
@@ -29,7 +27,6 @@ public class Runnables {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
                     session.makeCylinder(Utils.blockVector3From(loc), pattern, radius, radiusZ, height, !hollow);
-                    SkWE.getInstance().getLocalSession().remember(session);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };
@@ -40,7 +37,6 @@ public class Runnables {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
                     session.makePyramid(Utils.blockVector3From(loc), pattern, size, !hollow);
-                    SkWE.getInstance().getLocalSession().remember(session);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };
