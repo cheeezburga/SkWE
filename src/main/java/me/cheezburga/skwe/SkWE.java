@@ -2,6 +2,7 @@ package me.cheezburga.skwe;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import me.cheezburga.skwe.api.utils.UpdateChecker;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.Bukkit;
@@ -9,6 +10,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class SkWE extends JavaPlugin {
 
@@ -40,6 +43,8 @@ public class SkWE extends JavaPlugin {
                 getServer().getPluginManager().disablePlugin(this);
             }
             Utils.log("&aFinished enabling SkWE!");
+            if (HAS_FAWE)
+                preLoadRelighterFactory();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load SkWE: " + e);
         }
@@ -54,6 +59,25 @@ public class SkWE extends JavaPlugin {
 
     private void checkUpdate(String version) {
         UpdateChecker.checkForUpdate(version);
+    }
+
+    private void preLoadRelighterFactory() {
+        WorldEditPlugin plugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+        if (plugin != null) {
+            Utils.log("&6Looking for FAWE's relighter factory...");
+            try {
+                Method bukkitImplAdapterMethod = plugin.getClass().getMethod("getBukkitImplAdapter");
+                Object bukkitImplAdapter = bukkitImplAdapterMethod.invoke(plugin);
+
+                if (bukkitImplAdapter != null) {
+                    Method relighterFactoryMethod = bukkitImplAdapter.getClass().getMethod("getRelighterFactory");
+                    Object relighterFactory = relighterFactoryMethod.invoke(bukkitImplAdapter);
+                    Utils.log("&aFound FAWE's relighter factory: " + relighterFactory.toString());
+                }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                Utils.log("&cTried preloading FAWE's relighter factory, but ran into an exception: " + e.getMessage());
+            }
+        }
     }
 
     public static SkWE getInstance() {
