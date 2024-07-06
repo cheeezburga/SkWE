@@ -6,7 +6,6 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
-import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector2;
 import com.sk89q.worldedit.math.Vector3;
@@ -93,7 +92,7 @@ public class Types {
 
                     @Override
                     protected MaskWrapper deserialize(@NotNull Fields fields) throws StreamCorruptedException {
-                        String asString = fields.getObject("pattern", String.class);
+                        String asString = fields.getObject("mask", String.class);
                         return new MaskWrapper(Utils.maskFrom(asString, null), asString);
                     }
 
