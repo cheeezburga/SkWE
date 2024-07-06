@@ -2,13 +2,11 @@ package me.cheezburga.skwe.api.utils;
 
 import com.sk89q.worldedit.function.pattern.Pattern;
 
-import java.util.Arrays;
-
-public record PatternWrapper(Pattern pattern, Object... input) {
+public record PatternWrapper(Pattern pattern, String asString) {
 
     @Override
     public String toString() {
-        return "worldedit pattern from " + Arrays.toString(input);
+        return "worldedit pattern from " + asString;
     }
 
 }

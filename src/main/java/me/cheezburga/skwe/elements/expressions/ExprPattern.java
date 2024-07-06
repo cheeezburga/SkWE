@@ -7,15 +7,16 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.function.pattern.Pattern;
+import me.cheezburga.skwe.api.utils.PatternWrapper;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ExprPattern extends SimpleExpression<Pattern> {
+public class ExprPattern extends SimpleExpression<PatternWrapper> {
 
     static {
-        Skript.registerExpression(ExprPattern.class, Pattern.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprPattern.class, PatternWrapper.class, ExpressionType.COMBINED,
                 "pattern (of|from|that matches) %string/itemtype%");
     }
 
@@ -30,11 +31,11 @@ public class ExprPattern extends SimpleExpression<Pattern> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected Pattern @Nullable [] get(Event event) {
+    protected @Nullable PatternWrapper[] get(Event event) {
         Object prePattern = this.prePattern.getSingle(event);
         if (prePattern == null) return null;
         Pattern pattern = Utils.patternFrom(prePattern);
-        return (pattern == null) ? null : new Pattern[]{pattern};
+        return (pattern == null) ? null : new PatternWrapper[]{new PatternWrapper(pattern, Utils.templateFrom(prePattern))};
     }
 
     @Override
@@ -43,8 +44,8 @@ public class ExprPattern extends SimpleExpression<Pattern> {
     }
 
     @Override
-    public @NotNull Class<? extends Pattern> getReturnType() {
-        return Pattern.class;
+    public @NotNull Class<? extends PatternWrapper> getReturnType() {
+        return PatternWrapper.class;
     }
 
     @Override

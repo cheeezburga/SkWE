@@ -16,6 +16,8 @@ import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
 import me.cheezburga.skwe.api.utils.EnumWrapper;
+import me.cheezburga.skwe.api.utils.MaskWrapper;
+import me.cheezburga.skwe.api.utils.PatternWrapper;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.Getters;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
@@ -36,11 +38,75 @@ public class Types {
                 .description("All the supported creatable shapes using WorldEdit.")
                 .since("1.0.0"));
 
-        Classes.registerClass(new ClassInfo<>(Pattern.class, "worldeditpattern")
+        Classes.registerClass(new ClassInfo<>(PatternWrapper.class, "worldeditpattern")
                 .user("(world ?edit|fawe) pattern")
                 .name("World Edit Pattern")
                 .description("Represents a pattern that can be used for WorldEdit operations.")
-                .since("1.0.0"));
+                .since("1.0.0")
+                .serializer(new Serializer<>() {
+                    @Override
+                    public @NotNull Fields serialize(PatternWrapper wrapper) {
+                        Fields f = new Fields();
+                        f.putObject("pattern", wrapper.asString());
+                        return f;
+                    }
+
+                    @Override
+                    public void deserialize(PatternWrapper wrapper, @NotNull Fields fields) {
+                        assert false;
+                    }
+
+                    @Override
+                    protected PatternWrapper deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                        String asString = fields.getObject("pattern", String.class);
+                        return new PatternWrapper(Utils.patternFrom(asString), asString);
+                    }
+
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
+                    }
+                }));
+
+        Classes.registerClass(new ClassInfo<>(MaskWrapper.class, "worldeditmask")
+                .user("(world ?edit|fawe) mask")
+                .name("World Edit Mask")
+                .description("Represents a mask that can be used for WorldEdit operations.")
+                .since("1.0.0")
+                .serializer(new Serializer<>() {
+                    @Override
+                    public @NotNull Fields serialize(MaskWrapper wrapper) {
+                        Fields f = new Fields();
+                        f.putObject("mask", wrapper.asString());
+                        return f;
+                    }
+
+                    @Override
+                    public void deserialize(MaskWrapper wrapper, @NotNull Fields fields) {
+                        assert false;
+                    }
+
+                    @Override
+                    protected MaskWrapper deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                        String asString = fields.getObject("pattern", String.class);
+                        return new MaskWrapper(Utils.maskFrom(asString, null), asString);
+                    }
+
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
+                    }
+                }));
 
         Classes.registerClass(new ClassInfo<>(RegionWrapper.class, "worldeditregion")
                 .user("(world ?edit|fawe) region")

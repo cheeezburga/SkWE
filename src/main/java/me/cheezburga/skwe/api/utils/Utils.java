@@ -28,6 +28,11 @@ public class Utils {
     public static final String PATTERN_PREFIX = "(use (world[ ]edit|we) to|world[ ]edit|we)";
     private static final java.util.regex.Pattern HEX_PATTERN = java.util.regex.Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_EXISTS = Bukkit.getPluginManager().getPlugin("Skript") != null;
+
+    public static final String MASK_TYPES = "%string/itemtype/worldeditmask%";
+    public static final String MASK_TYPES_OPTIONAL = "%-string/itemtype/worldeditmask%";
+    public static final String PATTERN_TYPES = "%string/itemtype/worldeditpattern%";
+    public static final String PATTERN_TYPES_OPTIONAL = "%-string/itemtype/worldeditpattern%";
     public static final Pattern AIR_PATTERN = patternFrom("air");
 
     /**
@@ -111,6 +116,25 @@ public class Utils {
             }
         } catch (InputParseException e) { return null; }
         return null;
+    }
+
+    @Nullable
+    public static String templateFrom(Object... input) {
+        if (input.length == 0)
+            return null;
+        StringBuilder output = new StringBuilder();
+        for (Object o : input) {
+            if (o instanceof String string) {
+                output.append(string); // TODO: should this check if its a valid string first? maybe try parsing and checking result?
+            } else if (o instanceof ItemType item) {
+                if (item.getItemMeta() instanceof BlockDataMeta meta) {
+                    Material material = item.getMaterial();
+                    if (material.isBlock())
+                        output.append(meta.getBlockData(material).getAsString());
+                }
+            }
+        }
+        return output.toString().isEmpty() ? null : output.toString();
     }
 
     /**

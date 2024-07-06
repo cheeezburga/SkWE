@@ -1,7 +1,7 @@
 package me.cheezburga.skwe.api.utils.shape;
 
 import ch.njol.skript.lang.util.SimpleLiteral;
-import com.sk89q.worldedit.function.pattern.Pattern;
+import me.cheezburga.skwe.api.utils.PatternWrapper;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
@@ -21,7 +21,7 @@ public class EntryValidators {
 
     public static EntryValidatorBuilder base() {
         EntryValidatorBuilder builder = EntryValidator.builder();
-        builder.addEntryData(new ExpressionEntryData<>("pattern", null, false, Pattern.class));
+        builder.addEntryData(new ExpressionEntryData<>("pattern", null, false, PatternWrapper.class));
         builder.addEntryData(new ExpressionEntryData<>("hollow", new SimpleLiteral<>(true, false), true, Boolean.class));
         return builder;
     }
