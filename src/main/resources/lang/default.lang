@@ -4,3 +4,4 @@ types:
     worldeditregion: world( |-)?edit region¦s
     worldeditshape: world( |-)?edit shape¦s
     worldeditpattern: world( |-)?edit pattern¦s
+    worldeditmask: world( |-)?edit mask¦s
