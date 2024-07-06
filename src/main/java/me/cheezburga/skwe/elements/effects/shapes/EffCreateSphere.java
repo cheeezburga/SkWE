@@ -19,7 +19,7 @@ public class EffCreateSphere extends Effect {
 
     static {
         Skript.registerEffect(EffCreateSphere.class,
-                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) %itemtype/string% [with radi(us|i) %-numbers%] at %locations%");
+                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] at %locations%");
     }
 
     private boolean hollow;

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffWalls extends Effect {
 
     static {
-        Skript.registerEffect(EffWalls.class, "create [the] walls (of|around) %worldeditregion% ([made] out of|with [pattern]) %itemtype/string%");
+        Skript.registerEffect(EffWalls.class, "create [the] walls (of|around) %worldeditregion% ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

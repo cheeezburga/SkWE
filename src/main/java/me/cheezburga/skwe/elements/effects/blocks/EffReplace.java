@@ -19,8 +19,8 @@ public class EffReplace extends Effect {
     static {
         if (Bukkit.getServer().getPluginManager().isPluginEnabled("FastAsyncWorldEdit"))
             Skript.registerEffect(EffReplace.class,
-                    "(use (world[ ]edit|we) to|world[ ]edit|we) replace [all] blocks in %worldeditregion% that match [mask] %itemtype/string% with [pattern] %itemtype/string%",
-            "(use (world[ ]edit|we) to|world[ ]edit|we) replace all %itemtype/string% in %worldeditregion% with %itemtype/string%");
+                    Utils.PATTERN_PREFIX + " replace [all] blocks in %worldeditregion% that match [mask] " + Utils.MASK_TYPES + " with [pattern] " + Utils.PATTERN_TYPES,
+            Utils.PATTERN_PREFIX + " replace all " + Utils.MASK_TYPES + " in %worldeditregion% with " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

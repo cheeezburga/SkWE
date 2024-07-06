@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffCenter extends Effect {
 
     static {
-        Skript.registerEffect(EffCenter.class, "create [a] block at [the] center of %worldeditregion% with [pattern] %itemtype/string%");
+        Skript.registerEffect(EffCenter.class, "create [a] block at [the] center of %worldeditregion% with [pattern] " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

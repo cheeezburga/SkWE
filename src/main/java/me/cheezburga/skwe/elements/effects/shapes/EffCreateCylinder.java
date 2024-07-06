@@ -19,7 +19,7 @@ public class EffCreateCylinder extends Effect {
 
     static {
         Skript.registerEffect(EffCreateCylinder.class,
-                "create [a] [:hollow] cylinder ([made] out of|with [pattern]) %itemtype/string% [with radi(us|i) %-numbers%] [with height %-number%] at %locations%");
+                "create [a] [:hollow] cylinder ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] [with height %-number%] at %locations%");
     }
 
     private boolean hollow;

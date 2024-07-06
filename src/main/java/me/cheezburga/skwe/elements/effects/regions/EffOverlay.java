@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffOverlay extends Effect {
 
     static {
-        Skript.registerEffect(EffOverlay.class, "overlay [the] [top level of] blocks (in|of) %worldeditregion% with [pattern] %itemtype/string%");
+        Skript.registerEffect(EffOverlay.class, "overlay [the] [top level of] blocks (in|of) %worldeditregion% with [pattern] " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

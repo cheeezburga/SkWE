@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffFaces extends Effect {
 
     static {
-        Skript.registerEffect(EffFaces.class, "create [the] faces (of|around) %worldeditregion% ([made] out of|with [pattern]) %itemtype/string%");
+        Skript.registerEffect(EffFaces.class, "create [the] faces (of|around) %worldeditregion% ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

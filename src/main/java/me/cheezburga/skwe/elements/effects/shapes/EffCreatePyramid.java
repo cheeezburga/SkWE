@@ -17,7 +17,7 @@ public class EffCreatePyramid extends Effect {
 
     static {
         Skript.registerEffect(EffCreatePyramid.class,
-                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) %itemtype/string% [with size %-number%] at %locations%");
+                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%");
     }
 
     private boolean hollow;

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffSmooth extends Effect {
 
     static {
-        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% times] [with mask %-itemtype/string%]");
+        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% times] [with mask " + Utils.MASK_TYPES + "]");
     }
 
     private Expression<RegionWrapper> wrapper;

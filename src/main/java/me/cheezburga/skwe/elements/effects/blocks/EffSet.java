@@ -18,7 +18,7 @@ public class EffSet extends Effect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                "(use (world[ ]edit|we) to|world[ ]edit|we) set blocks in %worldeditregion% to %itemtype/string%");
+                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;
