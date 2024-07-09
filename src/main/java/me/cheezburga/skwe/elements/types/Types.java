@@ -38,7 +38,7 @@ public class Types {
                 .since("1.0.0"));
 
         Classes.registerClass(new ClassInfo<>(PatternWrapper.class, "worldeditpattern")
-                .user("(world ?edit|fawe) pattern")
+                .user("(world ?edit|fawe) ?patterns?")
                 .name("World Edit Pattern")
                 .description("Represents a pattern that can be used for WorldEdit operations.")
                 .since("1.0.0")
@@ -73,7 +73,7 @@ public class Types {
                 }));
 
         Classes.registerClass(new ClassInfo<>(MaskWrapper.class, "worldeditmask")
-                .user("(world ?edit|fawe) mask")
+                .user("(world ?edit|fawe) ?masks?")
                 .name("World Edit Mask")
                 .description("Represents a mask that can be used for WorldEdit operations.")
                 .since("1.0.0")
@@ -108,7 +108,7 @@ public class Types {
                 }));
 
         Classes.registerClass(new ClassInfo<>(RegionWrapper.class, "worldeditregion")
-                .user("(world ?edit|fawe) region")
+                .user("(world ?edit|fawe) ?regions?")
                 .name("World Edit Region")
                 .description("Represents a region that can be used for WorldEdit operations.")
                 .since("1.0.0")
