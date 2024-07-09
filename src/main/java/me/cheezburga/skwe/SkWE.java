@@ -2,7 +2,9 @@ package me.cheezburga.skwe;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.extension.platform.Capability;
+import com.sk89q.worldedit.extension.platform.Platform;
 import me.cheezburga.skwe.api.utils.UpdateChecker;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.Bukkit;
@@ -25,31 +27,30 @@ public class SkWE extends JavaPlugin {
 
         try {
             skriptAddon = Skript.registerAddon(this).setLanguageFileDirectory("lang");
+            skriptAddon.loadClasses("me.cheezburga.skwe.elements");
             Utils.log("&aLooking for WorldEdit or FAWE...");
             Plugin worldEdit = Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
             if (worldEdit != null) {
-                Utils.log("&aFound a WorldEdit instance, checking for FAWE...");
                 try {
                     Class.forName("com.fastasyncworldedit.core.Fawe");
                     HAS_FAWE = true;
-                    Utils.log("&aFound FAWE!");
+                    Utils.log("&a  - Found FAWE!");
                 } catch (ClassNotFoundException e) {
                     HAS_FAWE = false;
-                    Utils.log("&cCouldn't find FAWE, syntax will still be enabled but will be more limited.");
+                    Utils.log("&a  - Found WorldEdit! Syntax will still be enabled, but might be more limited than a server using FAWE.");
                 }
-                skriptAddon.loadClasses("me.cheezburga.skwe.elements");
-            } else {
-                Utils.log("&cCouldn't find WorldEdit or FAWE! Disabling SkWE...");
+                Utils.log("&a  - Finished enabling SkWE!");
+                if (HAS_FAWE)
+                    preLoadRelighterFactory();
+            } else { // should never get to this, as server shouldn't try enabling if the dependency isn't found
+                Utils.log("&c  - Couldn't find WorldEdit or FAWE! Disabling SkWE...");
                 getServer().getPluginManager().disablePlugin(this);
             }
-            Utils.log("&aFinished enabling SkWE!");
-            if (HAS_FAWE)
-                preLoadRelighterFactory();
         } catch (IOException e) {
             throw new RuntimeException("Failed to load SkWE: " + e);
         }
         loadMetrics();
-        // checkUpdate(getDescription().getVersion());
+        //checkUpdate(getDescription().getVersion());
     }
 
     private void loadMetrics() {
@@ -62,20 +63,15 @@ public class SkWE extends JavaPlugin {
     }
 
     private void preLoadRelighterFactory() {
-        WorldEditPlugin plugin = (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
-        if (plugin != null) {
-            Utils.log("&6Looking for FAWE's relighter factory...");
+        Platform platform = WorldEdit.getInstance().getPlatformManager().queryCapability(Capability.WORLD_EDITING);
+        if (platform != null) {
+            Utils.log("&aTrying to preload FAWE's relighter factory...");
             try {
-                Method bukkitImplAdapterMethod = plugin.getClass().getMethod("getBukkitImplAdapter");
-                Object bukkitImplAdapter = bukkitImplAdapterMethod.invoke(plugin);
-
-                if (bukkitImplAdapter != null) {
-                    Method relighterFactoryMethod = bukkitImplAdapter.getClass().getMethod("getRelighterFactory");
-                    Object relighterFactory = relighterFactoryMethod.invoke(bukkitImplAdapter);
-                    Utils.log("&aFound FAWE's relighter factory: " + relighterFactory.toString());
-                }
+                Method relighterMethod = platform.getClass().getMethod("getRelighterFactory");
+                Object relighterFactory = relighterMethod.invoke(platform);
+                Utils.log("&a  - Found FAWE's relighter factory!");
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                Utils.log("&cTried preloading FAWE's relighter factory, but ran into an exception: " + e.getMessage());
+                Utils.log("&c  - Failed to load FAWE's relighter with exception " + e.getMessage());
             }
         }
     }
