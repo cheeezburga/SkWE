@@ -35,10 +35,9 @@ public class EffFlora extends Effect {
         if (wrapper == null)
             return;
 
-        Number density = this.density.getSingle(event);
-        double d = density != null ? (double) density : 5;
+        double density = this.density.getOptionalSingle(event).orElse(5).doubleValue();
 
-        RunnableUtils.run(Runnables.getFloraRunnable(wrapper, d));
+        RunnableUtils.run(Runnables.getFloraRunnable(wrapper, density));
     }
 
     @SuppressWarnings("NullableProblems")
