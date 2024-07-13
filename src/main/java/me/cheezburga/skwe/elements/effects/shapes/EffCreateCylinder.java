@@ -34,7 +34,7 @@ public class EffCreateCylinder extends Effect {
         prePattern = exprs[0];
         radius = (Expression<Number>) exprs[1];
         height = (Expression<Number>) exprs[2];
-        locations = (Expression<Location>) exprs[4];
+        locations = (Expression<Location>) exprs[3];
         return true;
     }
 
