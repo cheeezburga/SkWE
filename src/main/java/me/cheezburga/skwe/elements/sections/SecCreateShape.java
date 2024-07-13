@@ -10,6 +10,7 @@ import ch.njol.skript.lang.util.ContextlessEvent;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.EntryValidators;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
 import me.cheezburga.skwe.elements.types.WorldEditShape;
@@ -44,8 +45,7 @@ public class SecCreateShape extends Section {
         EntryContainer container = builder.build().validate(sectionNode);
         if (container == null) return false;
 
-        pattern = (Expression<Pattern>) container.getOptional("pattern", false);
-        if (pattern == null) return false;
+        pattern = (Expression<Pattern>) container.get("pattern", false);
         hollow = (Expression<Boolean>) container.getOptional("hollow", true);
 
         switch (shape) {
@@ -62,7 +62,6 @@ public class SecCreateShape extends Section {
             case PYRAMID:
                 radius = (Expression<Number>) container.getOptional("size", false);
         }
-        if (radius == null || height == null) return false;
         if (radiusY == null && (shape == WorldEditShape.ELLIPSE || shape == WorldEditShape.ELLIPSOID || shape == WorldEditShape.SPHERE)) radiusY = radius;
         if (radiusZ == null && (shape != WorldEditShape.PYRAMID)) radiusZ = radius;
 
@@ -78,11 +77,13 @@ public class SecCreateShape extends Section {
     }
 
     private void execute(Event event) {
-        Pattern pattern = this.pattern.getSingle(event);
+        Object prePattern = this.pattern.getSingle(event);
+        Pattern pattern = Utils.patternFrom(prePattern);
         if (pattern == null) return;
 
         Number radius = null, radiusY = null, radiusZ = null, height = null;
-        double rX, rY, rZ, h;
+        double rX, rY, rZ;
+        int h;
 
         switch (shape) {
             case CYLINDER:
@@ -106,13 +107,13 @@ public class SecCreateShape extends Section {
         rZ = (radiusZ == null) ? rX : radiusZ.doubleValue();
         h = (height == null) ? 5 : height.intValue();
 
-        boolean hollow = Boolean.FALSE.equals(this.hollow.getSingle(event));
+        boolean hollow = Boolean.TRUE.equals(this.hollow.getSingle(event));
 
         for (Location loc : locations.getArray(event)) {
             Runnable runnable = null;
             switch (shape) {
                 case ELLIPSOID, ELLIPSE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);
-                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, (int) h);
+                case CYLINDER -> runnable = Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, h);
                 case PYRAMID -> runnable = Runnables.getPyramidRunnable(loc, pattern, hollow, (int) rX);
             }
 
