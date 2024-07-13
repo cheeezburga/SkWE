@@ -33,6 +33,7 @@ public class Utils {
     public static final String MASK_TYPES_OPTIONAL = "%-string/itemtype/worldeditmask%";
     public static final String PATTERN_TYPES = "%string/itemtype/worldeditpattern%";
     public static final String PATTERN_TYPES_OPTIONAL = "%-string/itemtype/worldeditpattern%";
+
     public static final Pattern AIR_PATTERN = patternFrom("air");
 
     /**
@@ -78,6 +79,8 @@ public class Utils {
                 }
             } else if (o instanceof Pattern pattern) {
                 return pattern;
+            } else if (o instanceof PatternWrapper wrapper) {
+                return wrapper.pattern();
             }
         } catch (InputParseException e) {
             return null;
@@ -113,6 +116,8 @@ public class Utils {
                 }
             } else if (o instanceof Mask mask) {
                 return mask;
+            } else if (o instanceof MaskWrapper wrapper) {
+                return wrapper.mask();
             }
         } catch (InputParseException e) { return null; }
         return null;
