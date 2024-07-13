@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffSmooth extends Effect {
 
     static {
-        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% times] [with mask " + Utils.MASK_TYPES + "]");
+        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% times] [with mask " + Utils.MASK_TYPES_OPTIONAL + "]");
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -39,16 +39,17 @@ public class EffSmooth extends Effect {
         if (wrapper == null)
             return;
 
-        Number iterations = this.iterations.getSingle(event);
-        if (iterations == null)
-            iterations = 1;
+        int iterations = this.iterations.getOptionalSingle(event).orElse(1).intValue();
 
         Mask mask = null;
-        if (preMask != null)
+        if (preMask != null) {
             mask = Utils.maskFrom(preMask.getSingle(event), null);
             // does this mask need more context (wrapper.world()?)
+            if (mask == null)
+                return;
+        }
 
-        RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, (int) iterations, mask));
+        RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, mask));
     }
 
     @SuppressWarnings("NullableProblems")
