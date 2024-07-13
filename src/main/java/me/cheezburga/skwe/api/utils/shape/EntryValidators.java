@@ -21,7 +21,7 @@ public class EntryValidators {
 
     public static EntryValidatorBuilder base() {
         EntryValidatorBuilder builder = EntryValidator.builder();
-        builder.addEntryData(new ExpressionEntryData<>("pattern", null, false, PatternWrapper.class));
+        builder.addEntryData(new ExpressionEntryData<>("pattern", null, false, PatternWrapper.class)); // TODO: this should maybe use my pr for multiple expected types if its merged? would require latest skript version tho
         builder.addEntryData(new ExpressionEntryData<>("hollow", new SimpleLiteral<>(true, false), true, Boolean.class));
         return builder;
     }
