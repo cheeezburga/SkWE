@@ -40,8 +40,8 @@ public class EffMove extends Effect {
         preMask = exprs[0];
         wrapper = (Expression<RegionWrapper>) exprs[1];
         direction = parseResult.mark;
-        distance = (Expression<Number>) exprs[3];
-        prePattern = exprs[4];
+        distance = (Expression<Number>) exprs[2];
+        prePattern = exprs[3];
         ignoreAir = parseResult.hasTag("air");
         copyEntities = parseResult.hasTag("entities");
         copyBiomes = parseResult.hasTag("biomes");
@@ -55,13 +55,22 @@ public class EffMove extends Effect {
         if (wrapper == null)
             return;
 
-        Object preMask = this.preMask.getSingle(event);
-        Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
-        Number distance = this.distance.getSingle(event);
-        if (distance == null)
-            distance = 1;
+        Object preMask = null;
+        Pattern pattern = null;
+        if (this.preMask != null) {
+            preMask = this.preMask.getSingle(event);
+            if (preMask == null)
+                return;
+        }
+        if (this.prePattern != null) {
+            pattern = Utils.patternFrom(this.prePattern.getSingle(event));
+            if (pattern == null)
+                return;
+        }
 
-        RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), (int) distance, ignoreAir, copyEntities, copyBiomes));
+        int distance = this.distance.getOptionalSingle(event).orElse(1).intValue();
+
+        RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), distance, ignoreAir, copyEntities, copyBiomes));
     }
 
     @SuppressWarnings("NullableProblems")
