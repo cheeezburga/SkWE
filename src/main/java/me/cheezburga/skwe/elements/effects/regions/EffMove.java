@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffMove extends Effect {
 
     static {
-        Skript.registerEffect(EffMove.class, "move [mask:blocks that match " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregion% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (times|blocks)] [and fill the area with " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air] [entities:while copying entities] [biomes:while copying biomes]");
+        Skript.registerEffect(EffMove.class, "move [mask:blocks that match " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregion% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and fill the area with " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air] [entities:while copying entities] [biomes:while copying biomes]");
     }
 
     private static final int UP = 0;

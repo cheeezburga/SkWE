@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffHollow extends Effect {
 
     static {
-        Skript.registerEffect(EffHollow.class, "hollow out %worldeditregion% [with thickness %-number%] [with pattern " + Utils.PATTERN_TYPES_OPTIONAL + "]");
+        Skript.registerEffect(EffHollow.class, "hollow out %worldeditregion% [with thickness %-number%] [(with pattern|leaving behind) " + Utils.PATTERN_TYPES_OPTIONAL + "]");
     }
 
     private Expression<RegionWrapper> wrapper;

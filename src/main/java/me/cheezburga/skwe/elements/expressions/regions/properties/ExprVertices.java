@@ -20,7 +20,7 @@ public class ExprVertices extends SimpleExpression<Location> {
 
     static {
         Skript.registerExpression(ExprVertices.class, Location.class, ExpressionType.COMBINED,
-                "[the] region vert(ices|exes) of %worldeditregion%", "%worldeditregion%'[s] vert(ices|exes)");
+                "[the] region vert(ices|exes) of %worldeditregion%", "[the] %worldeditregion%'[s] vert(ices|exes)");
     }
 
     private Expression<RegionWrapper> wrapper;
