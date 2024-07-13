@@ -29,11 +29,11 @@ public class ExprVertices extends SimpleExpression<Location> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrapper = (Expression<RegionWrapper>) exprs[0];
-        return false;
+        return true;
     }
 
     @Override
-    protected @Nullable Location[] get(Event event) {
+    protected @Nullable Location[] get(@NotNull Event event) {
         if (this.wrapper == null) return null;
 
         RegionWrapper wrapper = this.wrapper.getSingle(event);
