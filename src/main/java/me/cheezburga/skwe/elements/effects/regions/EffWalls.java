@@ -3,7 +3,7 @@ package me.cheezburga.skwe.elements.effects.regions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
@@ -24,7 +24,7 @@ public class EffWalls extends Effect {
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrapper = (Expression<RegionWrapper>) exprs[0];
         prePattern = exprs[1];
         return true;

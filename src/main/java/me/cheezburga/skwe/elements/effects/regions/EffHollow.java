@@ -41,8 +41,11 @@ public class EffHollow extends Effect {
 
         int thickness = (this.thickness == null) ? 1 : this.thickness.getOptionalSingle(event).orElse(1).intValue();
 
-        Object prePattern = this.prePattern.getSingle(event);
-        Pattern pattern = prePattern == null ? Utils.AIR_PATTERN : Utils.patternFrom(prePattern);
+        Pattern pattern = null;
+        if (this.prePattern != null)
+            pattern = Utils.patternFrom(this.prePattern.getSingle(event));
+        if (pattern == null)
+            pattern = Utils.AIR_PATTERN;
 
         RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, thickness));
     }
