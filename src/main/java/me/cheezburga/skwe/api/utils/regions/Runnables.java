@@ -4,12 +4,10 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.GroundFunction;
 import com.sk89q.worldedit.function.generator.FloraGenerator;
-import com.sk89q.worldedit.function.mask.ExistingBlockMask;
-import com.sk89q.worldedit.function.mask.Mask;
-import com.sk89q.worldedit.function.mask.MaskIntersection;
-import com.sk89q.worldedit.function.mask.NoiseFilter2D;
+import com.sk89q.worldedit.function.mask.*;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.function.visitor.LayerVisitor;
@@ -18,10 +16,17 @@ import com.sk89q.worldedit.math.convolution.GaussianKernel;
 import com.sk89q.worldedit.math.convolution.HeightMap;
 import com.sk89q.worldedit.math.convolution.HeightMapFilter;
 import com.sk89q.worldedit.math.noise.RandomNoise;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.Regions;
 import com.sk89q.worldedit.world.RegenOptions;
+import me.cheezburga.skwe.SkWE;
 import me.cheezburga.skwe.api.utils.Utils;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class Runnables {
 
@@ -95,10 +100,29 @@ public class Runnables {
         };
     }
 
-    public static Runnable getHollowRunnable(RegionWrapper wrapper, Pattern pattern, int thickness) {
+    @SuppressWarnings("JavaReflectionMemberAccess")
+    public static Runnable getHollowRunnable(RegionWrapper wrapper, Pattern pattern, @Nullable Mask mask, int thickness) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
-                session.hollowOutRegion(wrapper.region(), thickness, pattern);
+                if (SkWE.HAS_FAWE) {
+                    try {
+                        Method method = EditSession.class.getMethod("hollowOutRegion", Region.class, int.class, Pattern.class, Mask.class);
+                        Mask finalMask;
+                        if (mask != null) {
+                            Class<?> traverserClass = Class.forName("com.fastasyncworldedit.core.util.MaskTraverser");
+                            Constructor<?> constructor = traverserClass.getConstructor(Mask.class);
+                            Object traverser = constructor.newInstance(mask);
+                            Method setExtentMethod = traverserClass.getMethod("setNewExtent", Extent.class);
+                            setExtentMethod.invoke(traverser, session);
+                            finalMask = mask;
+                        } else {
+                            finalMask = new SolidBlockMask(session);
+                        }
+                        method.invoke(session, wrapper.region(), thickness, pattern, finalMask);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException | InstantiationException ignored) {}
+                } else {
+                    session.hollowOutRegion(wrapper.region(), thickness, pattern);
+                }
             } catch (MaxChangedBlocksException ignored) {}
         };
     }

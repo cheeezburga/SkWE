@@ -47,7 +47,7 @@ public class EffHollow extends Effect {
         if (pattern == null)
             pattern = Utils.AIR_PATTERN;
 
-        RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, thickness));
+        RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, null, thickness)); // TODO: make this accept a mask if FAWE is found
     }
 
     @SuppressWarnings("NullableProblems")
