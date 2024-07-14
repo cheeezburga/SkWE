@@ -1,8 +1,8 @@
-name: SkWE
+name: skript-worldedit
 version: '1.0'
 main: me.cheezburga.skwe.SkWE
 api-version: '1.17'
-prefix: SkWE
+prefix: skript-worldedit
 loadAfter: [WorldEdit]
 depend: [Skript, WorldEdit]
 softdepend: [FastAsyncWorldEdit]

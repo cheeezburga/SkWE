@@ -1,2 +1,2 @@
-# SkWE
-An addon for Skript which adds some FAWE syntax
+# skript-worldedit
+An addon for Skript which adds some WorldEdit syntax. See the syntax.md file for more information.

@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 public class Utils {
 
     @SuppressWarnings("deprecation")
-    public static final String PLUGIN_PREFIX = ChatColor.of("#00FFFF") + "[SkWE]" + ChatColor.RESET;
+    public static final String PLUGIN_PREFIX = ChatColor.of("#00FFFF") + "[skript-worldedit]" + ChatColor.RESET;
     public static final String PATTERN_PREFIX = "(use (world[ ]edit|we) to|world[ ]edit|we)";
     private static final java.util.regex.Pattern HEX_PATTERN = java.util.regex.Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_EXISTS = Bukkit.getPluginManager().getPlugin("Skript") != null;
