@@ -276,7 +276,7 @@ If no size is provided, the effect will default to 5
 ## Coming soon
 
 -[ ] Schematic support (saving, pasting, deleting, maybe more?)
--[ ] More region stuff (moving, contracting, shifting, etc.)
+-[ ] More region stuff (moving, contracting, shifting, creating lines/curves, etc.)
 -[ ] More flexibility with some of the already-existing region effects (e.g. choosing to adjust the region after using EffMove)
 -[ ] Generating arbitrary shapes (i.e. ones defined by a WorldEdit expression)
 -[ ] Generating forests and pumpkin patches
