@@ -39,7 +39,7 @@ public class EffSmooth extends Effect {
         if (wrapper == null)
             return;
 
-        int iterations = this.iterations.getOptionalSingle(event).orElse(1).intValue();
+        int iterations = (this.iterations == null) ? 1 : this.iterations.getOptionalSingle(event).orElse(1).intValue();
 
         Mask mask = null;
         if (preMask != null) {

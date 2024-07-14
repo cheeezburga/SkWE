@@ -68,7 +68,7 @@ public class EffMove extends Effect {
                 return;
         }
 
-        int distance = this.distance.getOptionalSingle(event).orElse(1).intValue();
+        int distance = (this.distance == null) ? 1 : this.distance.getOptionalSingle(event).orElse(1).intValue();
 
         RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), distance, ignoreAir, copyEntities, copyBiomes));
     }
