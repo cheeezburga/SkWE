@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 public class UpdateChecker {
 
     public static void checkForUpdate(String pluginVersion) {
-        Utils.log("Checking for update...");
+        Utils.log("&6Checking for update...");
         getLatestReleaseVersion(version -> {
             Version plugVer = new Version(pluginVersion);
             Version curVer = new Version(version);

@@ -50,7 +50,7 @@ public class SkWE extends JavaPlugin {
             throw new RuntimeException("Failed to load SkWE: " + e);
         }
         loadMetrics();
-        //checkUpdate(getDescription().getVersion());
+        checkUpdate(getDescription().getVersion());
     }
 
     private void loadMetrics() {
