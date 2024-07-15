@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,10 +14,17 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Place Centre")
+@Description("Places a block in the centre of a given region using a given pattern.")
+@Examples({
+    "create a block at the centre of {region} with bedrock"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffCenter extends Effect {
 
     static {
-        Skript.registerEffect(EffCenter.class, "create [a] block at [the] center of %worldeditregion% with [pattern] " + Utils.PATTERN_TYPES);
+        Skript.registerEffect(EffCenter.class, "create [a] block at [the] cent(re|er) of %worldeditregion% with [pattern] " + Utils.PATTERN_TYPES);
     }
 
     private Expression<RegionWrapper> wrapper;

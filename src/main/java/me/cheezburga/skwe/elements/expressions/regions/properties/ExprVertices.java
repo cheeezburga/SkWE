@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions.regions.properties;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -16,6 +17,15 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Vertices")
+@Description({
+        "Gets the vertices of a given region. This expression can only be used on convex polyhedral regions."
+})
+@Examples(
+        "set {vertices::*} to region vertices of {convex}"
+)
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprVertices extends SimpleExpression<Location> {
 
     static {

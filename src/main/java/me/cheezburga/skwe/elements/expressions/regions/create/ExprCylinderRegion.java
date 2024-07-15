@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions.regions.create;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -15,6 +16,15 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Cylinder")
+@Description(
+        "Creates a cylindrical region, which can be used for operations."
+)
+@Examples(
+        "set {cylinder} to a new cylindrical region at {location} with radii (5,4) and with height 10"
+)
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprCylinderRegion extends SimpleExpression<RegionWrapper> {
 
     static {

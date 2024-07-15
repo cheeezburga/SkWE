@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -11,6 +12,13 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Naturalize")
+@Description("Naturalizes a given region. This just changes the top 3 layers of blocks into grass/dirt, and the bottom layers into stone.")
+@Examples({
+    "naturalize {region}"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffNaturalize extends Effect {
 
     static {

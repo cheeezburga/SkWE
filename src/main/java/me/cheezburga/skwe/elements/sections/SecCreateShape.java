@@ -2,6 +2,7 @@ package me.cheezburga.skwe.elements.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -23,6 +24,39 @@ import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 
 import java.util.List;
 
+@Name("Shape - General")
+@Description({
+    "Creates a shape at a given location. Depending on which shape is being created, a different set of entries can be used.",
+    "",
+    "Entries that can be used with any shape:",
+    "* pattern (pattern): the pattern that the shape will be made out of (no default, and this has to be a pattern object (via the pattern expression))",
+    "* hollow (boolean): whether the shape will be hollow (default is true)",
+    "",
+    "Entries that can be used with a pyramid:",
+    "* size (integer): the size of the pyramid (no default)",
+    "",
+    "Entries that can be used with both a sphere and cylinder:",
+    "* radius (number): the radius (on the x-axis) of the shape (no default)",
+    "* radiusZ (number): the radius (on the z-axis) of the shape (this is optional, and if not provided, will default to the radius)",
+    "",
+    "Entries that can be used only with a sphere:",
+    "* radiusY (number): the radius (on the y-axis) of the shape (this is optional, and if not provided, will default to the radius)",
+    "",
+    "Entries that can be used only with a cylinder:",
+    "* height (number): the height of the cylinder (no default)",
+    "",
+    "This section is effectively the same as just using the shape effects, but might be preferable."
+})
+@Examples({
+    "create a sphere at {location}:",
+        "\tpattern: pattern of stone",
+        "\thollow: false",
+        "\tradius: 5",
+        "\tradiusY: 4",
+        "\tradiusZ: 3"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class SecCreateShape extends Section {
 
     static {

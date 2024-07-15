@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +14,13 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Overlay")
+@Description("Overlays the top level of blocks in a given region using a given pattern.")
+@Examples({
+    "overlay the top level of blocks in {region} with torch"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffOverlay extends Effect {
 
     static {

@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -11,6 +12,13 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Flora")
+@Description("Generates flora in a given region, with a given density. The default density is 5.")
+@Examples({
+    "make flora within {region} with density 10"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffFlora extends Effect {
 
     static {

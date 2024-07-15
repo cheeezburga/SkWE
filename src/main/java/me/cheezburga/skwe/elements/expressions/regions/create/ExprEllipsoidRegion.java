@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions.regions.create;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -15,6 +16,15 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Ellipsoid")
+@Description(
+        "Creates an ellipsoid region, which can be used for operations."
+)
+@Examples(
+        "set {ellipsoid} to a new ellipsoid region at {location} with radii (10,9,8)"
+)
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprEllipsoidRegion extends SimpleExpression<RegionWrapper> {
 
     static {

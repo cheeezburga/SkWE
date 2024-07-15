@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.shapes;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -15,6 +16,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
+@Name("Shape - Sphere")
+@Description({
+    "Creates a sphere using a given pattern at a certain location.",
+    "You can choose for the sphere to be hollow, and it can take a set of radii.",
+    "By default, the radius is 5, and the sphere will not be hollow."
+})
+@Examples({
+    "create a hollow sphere made out of emerald block with radii (5,4,3) at {location}"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffCreateSphere extends Effect {
 
     static {

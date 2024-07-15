@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +15,19 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Move")
+@Description({
+    "Moves the blocks in a given region in a given direction a given distance.",
+    "You can choose to only move the blocks that match a given mask too, as well as filling the left-behind area using a certain pattern.",
+    "Additionally, air can be ignored, and entities and biomes can be copied.",
+    "",
+    "By default, the distance will be 1, all blocks will be moved, no pattern will be left behind, air will not be ignored, and entities and biomes will not be copied."
+})
+@Examples({
+    "move {region} up 10 blocks and fill the area with glass block while ignoring air while copying entities while copying biomes"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffMove extends Effect {
 
     static {

@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +15,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Replace Blocks")
+@Description("Replaces blocks in a region that match a certain mask with a given pattern.")
+@Examples({
+        "use we to replace all stone in {region} with diamond ore",
+        "use we to replace all blocks in {region} that match mask \"stone,cobblestone\" with pattern \"50%%diamond_block,50%%gold_block\""
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffReplace extends Effect {
 
     static {

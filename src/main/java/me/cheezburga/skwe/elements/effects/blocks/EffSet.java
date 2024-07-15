@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +15,13 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Set Blocks")
+@Description("Sets the blocks in a region with a given pattern.")
+@Examples({
+        "use we to set blocks in {region} to \"33%%red_wool,33%blue_wool,33%green_wool\""
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffSet extends Effect {
 
     static {

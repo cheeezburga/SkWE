@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -13,6 +14,16 @@ import me.cheezburga.skwe.api.utils.regions.Runnables;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Hollow Out")
+@Description({
+    "Hollows out objects in a given region, using a given thickness and leaving behind a given pattern.",
+    "The default thickness is 1, and the default pattern is just air."
+})
+@Examples({
+    "hollow out {region} with thickness 2 leaving behind glass"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffHollow extends Effect {
 
     static {

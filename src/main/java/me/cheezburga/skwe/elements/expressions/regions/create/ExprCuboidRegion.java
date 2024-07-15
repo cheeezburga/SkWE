@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions.regions.create;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -15,6 +16,15 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Cuboid")
+@Description(
+        "Creates a cuboid region, which can be used for operations."
+)
+@Examples(
+        "set {cuboid} to a new cuboid region from {location1} to {location2}"
+)
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprCuboidRegion extends SimpleExpression<RegionWrapper> {
 
     static {

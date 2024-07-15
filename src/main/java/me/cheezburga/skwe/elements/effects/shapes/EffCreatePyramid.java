@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.effects.shapes;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -13,6 +14,17 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Shape - Pyramid")
+@Description({
+    "Creates a pyramid using a given pattern at a certain location.",
+    "You can choose for the pyramid to be hollow, and it can take a size.",
+    "By default, the size is 5, and the pyramid will not be hollow."
+})
+@Examples({
+    "create a hollow pyramid made out of gold block with size 10 at {location}"
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class EffCreatePyramid extends Effect {
 
     static {
