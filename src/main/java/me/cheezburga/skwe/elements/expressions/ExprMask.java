@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +14,16 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Mask")
+@Description(
+        "Gets a WorldEdit mask from a string or itemtype."
+)
+@Examples({
+        "set {simpleMask} to mask of stone",
+        "set {complexMask} to mask from \"stone,cobblestone,stone_bricks\""
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprMask extends SimpleExpression<MaskWrapper> {
 
     static {

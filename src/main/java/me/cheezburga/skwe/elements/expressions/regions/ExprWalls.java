@@ -1,8 +1,6 @@
 package me.cheezburga.skwe.elements.expressions.regions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
@@ -17,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 @Examples(
         "set {walls} to region walls of {cuboid}"
 )
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprWalls extends SimplePropertyExpression<RegionWrapper, RegionWrapper> {
 
     static {

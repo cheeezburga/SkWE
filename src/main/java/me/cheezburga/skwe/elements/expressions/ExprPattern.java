@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.elements.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +14,16 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Pattern")
+@Description(
+        "Gets a WorldEdit pattern from a string or itemtype."
+)
+@Examples({
+        "set {simplePattern} to pattern of stone",
+        "set {complexPattern} to pattern from \"33%%stone,33%%cobblestone,33%%stone_bricks\""
+})
+@Since("1.0.0")
+@RequiredPlugins("WorldEdit")
 public class ExprPattern extends SimpleExpression<PatternWrapper> {
 
     static {
