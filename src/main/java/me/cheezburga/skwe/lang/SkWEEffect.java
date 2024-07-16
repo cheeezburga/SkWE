@@ -3,26 +3,26 @@ package me.cheezburga.skwe.lang;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.AsyncEffect;
 import me.cheezburga.skwe.SkWE;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class SkWEEffect extends AsyncEffect {
 
-    private boolean delayed;
+    private boolean blocking;
 
-    public void setDelayed(boolean delayed) {
-        this.delayed = delayed;
+    public void setBlocking(boolean blocking) {
+        this.blocking = blocking;
     }
 
-    public boolean isDelayed() {
-        return this.delayed;
+    public boolean isBlocking() {
+        return this.blocking;
     }
 
     @Override
     @Nullable
-    protected TriggerItem walk(Event event) {
-        if (this.delayed) {
+    protected TriggerItem walk(@NotNull Event event) {
+        if (SkWE.HAS_FAWE) {
             super.walk(event);
         } else {
             execute(event);

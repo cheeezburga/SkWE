@@ -27,7 +27,7 @@ public class EffSet extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + " " + Utils.AND_WAIT);
+                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + " " + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -38,7 +38,7 @@ public class EffSet extends SkWEEffect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.wrapper = (Expression<RegionWrapper>) exprs[0];
         this.prePattern = exprs[1];
-        setDelayed(parseResult.hasTag("wait"));
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -53,11 +53,20 @@ public class EffSet extends SkWEEffect {
         Pattern pattern = Utils.patternFrom(prePattern);
         if (pattern == null) return;
 
-        Bukkit.getScheduler().runTask(SkWE.getInstance(), Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern));
+        Runnable runnable = Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern);
+        if (isBlocking()) {
+            runnable.run();
+        } else {
+            if (SkWE.HAS_FAWE) {
+                Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+            } else {
+                Bukkit.getScheduler().runTask(SkWE.getInstance(), runnable);
+            }
+        }
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug) + (isDelayed() ? " and wait" : "");
+        return "set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }
