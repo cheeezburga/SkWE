@@ -6,10 +6,18 @@ import org.bukkit.Bukkit;
 public class RunnableUtils {
 
     public static void run(Runnable runnable) {
-        if (SkWE.HAS_FAWE) {
-            Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+        run(runnable, true);
+    }
+
+    public static void run(Runnable runnable, boolean blocking) {
+        if (blocking) {
+            runnable.run();
         } else {
-            Bukkit.getScheduler().runTask(SkWE.getInstance(), runnable);
+            if (SkWE.HAS_FAWE) {
+                Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
+            } else {
+                Bukkit.getScheduler().runTask(SkWE.getInstance(), runnable);
+            }
         }
     }
 

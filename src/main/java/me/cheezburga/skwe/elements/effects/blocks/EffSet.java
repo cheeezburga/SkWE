@@ -6,12 +6,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import me.cheezburga.skwe.SkWE;
+import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.blocks.Runnables;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.lang.SkWEEffect;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,16 +52,7 @@ public class EffSet extends SkWEEffect {
         Pattern pattern = Utils.patternFrom(prePattern);
         if (pattern == null) return;
 
-        Runnable runnable = Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern);
-        if (isBlocking()) {
-            runnable.run();
-        } else {
-            if (SkWE.HAS_FAWE) {
-                Bukkit.getScheduler().runTaskAsynchronously(SkWE.getInstance(), runnable);
-            } else {
-                Bukkit.getScheduler().runTask(SkWE.getInstance(), runnable);
-            }
-        }
+        RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern), isBlocking());
     }
 
     @Override
