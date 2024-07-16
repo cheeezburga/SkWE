@@ -2,15 +2,16 @@ package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.SkWE;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.blocks.Runnables;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import me.cheezburga.skwe.lang.SkWEEffect;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,11 +23,11 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffSet extends Effect {
+public class EffSet extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES);
+                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + " " + Utils.AND_WAIT);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -37,6 +38,7 @@ public class EffSet extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.wrapper = (Expression<RegionWrapper>) exprs[0];
         this.prePattern = exprs[1];
+        setDelayed(parseResult.hasTag("wait"));
         return true;
     }
 
@@ -51,11 +53,11 @@ public class EffSet extends Effect {
         Pattern pattern = Utils.patternFrom(prePattern);
         if (pattern == null) return;
 
-        RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern));
+        Bukkit.getScheduler().runTask(SkWE.getInstance(), Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern));
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug);
+        return "set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug) + (isDelayed() ? " and wait" : "");
     }
 }
