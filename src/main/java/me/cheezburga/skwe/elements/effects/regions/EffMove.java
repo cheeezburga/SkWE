@@ -2,7 +2,6 @@ package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -12,6 +11,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,18 +28,13 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffMove extends Effect {
+public class EffMove extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffMove.class, "move [mask:blocks that match " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregion% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and fill the area with " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air] [entities:while copying entities] [biomes:while copying biomes]");
+        Skript.registerEffect(EffMove.class, "move [mask:blocks that match " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregion% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and fill the area with " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air] [entities:while copying entities] [biomes:while copying biomes]" + Utils.LAZILY);
     }
 
-    private static final int UP = 0;
-    private static final int DOWN = 1;
-    private static final int NORTH = 2;
-    private static final int SOUTH = 3;
-    private static final int EAST = 4;
-    private static final int WEST = 5;
+    private static final int UP = 0, DOWN = 1, NORTH = 2, SOUTH = 3, EAST = 4, WEST = 5;
 
     private Expression<?> preMask;
     private Expression<RegionWrapper> wrapper;
@@ -59,6 +54,7 @@ public class EffMove extends Effect {
         ignoreAir = parseResult.hasTag("air");
         copyEntities = parseResult.hasTag("entities");
         copyBiomes = parseResult.hasTag("biomes");
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -84,16 +80,16 @@ public class EffMove extends Effect {
 
         int distance = (this.distance == null) ? 1 : this.distance.getOptionalSingle(event).orElse(1).intValue();
 
-        RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), distance, ignoreAir, copyEntities, copyBiomes));
+        RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), distance, ignoreAir, copyEntities, copyBiomes), isBlocking());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         if (preMask != null)
-            return "move blocks in " + wrapper.toString(event, debug) + " that match " + preMask.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "");
+            return "move blocks in " + wrapper.toString(event, debug) + " that match " + preMask.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "") + (isBlocking() ? "" : " lazily");
         else
-            return "move " + wrapper.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "");
+            return "move " + wrapper.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "") + (isBlocking() ? "" : " lazily");
     }
 
     private Direction getDirection(int mark) {

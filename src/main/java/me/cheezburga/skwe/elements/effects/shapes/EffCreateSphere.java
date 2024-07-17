@@ -2,7 +2,6 @@ package me.cheezburga.skwe.elements.effects.shapes;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -10,6 +9,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +27,11 @@ import java.util.Arrays;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffCreateSphere extends Effect {
+public class EffCreateSphere extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreateSphere.class,
-                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] at %locations%");
+                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -46,6 +46,7 @@ public class EffCreateSphere extends Effect {
         prePattern = exprs[0];
         radius = (Expression<Number>) exprs[1];
         locations = (Expression<Location>) exprs[2];
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -69,13 +70,13 @@ public class EffCreateSphere extends Effect {
         }
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ));
+            RunnableUtils.run(Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ), isBlocking());
         }
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (hollow ? "hollow " : "") + "sphere with radius " + radius.toString(event, debug) + " at locations " + locations.toString(event, debug);
+        return "create a " + (hollow ? "hollow " : "") + "sphere with radius " + radius.toString(event, debug) + " at locations " + locations.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }

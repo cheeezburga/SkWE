@@ -33,7 +33,7 @@ public class Utils {
     public static final String MASK_TYPES_OPTIONAL = "%-string/itemtype/worldeditmask%";
     public static final String PATTERN_TYPES = "%string/itemtype/worldeditpattern%";
     public static final String PATTERN_TYPES_OPTIONAL = "%-string/itemtype/worldeditpattern%";
-    public static final String LAZILY = "[:lazily]";
+    public static final String LAZILY = " [:lazily]";
 
     public static final Pattern AIR_PATTERN = patternFrom("air");
 

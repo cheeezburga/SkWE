@@ -2,7 +2,6 @@ package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -11,6 +10,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffSmooth extends Effect {
+public class EffSmooth extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% time[s]] [with mask " + Utils.MASK_TYPES_OPTIONAL + "]");
+        Skript.registerEffect(EffSmooth.class, "smooth %worldeditregion% [%-number% time[s]] [with mask " + Utils.MASK_TYPES_OPTIONAL + "]" + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -40,6 +40,7 @@ public class EffSmooth extends Effect {
         wrapper = (Expression<RegionWrapper>) exprs[0];
         iterations = (Expression<Number>) exprs[1];
         preMask = exprs[2];
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -60,12 +61,12 @@ public class EffSmooth extends Effect {
                 return;
         }
 
-        RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, mask));
+        RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, mask), isBlocking());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "smooth " + wrapper.toString(event, debug) + " " + (iterations != null ? iterations.toString(event, debug) : "1") + " times" + (preMask != null ? " with mask " + preMask.toString(event, debug) : "");
+        return "smooth " + wrapper.toString(event, debug) + " " + (iterations != null ? iterations.toString(event, debug) : "1") + " times" + (preMask != null ? " with mask " + preMask.toString(event, debug) : "") + (isBlocking() ? "" : " lazily");
     }
 }

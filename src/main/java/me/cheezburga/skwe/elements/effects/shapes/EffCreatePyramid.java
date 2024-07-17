@@ -10,6 +10,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -25,11 +26,11 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffCreatePyramid extends Effect {
+public class EffCreatePyramid extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreatePyramid.class,
-                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%");
+                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -44,6 +45,7 @@ public class EffCreatePyramid extends Effect {
         prePattern = exprs[0];
         size = (Expression<Number>) exprs[1];
         locations = (Expression<Location>) exprs[2];
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -57,13 +59,13 @@ public class EffCreatePyramid extends Effect {
         int s = size.getOptionalSingle(event).orElse(5).intValue(); //TODO: replace with config, or just fail
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getPyramidRunnable(loc, pattern, hollow, s));
+            RunnableUtils.run(Runnables.getPyramidRunnable(loc, pattern, hollow, s), isBlocking());
         }
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (hollow ? "hollow " : "") + "pyramid with size " + size.toString(event, debug) + " at locations " + locations.toString(event, debug);
+        return "create a " + (hollow ? "hollow " : "") + "pyramid with size " + size.toString(event, debug) + " at locations " + locations.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }

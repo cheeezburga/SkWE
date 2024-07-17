@@ -2,13 +2,14 @@ package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffNaturalize extends Effect {
+public class EffNaturalize extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffNaturalize.class, "naturalize %worldeditregion%");
+        Skript.registerEffect(EffNaturalize.class, "naturalize %worldeditregion%" + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -31,6 +32,7 @@ public class EffNaturalize extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrapper = (Expression<RegionWrapper>) exprs[0];
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -41,12 +43,12 @@ public class EffNaturalize extends Effect {
         if (wrapper == null)
             return;
 
-        RunnableUtils.run(Runnables.getNaturalizeRunnable(wrapper));
+        RunnableUtils.run(Runnables.getNaturalizeRunnable(wrapper), isBlocking());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "naturalize " + wrapper.toString(event, debug);
+        return "naturalize " + wrapper.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }

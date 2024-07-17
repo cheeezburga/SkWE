@@ -11,6 +11,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.blocks.Runnables;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -23,12 +24,12 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffReplace extends Effect {
+public class EffReplace extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffReplace.class,
-                Utils.PATTERN_PREFIX + " replace [all] blocks in %worldeditregion% that match [mask] " + Utils.MASK_TYPES + " with [pattern] " + Utils.PATTERN_TYPES,
-        Utils.PATTERN_PREFIX + " replace all " + Utils.MASK_TYPES + " in %worldeditregion% with " + Utils.PATTERN_TYPES);
+                Utils.PATTERN_PREFIX + " replace [all] blocks in %worldeditregion% that match [mask] " + Utils.MASK_TYPES + " with [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY,
+        Utils.PATTERN_PREFIX + " replace all " + Utils.MASK_TYPES + " in %worldeditregion% with " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -40,6 +41,7 @@ public class EffReplace extends Effect {
         this.wrapper = (Expression<RegionWrapper>) (matchedPattern == 0 ? exprs[0] : exprs[1]);
         this.preMask = matchedPattern == 0 ? exprs[1] : exprs[0];
         this.prePattern = exprs[2];
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -57,11 +59,11 @@ public class EffReplace extends Effect {
         Object preMask = this.preMask.getSingle(event);
         if (preMask == null) return;
 
-        RunnableUtils.run(Runnables.getReplaceRunnable(wrapper.world(), wrapper.region(), pattern, preMask));
+        RunnableUtils.run(Runnables.getReplaceRunnable(wrapper.world(), wrapper.region(), pattern, preMask), isBlocking());
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "replace blocks in " + wrapper.toString(event, debug) + " that match mask " + preMask.toString(event, debug) + " with pattern " + prePattern.toString(event, debug);
+        return "replace blocks in " + wrapper.toString(event, debug) + " that match mask " + preMask.toString(event, debug) + " with pattern " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }

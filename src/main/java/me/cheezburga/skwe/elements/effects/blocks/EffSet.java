@@ -26,7 +26,7 @@ public class EffSet extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + " " + Utils.LAZILY);
+                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;

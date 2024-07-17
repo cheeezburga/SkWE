@@ -2,13 +2,14 @@ package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
-public class EffRegenerate extends Effect {
+public class EffRegenerate extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffRegenerate.class, "regen[erate] %worldeditregion% [with seed %-number%] [biomes:while regen[erat]ing biomes]");
+        Skript.registerEffect(EffRegenerate.class, "regen[erate] %worldeditregion% [with seed %-number%] [biomes:while regen[erat]ing biomes]" + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -38,6 +39,7 @@ public class EffRegenerate extends Effect {
         wrapper = (Expression<RegionWrapper>) exprs[0];
         seed = (Expression<Number>) exprs[1];
         regenBiomes = parseResult.hasTag("biomes");
+        setBlocking(!parseResult.hasTag("lazily"));
         return true;
     }
 
@@ -50,12 +52,12 @@ public class EffRegenerate extends Effect {
 
         @Nullable Long seed = this.seed != null ? (Long) this.seed.getSingle(event) : null;
 
-        RunnableUtils.run(Runnables.getRegenRunnable(wrapper, seed, regenBiomes));
+        RunnableUtils.run(Runnables.getRegenRunnable(wrapper, seed, regenBiomes), isBlocking());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "regen " + wrapper.toString(event, debug) + (seed != null ? " with seed " + seed.toString(event, debug) : "") + (regenBiomes ? " while regenerating biomes" : "");
+        return "regen " + wrapper.toString(event, debug) + (seed != null ? " with seed " + seed.toString(event, debug) : "") + (regenBiomes ? " while regenerating biomes" : "") + (isBlocking() ? "" : " lazily");
     }
 }
