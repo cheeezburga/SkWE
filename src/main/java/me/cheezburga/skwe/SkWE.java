@@ -34,12 +34,12 @@ public class SkWE extends JavaPlugin {
                 try {
                     Class.forName("com.fastasyncworldedit.core.Fawe");
                     HAS_FAWE = true;
-                    Utils.log("&a  - Found FAWE!");
+                    Utils.log("&2  - Found FAWE!");
                 } catch (ClassNotFoundException e) {
                     HAS_FAWE = false;
-                    Utils.log("&a  - Found WorldEdit! Syntax will still be enabled, but might be more limited than a server using FAWE.");
+                    Utils.log("&2  - Found WorldEdit! Syntax will still be enabled, but might be more limited than a server using FAWE.");
                 }
-                Utils.log("&a  - Finished enabling SkWE!");
+                Utils.log("&2  - Finished enabling SkWE!");
                 if (HAS_FAWE)
                     preLoadRelighterFactory();
             } else { // should never get to this, as server shouldn't try enabling if the dependency isn't found
@@ -69,7 +69,7 @@ public class SkWE extends JavaPlugin {
             try {
                 Method relighterMethod = platform.getClass().getMethod("getRelighterFactory");
                 Object relighterFactory = relighterMethod.invoke(platform);
-                Utils.log("&a  - Found FAWE's relighter factory!");
+                Utils.log("&2  - Found FAWE's relighter factory!");
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 Utils.log("&c  - Failed to load FAWE's relighter with exception " + e.getMessage());
             }

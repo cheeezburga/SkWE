@@ -24,16 +24,16 @@ import java.util.function.Consumer;
 public class UpdateChecker {
 
     public static void checkForUpdate(String pluginVersion) {
-        Utils.log("&6Checking for update...");
+        Utils.log("&aChecking for update...");
         getLatestReleaseVersion(version -> {
             Version plugVer = new Version(pluginVersion);
             Version curVer = new Version(version);
             if (curVer.compareTo(plugVer) <= 0) {
-                Utils.log("&aSkCheez is up to date!");
+                Utils.log("&2skript-worldedit is up to date!");
             } else {
-                Utils.log("&cSkCheez is not up to date!");
+                Utils.log("&cskript-worldedit is not up to date!");
                 Utils.log(" - Current version: &cv%s", pluginVersion);
-                Utils.log(" - Available update: &av%s",version);
+                Utils.log(" - Available update: &2v%s",version);
                 Utils.log(" - Download available at: https://github.com/cheeezburga/SkWE/releases");
             }
         });
