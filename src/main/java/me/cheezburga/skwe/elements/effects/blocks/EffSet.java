@@ -1,7 +1,11 @@
 package me.cheezburga.skwe.elements.effects.blocks;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -26,7 +30,7 @@ public class EffSet extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                 Utils.PATTERN_PREFIX + " set blocks in %worldeditregion% to " + Utils.PATTERN_TYPES + Utils.LAZILY);
+                 Utils.PATTERN_PREFIX + " set [the] blocks in %worldeditregions% to [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;

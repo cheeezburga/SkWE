@@ -1,8 +1,11 @@
 package me.cheezburga.skwe.elements.effects.shapes;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
-import ch.njol.skript.lang.Effect;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
@@ -30,7 +33,7 @@ public class EffCreatePyramid extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreatePyramid.class,
-                "create [a] [:hollow] pyramid ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%" + Utils.LAZILY);
+                "create [a] [:hollow] pyramid ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;

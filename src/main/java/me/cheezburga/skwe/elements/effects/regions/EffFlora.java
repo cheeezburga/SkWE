@@ -1,7 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -23,16 +27,16 @@ import org.jetbrains.annotations.Nullable;
 public class EffFlora extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffFlora.class, "make flora within %worldeditregion% [with density %-number%]" + Utils.LAZILY);
+        Skript.registerEffect(EffFlora.class, "(create|place|make|generate) flora [with]in %worldeditregions% [with density %-number%]" + Utils.LAZILY);
     }
 
-    private Expression<RegionWrapper> wrapper;
+    private Expression<RegionWrapper> wrappers;
     private Expression<Number> density;
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        wrapper = (Expression<RegionWrapper>) exprs[0];
+        wrappers = (Expression<RegionWrapper>) exprs[0];
         density = (Expression<Number>) exprs[1];
         setBlocking(!parseResult.hasTag("lazily"));
         return true;
@@ -41,18 +45,16 @@ public class EffFlora extends SkWEEffect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null)
-            return;
-
         double density = (this.density == null) ? 5 : this.density.getOptionalSingle(event).orElse(5).doubleValue();
 
-        RunnableUtils.run(Runnables.getFloraRunnable(wrapper, density), isBlocking());
+        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+            RunnableUtils.run(Runnables.getFloraRunnable(wrapper, density), isBlocking());
+        }
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "make flora within " + wrapper.toString(event, debug) + " with density " + (density != null ? density.toString(event, debug) : "5") + (isBlocking() ? "" : " lazily");
+        return "generate flora within " + wrappers.toString(event, debug) + " with density " + (density != null ? density.toString(event, debug) : "5") + (isBlocking() ? "" : " lazily");
     }
 }

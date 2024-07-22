@@ -28,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
 @RequiredPlugins("WorldEdit")
 public class ExprVertices extends SimpleExpression<Location> {
 
+    // TODO: implement a changer for this expression, to add or remove a location from a convex regions vertices (should only support add and remove changers)
+
     static {
         Skript.registerExpression(ExprVertices.class, Location.class, ExpressionType.COMBINED,
                 "[the] region vert(ices|exes) of %worldeditregion%", "[the] %worldeditregion%'[s] vert(ices|exes)");

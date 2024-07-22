@@ -1,7 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -24,16 +28,16 @@ import org.jetbrains.annotations.Nullable;
 public class EffWalls extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffWalls.class, "create [the] walls (of|around) %worldeditregion% ([made] out of|with [pattern]) " + Utils.PATTERN_TYPES + Utils.LAZILY);
+        Skript.registerEffect(EffWalls.class, "create [the] walls (of|around) %worldeditregions% ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
-    private Expression<RegionWrapper> wrapper;
+    private Expression<RegionWrapper> wrappers;
     private Expression<?> prePattern;
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        wrapper = (Expression<RegionWrapper>) exprs[0];
+        wrappers = (Expression<RegionWrapper>) exprs[0];
         prePattern = exprs[1];
         setBlocking(!parseResult.hasTag("lazily"));
         return true;
@@ -42,20 +46,18 @@ public class EffWalls extends SkWEEffect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null)
-            return;
-
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
         if (pattern == null)
             return;
 
-        RunnableUtils.run(Runnables.getWallsRunnable(wrapper, pattern), isBlocking());
+        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+            RunnableUtils.run(Runnables.getWallsRunnable(wrapper, pattern), isBlocking());
+        }
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create walls around " + wrapper.toString(event, debug) + " with pattern " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return "create walls around " + wrappers.toString(event, debug) + " with pattern " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
     }
 }

@@ -1,7 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -27,17 +31,17 @@ import org.jetbrains.annotations.Nullable;
 public class EffHollow extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffHollow.class, "hollow out %worldeditregion% [with thickness %-number%] [(with pattern|leaving behind) " + Utils.PATTERN_TYPES_OPTIONAL + "]" + Utils.LAZILY);
+        Skript.registerEffect(EffHollow.class, "hollow out %worldeditregions% [with thickness %-number%] [and] [(with pattern|leaving behind) " + Utils.PATTERN_TYPES_OPTIONAL + "]" + Utils.LAZILY);
     }
 
-    private Expression<RegionWrapper> wrapper;
+    private Expression<RegionWrapper> wrappers;
     private Expression<Number> thickness;
     private Expression<?> prePattern;
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        wrapper = (Expression<RegionWrapper>) exprs[0];
+        wrappers = (Expression<RegionWrapper>) exprs[0];
         thickness = (Expression<Number>) exprs[1];
         prePattern = exprs[2];
         setBlocking(!parseResult.hasTag("lazily"));
@@ -47,10 +51,6 @@ public class EffHollow extends SkWEEffect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null)
-            return;
-
         int thickness = (this.thickness == null) ? 1 : this.thickness.getOptionalSingle(event).orElse(1).intValue();
 
         Pattern pattern = null;
@@ -59,12 +59,15 @@ public class EffHollow extends SkWEEffect {
         if (pattern == null)
             pattern = Utils.AIR_PATTERN;
 
-        RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, null, thickness), isBlocking()); // TODO: make this accept a mask if FAWE is found
+        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+            RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, null, thickness), isBlocking()); // TODO: make this accept a mask if FAWE is found
+        }
+
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "hollow out " + wrapper.toString(event, debug) + " with thickness " + (thickness != null ? thickness.toString(event, debug) : "1") + (prePattern != null ? " with pattern " + prePattern.toString(event, debug) : "") + (isBlocking() ? "" : " lazily");
+        return "hollow out " + wrappers.toString(event, debug) + " with thickness " + (thickness != null ? thickness.toString(event, debug) : "1") + (prePattern != null ? " with pattern " + prePattern.toString(event, debug) : "") + (isBlocking() ? "" : " lazily");
     }
 }
