@@ -1,5 +1,6 @@
 package me.cheezburga.skwe.elements.expressions.regions.properties;
 
+import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -9,6 +10,17 @@ import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Dimensions")
+@Description({
+        "Gets the dimensions of a given region."
+})
+@Examples({
+        "set {_height} to height of {region}",
+        "set {_length} to length of {region}",
+        "set {_width} to width of {region}"
+})
+@Since("1.0.2")
+@RequiredPlugins("WorldEdit")
 public class ExprDimensions extends SimplePropertyExpression<RegionWrapper, Number> {
 
     static {
