@@ -1,5 +1,6 @@
 package me.cheezburga.skwe.api.utils.regions;
 
+import com.google.common.collect.ImmutableList;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
@@ -20,6 +21,8 @@ import com.sk89q.worldedit.math.convolution.GaussianKernel;
 import com.sk89q.worldedit.math.convolution.HeightMap;
 import com.sk89q.worldedit.math.convolution.HeightMapFilter;
 import com.sk89q.worldedit.math.noise.RandomNoise;
+import com.sk89q.worldedit.regions.ConvexPolyhedralRegion;
+import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.Regions;
 import com.sk89q.worldedit.world.RegenOptions;
@@ -32,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Runnables {
 
@@ -162,6 +167,32 @@ public class Runnables {
                     replace = new RegionMaskingFilter(session.getMask(), replace);
                 RegionVisitor visitor = new RegionVisitor(wrapper.region(), replace);
                 Operations.completeLegacy(visitor);
+            } catch (MaxChangedBlocksException ignored) {}
+        };
+    }
+
+    public static Runnable getLineRunnable(RegionWrapper wrapper, Pattern pattern, int thickness, boolean hollow) {
+        return () -> {
+            try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
+                List<BlockVector3> vectors = null;
+                if (wrapper.region() instanceof CuboidRegion cuboid) {
+                    vectors = ImmutableList.of(cuboid.getPos1(), cuboid.getPos2());
+                } else if (wrapper.region() instanceof ConvexPolyhedralRegion convex) {
+                    vectors = ImmutableList.copyOf(convex.getVertices());
+                }
+                if (vectors != null)
+                    session.drawLine(pattern, vectors, thickness, !hollow);
+            } catch (MaxChangedBlocksException ignored) {}
+        };
+    }
+
+    public static Runnable getCurveRunnable(RegionWrapper wrapper, Pattern pattern, int thickness, boolean hollow) {
+        return () -> {
+            try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
+                if (wrapper.region() instanceof ConvexPolyhedralRegion convex) {
+                    List<BlockVector3> vectors = new ArrayList<>(convex.getVertices());
+                    session.drawSpline(pattern, vectors, 0, 0, 0, 10, thickness, !hollow);
+                }
             } catch (MaxChangedBlocksException ignored) {}
         };
     }
