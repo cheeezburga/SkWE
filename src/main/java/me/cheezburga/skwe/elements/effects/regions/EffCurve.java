@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffCurve extends SkWEEffect {
 
     static {
+        // TODO: make this not rely on a region. should be able to make it accept just locations as well?
         Skript.registerEffect(EffCurve.class,
                 "(create|place|make|generate) [a|the] [:hollow] (curve|spline) (across|of|using) %worldeditregions% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%] " + Utils.LAZILY,
                 "(create|place|make|generate) %worldeditregions%'[s] [:hollow] (curve|spline) (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%] " + Utils.LAZILY);

@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffBiome extends SkWEEffect {
 
     static {
+        // TODO: add the ability to set the biome at locations as well? would just create a cuboid region with pos,pos
         Skript.registerEffect(EffBiome.class, "set biome of %worldeditregions% to %biome%" + Utils.LAZILY);
     }
 

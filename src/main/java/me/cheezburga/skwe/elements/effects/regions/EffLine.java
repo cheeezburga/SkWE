@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffLine extends SkWEEffect {
 
     static {
+        // TODO: make this not rely on a region. should be able to make it accept just locations as well?
         Skript.registerEffect(EffLine.class,
                 "(create|place|make|generate) [a|the] [:hollow] line (across|of|using) %worldeditregions% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%] " + Utils.LAZILY,
                 "(create|place|make|generate) %worldeditregions%'[s] [:hollow] line (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%] " + Utils.LAZILY);
