@@ -6,11 +6,15 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.Extent;
 import com.sk89q.worldedit.function.GroundFunction;
+import com.sk89q.worldedit.function.RegionFunction;
+import com.sk89q.worldedit.function.RegionMaskingFilter;
+import com.sk89q.worldedit.function.biome.BiomeReplace;
 import com.sk89q.worldedit.function.generator.FloraGenerator;
 import com.sk89q.worldedit.function.mask.*;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.function.visitor.LayerVisitor;
+import com.sk89q.worldedit.function.visitor.RegionVisitor;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.convolution.GaussianKernel;
 import com.sk89q.worldedit.math.convolution.HeightMap;
@@ -19,6 +23,7 @@ import com.sk89q.worldedit.math.noise.RandomNoise;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.Regions;
 import com.sk89q.worldedit.world.RegenOptions;
+import com.sk89q.worldedit.world.biome.BiomeType;
 import me.cheezburga.skwe.SkWE;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.Bukkit;
@@ -145,6 +150,18 @@ public class Runnables {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
                 session.naturalizeCuboidBlocks(wrapper.region());
+            } catch (MaxChangedBlocksException ignored) {}
+        };
+    }
+
+    public static Runnable getBiomeRunnable(RegionWrapper wrapper, BiomeType biome) {
+        return () -> {
+            try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
+                RegionFunction replace = new BiomeReplace(session, biome);
+                if (session.getMask() != null)
+                    replace = new RegionMaskingFilter(session.getMask(), replace);
+                RegionVisitor visitor = new RegionVisitor(wrapper.region(), replace);
+                Operations.completeLegacy(visitor);
             } catch (MaxChangedBlocksException ignored) {}
         };
     }
