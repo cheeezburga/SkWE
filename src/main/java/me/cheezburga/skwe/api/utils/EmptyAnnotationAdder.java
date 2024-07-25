@@ -56,6 +56,7 @@ public class EmptyAnnotationAdder {
             boolean modified = false;
 
             for (ClassOrInterfaceDeclaration c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
+                // TODO: change this to look for all skript lang classes
                 if (c.getExtendedTypes().stream().anyMatch(et -> et.getNameAsString().equals("SkWEEffect") || et.getNameAsString().equals("Expression"))) {
                     if (addAnnotations(c)) {
                         modified = true;
