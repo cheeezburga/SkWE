@@ -21,12 +21,8 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Biome")
-@Description({
-        "Sets the biome of given region."
-})
-@Examples({
-        "set biome of {region} to windswept hills"
-})
+@Description("Sets the biome of given region.")
+@Examples("set biome of {region} to (random element out of all biomes)")
 @Since("1.0.3")
 @RequiredPlugins("WorldEdit")
 public class EffBiome extends SkWEEffect {
