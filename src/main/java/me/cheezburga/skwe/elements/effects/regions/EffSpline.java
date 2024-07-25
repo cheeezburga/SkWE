@@ -22,7 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Name("Create Spline")
-@Description("Create a spline using a given region. This effect only works with convex polyhedral regions.")
+@Description({
+        "Create a spline using a set of locations. The order of the locations in this effect matter.",
+        "A rigid spline will create straight lines from location to location, whereas a non-rigid spline will create a curved line which goes through all the locations."
+})
 @Examples("create a hollow spline using {locations::*} with pattern \"50%%quartz_block,50%%quartz_bricks\" and with thickness 2")
 @Since("1.0.3")
 @RequiredPlugins("WorldEdit")
