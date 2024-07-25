@@ -8,17 +8,28 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.nodeTypes.NodeWithSimpleName;
 import com.github.javaparser.printer.lexicalpreservation.LexicalPreservingPrinter;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 public class EmptyAnnotationAdder {
+
     private static final Map<String, String> ANNOTATIONS_MAP = new LinkedHashMap<>();
+    private static final Set<String> TARGET_CLASSES = Set.of("SkWEEffect", "Expression", "PropertyExpression", "SimplePropertyExpression", "Condition", "PropertyCondition");
+    private static final Set<String> PREFIXES = Set.of("Eff", "Expr", "Cond");
 
     static {
         ANNOTATIONS_MAP.put("Name", "");
@@ -56,8 +67,8 @@ public class EmptyAnnotationAdder {
             boolean modified = false;
 
             for (ClassOrInterfaceDeclaration c : cu.findAll(ClassOrInterfaceDeclaration.class)) {
-                // TODO: change this to look for all skript lang classes
-                if (c.getExtendedTypes().stream().anyMatch(et -> et.getNameAsString().equals("SkWEEffect") || et.getNameAsString().equals("Expression"))) {
+                if (c.getExtendedTypes().stream().map(NodeWithSimpleName::getNameAsString).anyMatch(TARGET_CLASSES::contains)
+                        && PREFIXES.stream().anyMatch(prefix -> c.getNameAsString().startsWith(prefix))) {
                     if (addAnnotations(c)) {
                         modified = true;
                     }
