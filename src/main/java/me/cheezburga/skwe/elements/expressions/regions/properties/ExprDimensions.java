@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprDimensions extends SimplePropertyExpression<RegionWrapper, Number> {
 
     static {
-        register(ExprDimensions.class, Number.class, "(0:height|1:length|2:width)", "worldeditregions");
+        register(ExprDimensions.class, Number.class, "region (0:height|1:length|2:width)", "worldeditregions");
     }
 
     private static final int HEIGHT = 0, LENGTH = 1, WIDTH = 2;
