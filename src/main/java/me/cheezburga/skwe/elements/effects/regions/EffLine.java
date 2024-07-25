@@ -1,6 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
@@ -15,6 +20,11 @@ import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Create Line")
+@Description("Create a line using a given region. This effect only works with cuboid and convex polyhedral regions.")
+@Examples("create the line of {region} with pattern \"50%%quartz_block,50%%quartz_bricks\"")
+@Since("1.0.3")
+@RequiredPlugins("WorldEdit")
 public class EffLine extends SkWEEffect {
 
     static {

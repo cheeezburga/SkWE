@@ -1,6 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
@@ -14,6 +19,11 @@ import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Create Spline")
+@Description("Create a spline using a given region. This effect only works with convex polyhedral regions.")
+@Examples("create the hollow spline of {convex} with pattern \"50%%quartz_block,50%%quartz_bricks\" and with thickness 2")
+@Since("1.0.3")
+@RequiredPlugins("WorldEdit")
 public class EffCurve extends SkWEEffect {
 
     static {
