@@ -126,12 +126,12 @@ public class Utils {
                         return SkWE.HAS_FAWE ? ((AbstractFactory<Mask>) WorldEdit.getInstance().getMaskFactory()).parseFromInput(meta.getBlockData(material).getAsString(), context) :
                                 WorldEdit.getInstance().getMaskFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
                 }
+            } else if (o instanceof MaskWrapper wrapper) {
+                return maskFrom(wrapper.asString(), context);
             } else if (o instanceof Mask mask) {
                 return mask;
-            } else if (o instanceof MaskWrapper wrapper) {
-                return wrapper.mask();
             }
-        } catch (InputParseException e) { return null; }
+        } catch (InputParseException ignored) {}
         return null;
     }
 
