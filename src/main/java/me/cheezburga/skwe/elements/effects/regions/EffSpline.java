@@ -33,7 +33,7 @@ public class EffSpline extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSpline.class,
-                "(create|place|make|generate) [a] [:hollow] [rigid:rigid|straight] (curve|spline|line) (with|using|from) %locations% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%] " + Utils.LAZILY);
+                "(create|place|make|generate) [a] [:hollow] [rigid:rigid|straight] (curve|spline|line) (with|using|from) %locations% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%]" + Utils.LAZILY);
     }
 
     private Expression<Location> locs;
