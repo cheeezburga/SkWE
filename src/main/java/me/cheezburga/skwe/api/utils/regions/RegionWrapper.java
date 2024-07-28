@@ -4,12 +4,10 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.mask.Mask;
-import com.sk89q.worldedit.regions.ConvexPolyhedralRegion;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.CylinderRegion;
-import com.sk89q.worldedit.regions.EllipsoidRegion;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.*;
 import com.sk89q.worldedit.util.Countable;
+import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.World;
@@ -33,6 +31,33 @@ public record RegionWrapper(Region region, World world) {
         return "unknown";
     }
 
+    public void contract(Direction direction, int distance, int reverseDistance) {
+        BlockVector3 vector = direction.toBlockVector();
+        try {
+            this.region.contract(vector.multiply(distance), vector.multiply(-reverseDistance));
+        } catch (RegionOperationException e) {
+            Utils.log("&cTried expanding a region but ran into an exception: " + e.getMessage());
+        }
+    }
+
+    public void expand(Direction direction, int distance, int reverseDistance) {
+        BlockVector3 vector = direction.toBlockVector();
+        try {
+            this.region.expand(vector.multiply(distance), vector.multiply(-reverseDistance));
+        } catch (RegionOperationException e) {
+            Utils.log("&cTried expanding a region but ran into an exception: " + e.getMessage());
+        }
+    }
+
+    public void expandVert() {
+        int height = BukkitAdapter.adapt(world).getMaxY() - BukkitAdapter.adapt(world).getMinY();
+        try {
+            this.region.expand(BlockVector3.at(0,height,0), BlockVector3.at(0,-height,0));
+        } catch (RegionOperationException e) {
+            Utils.log("&cTried expanding a region but ran into an exception: " + e.getMessage());
+        }
+    }
+
     public int countBlocks(Object preMask) {
         try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world()))) {
             Mask mask = Utils.maskFrom(preMask, Utils.contextFrom(session, world()));
@@ -51,8 +76,6 @@ public record RegionWrapper(Region region, World world) {
         }
         return map;
     }
-
-
 
     @Override
     public String toString() {
