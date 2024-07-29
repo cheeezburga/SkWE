@@ -1,6 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -10,6 +15,14 @@ import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Expand/Contract")
+@Description({
+        "Makes a region larger or smaller in a given direction by a given amount. Optionally takes an opposite amount to expand the region in the other direction.",
+        "Regions can also be expanded vertically, which makes them span from the min to the max of the world they're in."
+})
+@Examples("expand {region} up by 10 blocks and 3 in opposite direction")
+@Since("1.0.4")
+@RequiredPlugins("WorldEdit")
 public class EffExpandContract extends SkWEEffect {
 
     static {

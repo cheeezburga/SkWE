@@ -1,6 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -9,6 +14,11 @@ import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Region - Inset/Outset")
+@Description("Insets or outsets a region by a given number of blocks. Can optionally only perform the operation vertically (up and down) or horizontally (north, south, east, and west).")
+@Examples("outset {region} by 10 blocks")
+@Since("1.0.4")
+@RequiredPlugins("WorldEdit")
 public class EffInsetOutset extends SkWEEffect {
 
     static {
