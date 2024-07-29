@@ -78,11 +78,11 @@ public record RegionWrapper(Region region, World world) {
         return -1;
     }
 
-    public Map<BlockData, Number> getDistribution(boolean separateStates) {
-        Map<BlockData, Number> map = new HashMap<>();
+    public Map<String, Number> getDistribution(boolean separateStates) { // the key is a string which represents a block data
+        Map<String, Number> map = new HashMap<>();
         try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(world()))) {
             for (Countable<BlockState> countable : session.getBlockDistribution(region(), separateStates)) {
-                map.put(BukkitAdapter.adapt(countable.getID()), countable.getAmount());
+                map.put(BukkitAdapter.adapt(countable.getID()).getAsString(false), countable.getAmount());
             }
         }
         return map;
@@ -90,11 +90,10 @@ public record RegionWrapper(Region region, World world) {
 
     @Override
     public String toString() {
-        return getRegionType() + " region in world " + this.world.getName();
+        return getRegionType() + " region in world \"" + this.world.getName() + "\"";
     }
 
     public String toVariableString() {
-        // TODO: change this to actually return a proper variable string
-        return toString();
+        return getRegionType() + "Region;world=" + this.world.getName() + ";distribution=" + getDistribution(true);
     }
 }
