@@ -5,7 +5,8 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.RegionOperationException;
 import com.sk89q.worldedit.util.Countable;
 import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
@@ -16,19 +17,29 @@ import org.bukkit.block.data.BlockData;
 import java.util.HashMap;
 import java.util.Map;
 
+import static me.cheezburga.skwe.api.utils.regions.Utils.REGION_TYPES;
+import static me.cheezburga.skwe.api.utils.regions.Utils.getChangesForEachDir;
+
 public record RegionWrapper(Region region, World world) {
 
     private String getRegionType() {
-        if (this.region instanceof CuboidRegion) {
-            return "cuboid";
-        } else if (this.region instanceof CylinderRegion) {
-            return "cylinder";
-        } else if (this.region instanceof EllipsoidRegion) {
-            return "ellipsoid";
-        } else if (this.region instanceof ConvexPolyhedralRegion) {
-            return "convex polyhedral";
+        return REGION_TYPES.getOrDefault(this.region.getClass(), "unknown");
+    }
+
+    public void inset(int distance, int direction) { // dir = 1:vertical/2:horizontal
+        try {
+            this.region.contract(getChangesForEachDir(distance, (direction == 2), (direction == 1)));
+        } catch (RegionOperationException e) {
+            Utils.log("&cTried insetting a region but ran into an exception: " + e.getMessage());
         }
-        return "unknown";
+    }
+
+    public void outset(int distance, int direction) { // dir = 1:vertical/2:horizontal
+        try {
+            this.region.expand(getChangesForEachDir(distance, (direction == 2), (direction == 1)));
+        } catch (RegionOperationException e) {
+            Utils.log("&cTried outsetting a region but ran into an exception: " + e.getMessage());
+        }
     }
 
     public void contract(Direction direction, int distance, int reverseDistance) {
@@ -79,7 +90,6 @@ public record RegionWrapper(Region region, World world) {
 
     @Override
     public String toString() {
-        // TODO: decide whether this should include coords of associated points - might get long for poly/convex
         return getRegionType() + " region in world " + this.world.getName();
     }
 
