@@ -1,13 +1,16 @@
 package me.cheezburga.skwe.elements.effects.schematics;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Capability;
-import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
@@ -17,6 +20,15 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Schematic - Save")
+@Description({
+        "Saves a region as a schematic.",
+        "The name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
+        "The centre of the schematic can be set, as well as whether or not it should overwrite an existing schematic of the same name."
+})
+@Examples("save {region} as a schematic named \"example_schematic\" and overwrite existing")
+@Since("1.1")
+@RequiredPlugins("WorldEdit")
 public class EffSaveSchematic extends SkWEEffect {
 
     static {

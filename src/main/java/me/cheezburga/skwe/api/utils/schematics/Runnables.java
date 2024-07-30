@@ -63,7 +63,7 @@ public class Runnables {
             try (ClipboardWriter writer = format.getWriter(new FileOutputStream(filePath.toFile()))) {
                 Clipboard clipboard = new BlockArrayClipboard(wrapper.region());
                 if (centre != null)
-                    clipboard.setOrigin(Utils.blockVector3From(centre));
+                    clipboard.setOrigin(Utils.toBlockVector3(centre));
 
                 World world = BukkitAdapter.adapt(wrapper.world());
                 ForwardExtentCopy copy = new ForwardExtentCopy(world, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
@@ -105,7 +105,7 @@ public class Runnables {
                         holder.setTransform(new AffineTransform().rotateY(rotation));
                     Operation operation = holder
                             .createPaste(session)
-                            .to(Utils.blockVector3From(location))
+                            .to(Utils.toBlockVector3(location))
                             .ignoreAirBlocks(ignoreAir)
                             .build();
                     Operations.completeLegacy(operation);
