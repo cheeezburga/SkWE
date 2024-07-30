@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffSaveSchematic extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [schem[atic]] %string% [center:with (cent(re|er)|origin) (at|of) %-location%] [overwrite:and overwrite existing]");
+        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [a] schem[atic] (named|with name) %string% [center:with [the] (cent(re|er)|origin) (at|of) %-location%] [overwrite:[and] overwrit(e|ing) existing]");
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -43,6 +43,7 @@ public class EffSaveSchematic extends SkWEEffect {
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     protected void execute(Event event) {
         RegionWrapper wrapper = this.wrapper.getSingle(event);
         if (wrapper == null)
@@ -59,13 +60,12 @@ public class EffSaveSchematic extends SkWEEffect {
                 return;
         }
 
-        ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
-
-        RunnableUtils.run(Runnables.getSaveRunnable(wrapper, format, name, center, this.overwrite));
+        RunnableUtils.run(Runnables.getSaveRunnable(wrapper, name, center, this.overwrite));
     }
 
     @Override
+    @SuppressWarnings("NullableProblems")
     public String toString(@Nullable Event event, boolean debug) {
-        return "save " + wrapper.toString(event, debug) + " to .schem file " + this.name.toString(event, debug);
+        return "save " + wrapper.toString(event, debug) + " as a schematic named \"" + this.name.toString(event, debug) + "\" with origin at " + (this.center != null ? this.center.toString(event, debug) : "default") + " and" + (this.overwrite ? "" : " not") + " overwriting the existing file";
     }
 }
