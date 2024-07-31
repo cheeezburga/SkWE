@@ -14,15 +14,15 @@ import org.bukkit.World;
 public class Getters {
 
     public static CuboidRegion getCuboidRegion(Location loc1, Location loc2, World world) {
-        return new CuboidRegion(BukkitAdapter.adapt(world), Utils.blockVector3From(loc1), Utils.blockVector3From(loc2));
+        return new CuboidRegion(BukkitAdapter.adapt(world), Utils.toBlockVector3(loc1), Utils.toBlockVector3(loc2));
     }
 
     public static CylinderRegion getCylinderRegion(Location center, double radiusX, double radiusZ, int height) {
-        return new CylinderRegion(BukkitAdapter.adapt(center.getWorld()), Utils.blockVector3From(center), Vector2.at(radiusX, radiusZ), center.getBlockY(), center.getBlockY() + height);
+        return new CylinderRegion(BukkitAdapter.adapt(center.getWorld()), Utils.toBlockVector3(center), Vector2.at(radiusX, radiusZ), center.getBlockY(), center.getBlockY() + height);
     }
 
     public static EllipsoidRegion getEllipsoidRegion(Location center, double radiusX, double radiusY, double radiusZ) {
-        return new EllipsoidRegion(BukkitAdapter.adapt(center.getWorld()), Utils.blockVector3From(center), Vector3.at(radiusX, radiusY, radiusZ));
+        return new EllipsoidRegion(BukkitAdapter.adapt(center.getWorld()), Utils.toBlockVector3(center), Vector3.at(radiusX, radiusY, radiusZ));
     }
 
     public static ConvexPolyhedralRegion getConvexPolyRegion(Location... vertices) {
@@ -30,7 +30,7 @@ public class Getters {
         // TODO: it seems random, might be a worldedit/fawe thing that im just not understanding
         ConvexPolyhedralRegion region = new ConvexPolyhedralRegion(BukkitAdapter.adapt(vertices[0].getWorld()));
         for (Location loc : vertices) {
-            region.addVertex(Utils.blockVector3From(loc));
+            region.addVertex(Utils.toBlockVector3(loc));
         }
         return region;
     }

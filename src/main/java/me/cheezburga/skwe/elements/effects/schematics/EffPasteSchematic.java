@@ -1,6 +1,11 @@
 package me.cheezburga.skwe.elements.effects.schematics;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -11,6 +16,11 @@ import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+@Name("Schematic - Paste")
+@Description("Pastes a schematic at a location(s). Can be rotated, and can choose whether it should ignore air or not.")
+@Examples("paste schematic \"example_schematic\" at {locations::*} rotated by 90 while ignoring air")
+@Since("1.1")
+@RequiredPlugins("WorldEdit")
 public class EffPasteSchematic extends SkWEEffect {
 
     static {

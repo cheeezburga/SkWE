@@ -16,7 +16,7 @@ public class Runnables {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
-                    session.makeSphere(Utils.blockVector3From(loc), pattern, radius, radiusY, radiusZ, !hollow);
+                    session.makeSphere(Utils.toBlockVector3(loc), pattern, radius, radiusY, radiusZ, !hollow);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };
@@ -26,7 +26,7 @@ public class Runnables {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
-                    session.makeCylinder(Utils.blockVector3From(loc), pattern, radius, radiusZ, height, !hollow);
+                    session.makeCylinder(Utils.toBlockVector3(loc), pattern, radius, radiusZ, height, !hollow);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };
@@ -36,7 +36,7 @@ public class Runnables {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(loc.getWorld()))) {
                 try {
-                    session.makePyramid(Utils.blockVector3From(loc), pattern, size, !hollow);
+                    session.makePyramid(Utils.toBlockVector3(loc), pattern, size, !hollow);
                 } catch (MaxChangedBlocksException ignored) {}
             }
         };

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'me.cheezburga'
-version = '1.0.2'
+version = '1.1.0'
 
 repositories {
     mavenCentral()
@@ -21,6 +21,8 @@ dependencies {
 
     implementation("com.sk89q.worldedit:worldedit-core:7.2.20")
     implementation("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
+
+    implementation("com.github.javaparser:javaparser-core:3.25.4")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1'
 }
@@ -40,5 +42,19 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+tasks.register('addAnnotations', JavaExec) {
+    mainClass = 'me.cheezburga.skwe.api.utils.EmptyAnnotationAdder'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ["src/main/java"]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java']
+        }
     }
 }

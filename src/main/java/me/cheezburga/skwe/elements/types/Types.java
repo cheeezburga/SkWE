@@ -130,7 +130,7 @@ public class Types {
 
                     @Override
                     public @NotNull String toVariableNameString(RegionWrapper regionWrapper) {
-                        return regionWrapper.toString();
+                        return regionWrapper.toVariableString();
                     }
                 })
                 .serializer(new Serializer<>() {

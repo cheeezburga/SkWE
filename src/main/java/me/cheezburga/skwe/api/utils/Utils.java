@@ -19,7 +19,10 @@ import org.bukkit.World;
 import org.bukkit.inventory.meta.BlockDataMeta;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 public class Utils {
 
@@ -43,8 +46,16 @@ public class Utils {
      * @param location  input Location
      * @return          WorldEdit BlockVector3
      */
-    public static BlockVector3 blockVector3From(Location location) {
+    public static BlockVector3 toBlockVector3(Location location) {
         return BlockVector3.at(location.getX(), location.getY(), location.getZ());
+    }
+
+    public static List<BlockVector3> toBlockVector3List(List<Location> locations) {
+        return locations.stream().map(Utils::toBlockVector3).collect(Collectors.toList());
+    }
+
+    public static BlockVector3[] toBlockVector3Array(Location[] locations) {
+        return Arrays.stream(locations).map(Utils::toBlockVector3).toArray(BlockVector3[]::new);
     }
 
     /**
@@ -115,12 +126,12 @@ public class Utils {
                         return SkWE.HAS_FAWE ? ((AbstractFactory<Mask>) WorldEdit.getInstance().getMaskFactory()).parseFromInput(meta.getBlockData(material).getAsString(), context) :
                                 WorldEdit.getInstance().getMaskFactory().parseFromInput(meta.getBlockData(material).getAsString(), context);
                 }
+            } else if (o instanceof MaskWrapper wrapper) {
+                return maskFrom(wrapper.asString(), context);
             } else if (o instanceof Mask mask) {
                 return mask;
-            } else if (o instanceof MaskWrapper wrapper) {
-                return wrapper.mask();
             }
-        } catch (InputParseException e) { return null; }
+        } catch (InputParseException ignored) {}
         return null;
     }
 

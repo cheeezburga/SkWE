@@ -1,2 +1,14 @@
-# skript-worldedit
-An addon for Skript which adds some WorldEdit syntax. See the syntax.md file for more information.
+🚀 **skript-worldedit** is here! This new Skript addon brings **WorldEdit** and **FAWE** support to Skript, offering numerous effects and expressions for efficient world manipulation.
+A shockingly small amount of testing was done, so there may be some bugs lying around. Please report any issues, or new feature requests, on the GitHub. Happy scripting!
+
+### Wiki
+For a fairly detailed walkthrough of the syntax and concepts, have a look at [the wiki](https://github.com/cheeezburga/SkWE/wiki)!
+
+### Docs
+If you're just looking for a list of all the syntax with some examples, head on over to [**skript-worldedit**'s SkriptHub docs](http://skripthub.net/docs/?addon=skript-worldedit)
+
+### Features
+- Regions - create and use them to run operations
+- Patterns and masks - use these exactly like you would in WorldEdit, opening up so many options
+- Shapes - create an ellipsoid, cylinder, or pyramid, with a bunch of customizable properties
+- Schematics (coming soon...)
