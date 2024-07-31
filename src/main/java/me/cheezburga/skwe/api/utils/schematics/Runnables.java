@@ -21,7 +21,6 @@ import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -87,17 +86,8 @@ public class Runnables {
             return () -> {};
         }
 
-        File file = filePath.toFile();
-
-        // format defaults to sponge with skript-worldedit, so no need for this
-        // ClipboardFormat format = ClipboardFormats.findByFile(file);
-        // if (format == null) {
-        //     Utils.log("&cCouldn't get the format of the schematic named " + name);
-        //     return () -> {};
-        // }
-
         return () -> {
-            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+            try (ClipboardReader reader = format.getReader(new FileInputStream(filePath.toFile()))) {
                 Clipboard clipboard = reader.read();
                 try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(location.getWorld()))) {
                     ClipboardHolder holder = new ClipboardHolder(clipboard);
