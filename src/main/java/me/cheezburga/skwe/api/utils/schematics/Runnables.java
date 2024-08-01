@@ -21,7 +21,6 @@ import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -31,7 +30,7 @@ import java.nio.file.Paths;
 
 public class Runnables {
 
-    public static Runnable getSaveRunnable(RegionWrapper wrapper, String name, @Nullable Location centre, boolean shouldOverwrite) {
+    public static Runnable getSaveRunnable(RegionWrapper wrapper, String name, @Nullable Location centre, @Nullable Object preMask, boolean shouldOverwrite, boolean copyEntities, boolean copyBiomes, boolean removeEntities) {
         ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         Path directory = Paths.get(WorldEdit.getInstance().getConfiguration().getWorkingDirectoryPath().toString(), "schematics");
@@ -67,6 +66,11 @@ public class Runnables {
 
                 World world = BukkitAdapter.adapt(wrapper.world());
                 ForwardExtentCopy copy = new ForwardExtentCopy(world, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
+                copy.setSourceMask(Utils.maskFrom(preMask, null));
+                copy.setCopyingEntities(copyEntities);
+                copy.setCopyingBiomes(copyBiomes);
+                copy.setRemovingEntities(removeEntities);
+
                 Operations.complete(copy);
 
                 writer.write(clipboard);
@@ -76,7 +80,7 @@ public class Runnables {
         };
     }
 
-    public static Runnable getPasteRunnable(String name, Location location, int rotation, boolean ignoreAir) {
+    public static Runnable getPasteRunnable(String name, Location location, int rotation, @Nullable Object preMask, boolean ignoreAir, boolean pasteEntities, boolean pasteBiomes) {
         ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         Path directory = Paths.get(WorldEdit.getInstance().getConfiguration().getWorkingDirectoryPath().toString(), "schematics");
@@ -87,17 +91,8 @@ public class Runnables {
             return () -> {};
         }
 
-        File file = filePath.toFile();
-
-        // format defaults to sponge with skript-worldedit, so no need for this
-        // ClipboardFormat format = ClipboardFormats.findByFile(file);
-        // if (format == null) {
-        //     Utils.log("&cCouldn't get the format of the schematic named " + name);
-        //     return () -> {};
-        // }
-
         return () -> {
-            try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
+            try (ClipboardReader reader = format.getReader(new FileInputStream(filePath.toFile()))) {
                 Clipboard clipboard = reader.read();
                 try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(location.getWorld()))) {
                     ClipboardHolder holder = new ClipboardHolder(clipboard);
@@ -106,7 +101,10 @@ public class Runnables {
                     Operation operation = holder
                             .createPaste(session)
                             .to(Utils.toBlockVector3(location))
+                            .maskSource(Utils.maskFrom(preMask, null)) // Utils.contextFrom(session, location.getWorld())
                             .ignoreAirBlocks(ignoreAir)
+                            .copyEntities(pasteEntities)
+                            .copyBiomes(pasteBiomes)
                             .build();
                     Operations.completeLegacy(operation);
                 }
@@ -115,9 +113,5 @@ public class Runnables {
             }
         };
     }
-
-
-
-
 
 }

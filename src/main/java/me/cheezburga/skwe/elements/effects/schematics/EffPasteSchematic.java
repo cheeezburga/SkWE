@@ -19,12 +19,12 @@ import org.jetbrains.annotations.Nullable;
 @Name("Schematic - Paste")
 @Description("Pastes a schematic at a location(s). Can be rotated, and can choose whether it should ignore air or not.")
 @Examples("paste schematic \"example_schematic\" at {locations::*} rotated by 90 while ignoring air")
-@Since("1.1")
+@Since("1.1.0")
 @RequiredPlugins("WorldEdit")
 public class EffPasteSchematic extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffPasteSchematic.class, "paste schem[atic] %string% at %locations% [(with rotation|rotated by) %-number%] [air:[and] while ignoring air]");
+        Skript.registerEffect(EffPasteSchematic.class, "paste [schem[atic]] [named|with name] %string% at %locations% [(with rotation|rotated by) %-number% [degrees]] [air:[and] while ignoring air]");
     }
 
     private Expression<String> name;
@@ -52,7 +52,7 @@ public class EffPasteSchematic extends SkWEEffect {
         int rotation = (this.rotation == null) ? 0 : this.rotation.getOptionalSingle(event).orElse(0).intValue();
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getPasteRunnable(name, loc, rotation, ignoreAir));
+            RunnableUtils.run(Runnables.getPasteRunnable(name, loc, rotation, null, ignoreAir, false, false));
         }
     }
 
