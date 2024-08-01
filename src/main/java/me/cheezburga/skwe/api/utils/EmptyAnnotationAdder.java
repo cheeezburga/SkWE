@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 public class EmptyAnnotationAdder {
 
     private static final Map<String, String> ANNOTATIONS_MAP = new LinkedHashMap<>();
-    private static final Set<String> TARGET_CLASSES = Set.of("SkWEEffect", "SimpleExpression", "Expression", "PropertyExpression", "SimplePropertyExpression", "Condition", "PropertyCondition");
+    private static final Set<String> TARGET_CLASSES = Set.of("SkWEEffect", "SimpleExpression", "Expression", "PropertyExpression", "SimplePropertyExpression", "Condition", "PropertyCondition", "Section");
     private static final Set<String> PREFIXES = Set.of("Eff", "Expr", "Cond");
 
     static {
