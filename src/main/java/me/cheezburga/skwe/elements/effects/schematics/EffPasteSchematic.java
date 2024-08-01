@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffPasteSchematic extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffPasteSchematic.class, "paste schem[atic] %string% at %locations% [(with rotation|rotated by) %-number%] [air:[and] while ignoring air]");
+        Skript.registerEffect(EffPasteSchematic.class, "paste [schem[atic]] [named|with name] %string% at %locations% [(with rotation|rotated by) %-number% [degrees]] [air:[and] while ignoring air]");
     }
 
     private Expression<String> name;
