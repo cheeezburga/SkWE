@@ -2,15 +2,22 @@ package me.cheezburga.skwe.elements.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import java.util.List;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.schematics.EntryValidators;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
+
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +25,28 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 
-import java.util.List;
-
+@Name("Schematic - Paste")
+@Description({
+        "Pastes a schematic, with a bunch of configurable options (see below for a list of them).",
+        "Note that the name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
+        "",
+        "Entries:",
+        "* paste entities: whether the schematic should copy entities",
+        "* paste biomes: whether the schematic should copy biomes",
+        "* ignore air: whether the schematic should paste air blocks",
+        "* rotation: the number of degrees that the pasted schematic should be rotated by (around the y-axis)",
+        "* mask: a mask which will only let matching blocks be pasted"
+})
+@Examples({
+        "paste schematic named \"example\" at {location}:",
+        "\tpaste entities: true",
+        "\tpaste biomes: true",
+        "\tmask: mask from \"stone,red_wool,blue_wool\"",
+        "\trotation: 45",
+        "\tignore air: true"
+})
+@Since("1.1.0")
+@RequiredPlugins("WorldEdit")
 public class SecPasteSchematic extends Section {
 
     static {

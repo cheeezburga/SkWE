@@ -2,16 +2,23 @@ package me.cheezburga.skwe.elements.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import java.util.List;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.schematics.EntryValidators;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
+
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -19,8 +26,30 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 
-import java.util.List;
-
+@Name("Schematic - Save")
+@Description({
+        "Saves a region as a schematic, with a bunch of configurable options (see below for a list of them).",
+        "Note that the name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
+        "",
+        "Entries:",
+        "* copy entities: whether the schematic should copy entities",
+        "* copy biomes: whether the schematic should copy biomes",
+        "* remove entities: whether the schematic should remove entities",
+        "* overwrite: whether the schematic should overwrite any schematics of the same name (if false, the schematic won't save if a schematic is found with the same name)",
+        "* origin: where the origin of the saved schematic should be",
+        "* mask: a mask which will only let matching blocks be copied"
+})
+@Examples({
+        "save {region} as a schematic named \"example\":",
+            "\tcopy entities: true",
+            "\tcopy biomes: true",
+            "\tmask: mask from \"stone,red_wool,blue_wool\"",
+            "\torigin: location of (first element out of all players)",
+            "\tremove entities: true",
+            "\toverwrite: true"
+})
+@Since("1.1.0")
+@RequiredPlugins("WorldEdit")
 public class SecSaveSchematic extends Section {
 
     static {
