@@ -30,7 +30,7 @@ import java.nio.file.Paths;
 
 public class Runnables {
 
-    public static Runnable getSaveRunnable(RegionWrapper wrapper, String name, @Nullable Location centre, boolean shouldOverwrite) {
+    public static Runnable getSaveRunnable(RegionWrapper wrapper, String name, @Nullable Location centre, @Nullable Object preMask, boolean shouldOverwrite, boolean copyEntities, boolean copyBiomes, boolean removeEntities) {
         ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         Path directory = Paths.get(WorldEdit.getInstance().getConfiguration().getWorkingDirectoryPath().toString(), "schematics");
@@ -66,6 +66,11 @@ public class Runnables {
 
                 World world = BukkitAdapter.adapt(wrapper.world());
                 ForwardExtentCopy copy = new ForwardExtentCopy(world, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
+                copy.setSourceMask(Utils.maskFrom(preMask, null));
+                copy.setCopyingEntities(copyEntities);
+                copy.setCopyingBiomes(copyBiomes);
+                copy.setRemovingEntities(removeEntities);
+
                 Operations.complete(copy);
 
                 writer.write(clipboard);
@@ -105,9 +110,5 @@ public class Runnables {
             }
         };
     }
-
-
-
-
 
 }

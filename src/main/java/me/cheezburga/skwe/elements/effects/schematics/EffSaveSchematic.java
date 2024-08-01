@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffSaveSchematic extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [a] schem[atic] (named|with name) %string% [center:with [the] (cent(re|er)|origin) (at|of) %-location%] [overwrite:[and] overwrit(e|ing) existing]");
+        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [a] [schem[atic] (named|with name)] %string% [overwrite:[and] overwrit(e|ing) existing]");
     }
 
     private Expression<RegionWrapper> wrapper;
@@ -72,7 +72,7 @@ public class EffSaveSchematic extends SkWEEffect {
                 return;
         }
 
-        RunnableUtils.run(Runnables.getSaveRunnable(wrapper, name, center, this.overwrite));
+        RunnableUtils.run(Runnables.getSaveRunnable(wrapper, name, center, null, this.overwrite, false, false, false));
     }
 
     @Override
