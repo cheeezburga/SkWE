@@ -8,7 +8,7 @@ For a fairly detailed walkthrough of the syntax and concepts, have a look at [th
 If you're just looking for a list of all the syntax with some examples, head on over to [**skript-worldedit**'s SkriptHub docs](http://skripthub.net/docs/?addon=skript-worldedit)
 
 ### Features
-- Regions - create and use them to run operations!
-- Patterns and masks - use these exactly like you would in WorldEdit, opening up so many options!
-- Schematics - save and paste schematics with ease!
-- Shapes - create an ellipsoid, cylinder, or pyramid, with a bunch of customizable properties!
+- **Regions** - create and use them to run operations!
+- **Patterns and masks** - use these exactly like you would in WorldEdit, opening up so many options!
+- **Schematics** - save and paste schematics with ease!
+- **Shapes** - create an ellipsoid, cylinder, or pyramid, with a bunch of customizable properties!
