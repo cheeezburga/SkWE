@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Schematic - Paste")
 @Description("Pastes a schematic at a location(s). Can be rotated, and can choose whether it should ignore air or not.")
 @Examples("paste schematic \"example_schematic\" at {locations::*} rotated by 90 while ignoring air")
-@Since("1.1")
+@Since("1.1.0")
 @RequiredPlugins("WorldEdit")
 public class EffPasteSchematic extends SkWEEffect {
 

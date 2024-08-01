@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "The centre of the schematic can be set, as well as whether or not it should overwrite an existing schematic of the same name."
 })
 @Examples("save {region} as a schematic named \"example_schematic\" and overwrite existing")
-@Since("1.1")
+@Since("1.1.0")
 @RequiredPlugins("WorldEdit")
 public class EffSaveSchematic extends SkWEEffect {
 
