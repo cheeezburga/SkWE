@@ -52,7 +52,7 @@ public class EffPasteSchematic extends SkWEEffect {
         int rotation = (this.rotation == null) ? 0 : this.rotation.getOptionalSingle(event).orElse(0).intValue();
 
         for (Location loc : locations.getArray(event)) {
-            RunnableUtils.run(Runnables.getPasteRunnable(name, loc, rotation, ignoreAir));
+            RunnableUtils.run(Runnables.getPasteRunnable(name, loc, rotation, null, ignoreAir, false, false));
         }
     }
 

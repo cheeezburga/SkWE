@@ -1,6 +1,5 @@
 package me.cheezburga.skwe.api.utils.schematics;
 
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import org.bukkit.Location;
@@ -31,7 +30,7 @@ public class EntryValidators {
         builder.addEntryData(new ExpressionEntryData<>("rotation", new SimpleLiteral<>(0, false), true, Integer.class));
         builder.addEntryData(new ExpressionEntryData<>("paste entities", new SimpleLiteral<>(false, false), true, Boolean.class));
         builder.addEntryData(new ExpressionEntryData<>("paste biomes", new SimpleLiteral<>(false, false), true, Boolean.class));
-        builder.addEntryData(new ExpressionEntryData<>("set region to", null, true, Variable.class));
+        builder.addEntryData(new ExpressionEntryData<>("ignore air", new SimpleLiteral<>(false, false), true, Boolean.class));
         return builder;
     }
 

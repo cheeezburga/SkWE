@@ -80,7 +80,7 @@ public class Runnables {
         };
     }
 
-    public static Runnable getPasteRunnable(String name, Location location, int rotation, boolean ignoreAir) {
+    public static Runnable getPasteRunnable(String name, Location location, int rotation, @Nullable Object preMask, boolean ignoreAir, boolean pasteEntities, boolean pasteBiomes) {
         ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         Path directory = Paths.get(WorldEdit.getInstance().getConfiguration().getWorkingDirectoryPath().toString(), "schematics");
@@ -101,7 +101,10 @@ public class Runnables {
                     Operation operation = holder
                             .createPaste(session)
                             .to(Utils.toBlockVector3(location))
+                            .maskSource(Utils.maskFrom(preMask, null)) // Utils.contextFrom(session, location.getWorld())
                             .ignoreAirBlocks(ignoreAir)
+                            .copyEntities(pasteEntities)
+                            .copyBiomes(pasteBiomes)
                             .build();
                     Operations.completeLegacy(operation);
                 }
