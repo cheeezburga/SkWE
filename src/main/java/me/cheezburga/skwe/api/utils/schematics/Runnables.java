@@ -6,10 +6,7 @@ import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.BlockArrayClipboard;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
-import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
+import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -21,12 +18,15 @@ import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import org.bukkit.Location;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static me.cheezburga.skwe.api.utils.schematics.Utils.findSchematicFile;
 
 public class Runnables {
 
@@ -81,18 +81,17 @@ public class Runnables {
     }
 
     public static Runnable getPasteRunnable(String name, Location location, int rotation, @Nullable Object preMask, boolean ignoreAir, boolean pasteEntities, boolean pasteBiomes) {
-        ClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
-
-        Path directory = Paths.get(WorldEdit.getInstance().getConfiguration().getWorkingDirectoryPath().toString(), "schematics");
-        Path filePath = directory.resolve(name + "." + format.getPrimaryFileExtension());
-
-        if (!Files.exists(filePath)) {
-            Utils.log("&cCouldn't find a schematic named " + name);
+        File schematicFile = findSchematicFile(name);
+        if (schematicFile == null) {
+            Utils.log("&cCouldn't find a schematic using " + name);
             return () -> {};
         }
 
+        ClipboardFormat format = ClipboardFormats.findByFile(schematicFile);
+        assert format != null; // should never be null, because to be returned by findSchematicFile, the format needs to be not-null
+
         return () -> {
-            try (ClipboardReader reader = format.getReader(new FileInputStream(filePath.toFile()))) {
+            try (ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
                 Clipboard clipboard = reader.read();
                 try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(location.getWorld()))) {
                     ClipboardHolder holder = new ClipboardHolder(clipboard);
@@ -109,7 +108,7 @@ public class Runnables {
                     Operations.completeLegacy(operation);
                 }
             } catch (IOException | WorldEditException e) {
-                Utils.log("&cRan into a problem pasting the schematic named " + name);
+                Utils.log("&cRan into a problem pasting the schematic named " + name + ": " + e.getMessage());
             }
         };
     }
