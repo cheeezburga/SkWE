@@ -59,6 +59,6 @@ public class EffPasteSchematic extends SkWEEffect {
     @Override
     @SuppressWarnings("NullableProblems")
     public String toString(@Nullable Event event, boolean debug) {
-        return "paste schematic named " + this.name.toString(event, debug) + " at " + this.locations.toString(event, debug) + " with rotation " + (this.rotation == null ? "0" : this.rotation.toString(event, debug)) + (ignoreAir ? " while ignoring air" : "");
+        return "paste schematic using " + this.name.toString(event, debug) + " at " + this.locations.toString(event, debug) + " with rotation " + (this.rotation == null ? "0" : this.rotation.toString(event, debug)) + (ignoreAir ? " while ignoring air" : "");
     }
 }

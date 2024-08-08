@@ -101,7 +101,7 @@ public class SecPasteSchematic extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        String builder = "paste schematic named " +
+        String builder = "paste schematic using " +
                 this.name.toString(event, debug) +
                 " at " + this.locations.toString(event, debug) +
                 (this.preMask == null ? " with no mask " : " with mask of " + this.preMask.toString(event, debug)) +

@@ -88,7 +88,10 @@ public class Runnables {
         }
 
         ClipboardFormat format = ClipboardFormats.findByFile(schematicFile);
-        assert format != null; // should never be null, because to be returned by findSchematicFile, the format needs to be not-null
+        if (format == null) { // should never be null, because to be returned by findSchematicFile, the format needs to be not-null
+            Utils.log("&cRan into a problem getting the format of the schematic using " + name);
+            return () -> {};
+        }
 
         return () -> {
             try (ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
@@ -108,7 +111,7 @@ public class Runnables {
                     Operations.completeLegacy(operation);
                 }
             } catch (IOException | WorldEditException e) {
-                Utils.log("&cRan into a problem pasting the schematic named " + name + ": " + e.getMessage());
+                Utils.log("&cRan into a problem pasting the schematic using " + name + ": " + e.getMessage());
             }
         };
     }
