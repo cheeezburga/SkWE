@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffForest extends SkWEEffect {
 
     static {
-        Skript.registerEffect(EffForest.class, "generate [a] %treetype% forest [with]in %worldeditregions [with density %-number%]" + Utils.LAZILY);
+        Skript.registerEffect(EffForest.class, "generate [a] %treetype% forest [with]in %worldeditregions% [with density %-number%]" + Utils.LAZILY);
     }
 
     private Expression<TreeType> treeType;
