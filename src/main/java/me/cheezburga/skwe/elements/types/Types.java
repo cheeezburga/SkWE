@@ -14,6 +14,7 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.CylinderRegion;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.TreeGenerator;
 import me.cheezburga.skwe.api.utils.EnumWrapper;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import me.cheezburga.skwe.api.utils.PatternWrapper;
@@ -36,6 +37,13 @@ public class Types {
                 .name("World Edit Shapes")
                 .description("All the supported creatable shapes using WorldEdit.")
                 .since("1.0.0"));
+
+        EnumWrapper<TreeGenerator.TreeType> TREE_ENUM = new EnumWrapper<>(TreeGenerator.TreeType.class);
+        Classes.registerClass(TREE_ENUM.getClassInfo("treetype")
+                .user("(world ?edit ?)?tree ?types?")
+                .name("Tree Types")
+                .description("All the supported tree types that WorldEdit can use.")
+                .since("1.1.2"));
 
         Classes.registerClass(new ClassInfo<>(PatternWrapper.class, "worldeditpattern")
                 .user("(world ?edit|fawe) ?patterns?")
