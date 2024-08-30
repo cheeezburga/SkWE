@@ -22,6 +22,7 @@ import com.sk89q.worldedit.math.convolution.HeightMapFilter;
 import com.sk89q.worldedit.math.noise.RandomNoise;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.Regions;
+import com.sk89q.worldedit.util.TreeGenerator.TreeType;
 import com.sk89q.worldedit.world.RegenOptions;
 import com.sk89q.worldedit.world.biome.BiomeType;
 import me.cheezburga.skwe.SkWE;
@@ -175,6 +176,16 @@ public class Runnables {
                 } else {
                     session.drawSpline(pattern, vectors, 0, 0, 0, 10, thickness, !hollow);
                 }
+            } catch (MaxChangedBlocksException ignored) {}
+        };
+    }
+
+    public static Runnable getForestRunnable(RegionWrapper wrapper, TreeType treeType, double density) {
+        return () -> {
+            try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
+                double d = Math.clamp(density, 0, 100);
+                d /= 100;
+                session.makeForest(wrapper.region(), density, treeType);
             } catch (MaxChangedBlocksException ignored) {}
         };
     }
