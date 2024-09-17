@@ -116,4 +116,23 @@ public class Runnables {
         };
     }
 
+    public static Runnable getDeleteRunnable(String name) {
+        File schematicFile = findSchematicFile(name);
+        if (schematicFile == null) {
+            Utils.log("&cCouldn't find a schematic using " + name);
+            return () -> {};
+        }
+
+        ClipboardFormat format = ClipboardFormats.findByFile(schematicFile);
+        if (format == null) { // should never be null, because to be returned by findSchematicFile, the format needs to be not-null
+            Utils.log("&cRan into a problem getting the format of the schematic using " + name);
+            return () -> {};
+        }
+
+        return () -> {
+            if (!schematicFile.delete())
+                Utils.log("&cFailed to delete the schematic named " + name);
+        };
+    }
+
 }
