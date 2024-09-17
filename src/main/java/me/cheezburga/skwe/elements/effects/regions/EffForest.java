@@ -1,7 +1,11 @@
 package me.cheezburga.skwe.elements.effects.regions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -15,7 +19,10 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Forest")
-@Description("Generates a forest of a specific tree type in a given region, with a given density. The default density is 5.")
+@Description({
+        "Generates a forest of a specific tree type in a given region, with a given density. The default density is 5.",
+        "Note that this effect uses a new tree type, not the Skript one."
+})
 @Examples({
         "generate a tall mangrove forest within {region} with density 10"
 })
