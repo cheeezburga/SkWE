@@ -34,7 +34,7 @@ public class EffSaveSchematic extends SkWEEffect {
     static {
         // TODO add saving as a structure instead of a schematic
         // TODO can then be used with skbee syntax, etc.
-        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [a] [schem[atic] (named|with name)] %string% [overwrite:[and] overwrit(e|ing) existing]");
+        Skript.registerEffect(EffSaveSchematic.class, "save %worldeditregion% as [a] [schem[atic] (named|with name)] %string% [center:with [the] (cent(re|er)|origin) (at|of) %-location%] [overwrite:[and] overwrit(e|ing) existing]");
     }
 
     private Expression<RegionWrapper> wrapper;
