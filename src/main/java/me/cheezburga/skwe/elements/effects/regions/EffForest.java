@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class EffForest extends SkWEEffect {
     private Expression<RegionWrapper> wrappers;
     private Expression<Number> density;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         treeType = (Expression<TreeType>) exprs[0];
@@ -48,7 +49,6 @@ public class EffForest extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         TreeType treeType = this.treeType.getSingle(event);
@@ -59,9 +59,12 @@ public class EffForest extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "generate " + treeType.toString(event, debug) + " forest within " + wrappers.toString(event, debug) + " with density " + (density != null ? density.toString(event, debug) : "5") + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("generate ", treeType, " forest within ", wrappers, " with density ")
+            .append(density == null ? "5" : density)
+            .toString();
     }
+
 }

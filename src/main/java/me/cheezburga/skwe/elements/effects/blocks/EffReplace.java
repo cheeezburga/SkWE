@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.blocks.Runnables;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -21,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 @Name("Replace Blocks")
 @Description("Replaces blocks in a region that match a certain mask with a given pattern.")
 @Examples({
-        "use we to replace all stone in {region} with diamond ore",
-        "use we to replace all blocks in {region} that match mask \"stone,cobblestone\" with pattern \"50%%diamond_block,50%%gold_block\""
+    "use we to replace all stone in {region} with diamond ore",
+    "use we to replace all blocks in {region} that match mask \"stone,cobblestone\" with pattern \"50%%diamond_block,50%%gold_block\""
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -30,14 +31,14 @@ public class EffReplace extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffReplace.class,
-                Utils.PATTERN_PREFIX + " replace [all] blocks in %worldeditregion% that match [mask] " + Utils.MASK_TYPES + " with [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY,
-        Utils.PATTERN_PREFIX + " replace all " + Utils.MASK_TYPES + " in %worldeditregion% with " + Utils.PATTERN_TYPES + Utils.LAZILY);
+            Utils.PATTERN_PREFIX + " replace [all] blocks in %worldeditregion% that match [mask] " + Utils.MASK_TYPES + " with [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY,
+            Utils.PATTERN_PREFIX + " replace all " + Utils.MASK_TYPES + " in %worldeditregion% with " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
     private Expression<?> preMask, prePattern;
 
-    @SuppressWarnings({"NullableProblems","unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         this.wrapper = (Expression<RegionWrapper>) (matchedPattern == 0 ? exprs[0] : exprs[1]);
@@ -66,6 +67,9 @@ public class EffReplace extends SkWEEffect {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "replace blocks in " + wrapper.toString(event, debug) + " that match mask " + preMask.toString(event, debug) + " with pattern " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("replace blocks in ", wrapper, " that match mask ", preMask, " with pattern ", prePattern)
+            .toString();
     }
+
 }

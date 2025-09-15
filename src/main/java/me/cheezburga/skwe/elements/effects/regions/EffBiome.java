@@ -15,6 +15,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
@@ -35,7 +36,7 @@ public class EffBiome extends SkWEEffect {
     private Expression<RegionWrapper> wrappers;
     private Expression<Biome> biome;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[0];
@@ -44,7 +45,6 @@ public class EffBiome extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Biome preBiome = this.biome.getSingle(event);
@@ -58,9 +58,10 @@ public class EffBiome extends SkWEEffect {
 
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "set the biome of " + wrappers.toString(event, debug) + " to " + biome.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("set the biome of ", wrappers, " to ", biome)
+            .toString();
     }
 }

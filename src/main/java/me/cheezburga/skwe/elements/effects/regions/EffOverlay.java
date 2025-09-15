@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ public class EffOverlay extends SkWEEffect {
     private Expression<RegionWrapper> wrappers;
     private Expression<?> prePattern;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[0];
@@ -43,7 +44,6 @@ public class EffOverlay extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
@@ -55,9 +55,11 @@ public class EffOverlay extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "overlay blocks in " + wrappers.toString(event, debug) + " with pattern " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("overlay blocks in ", wrappers, " with pattern ", prePattern)
+            .toString();
     }
+
 }

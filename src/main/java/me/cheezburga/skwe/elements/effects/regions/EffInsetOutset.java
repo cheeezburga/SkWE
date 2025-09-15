@@ -8,6 +8,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.lang.SkWEEffect;
@@ -23,7 +24,7 @@ public class EffInsetOutset extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffInsetOutset.class,
-                "(:in|out)set %worldeditregions% by %number% [blocks] [1:vertically|2:horizontally]");
+            "(:in|out)set %worldeditregions% by %number% [blocks] [1:vertically|2:horizontally]");
     }
 
     private Expression<RegionWrapper> wrappers;
@@ -32,7 +33,7 @@ public class EffInsetOutset extends SkWEEffect {
     private int direction;
 
     @Override
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[0];
         distance = (Expression<Number>) exprs[1];
@@ -42,8 +43,7 @@ public class EffInsetOutset extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected void execute(Event event) {
+	protected void execute(Event event) {
         int distance = (this.distance == null) ? 1 : this.distance.getOptionalSingle(event).orElse(1).intValue();
 
         for (RegionWrapper wrapper : wrappers.getArray(event)) {
@@ -56,18 +56,16 @@ public class EffInsetOutset extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings({"ConstantConditions", "NullableProblems"})
+    @SuppressWarnings({"ConstantConditions"})
     public String toString(@Nullable Event event, boolean debug) {
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
+        builder.append(in ? "in" : "out", "set", wrappers, " by ", (distance == null ? "1" : distance));
         if (this.direction == 0) {
-            return (in ? "in" : "out") + "set " + wrappers.toString(event, debug) + " by " + (distance != null ? distance.toString(event, debug) : "1");
+            return builder.toString();
         } else {
-            String direction;
-            if (this.direction == 1) {
-                direction = "vertical";
-            } else {
-                direction = "horizontal";
-            }
-            return (in ? "in" : "out") + "set " + wrappers.toString(event, debug) + " by " + (distance != null ? distance.toString(event, debug) : "1") + " in only the " + direction + " direction";
+            String direction = this.direction == 1 ? "vertical" : "horizontal";
+            return builder.append(" in only the ", direction, " direction").toString();
         }
     }
+
 }

@@ -13,6 +13,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -33,7 +34,7 @@ public class EffCreatePyramid extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreatePyramid.class,
-                "create [a] [:hollow] pyramid ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%" + Utils.LAZILY);
+            "create [a] [:hollow] pyramid ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with size %-number%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -41,7 +42,7 @@ public class EffCreatePyramid extends SkWEEffect {
     private Expression<Number> size;
     private Expression<Location> locations;
 
-    @SuppressWarnings({"NullableProblems","unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         hollow = parseResult.hasTag("hollow");
@@ -52,7 +53,6 @@ public class EffCreatePyramid extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
@@ -66,9 +66,11 @@ public class EffCreatePyramid extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (hollow ? "hollow " : "") + "pyramid with size " + size.toString(event, debug) + " at locations " + locations.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("create a ", (hollow ? "hollow" : ""), " pyramid with size ", size, " at locations ", locations)
+            .toString();
     }
+
 }

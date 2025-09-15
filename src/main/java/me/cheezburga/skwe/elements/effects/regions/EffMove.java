@@ -15,6 +15,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ public class EffMove extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffMove.class,
-                "move [mask:(blocks that match|all) " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregions% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and (fill the area with|leave behind) [pattern] " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air[,]] [entities:while copying entities[,| and]] [biomes:while copying biomes]" + Utils.LAZILY);
+            "move [mask:(blocks that match|all) " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregions% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and (fill the area with|leave behind) [pattern] " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air[,]] [entities:while copying entities[,| and]] [biomes:while copying biomes]" + Utils.LAZILY);
     }
 
     private static final int UP = 0, DOWN = 1, NORTH = 2, SOUTH = 3, EAST = 4, WEST = 5;
@@ -48,7 +49,7 @@ public class EffMove extends SkWEEffect {
     private Expression<?> prePattern;
     private boolean ignoreAir, copyEntities, copyBiomes;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         preMask = exprs[0];
@@ -63,7 +64,6 @@ public class EffMove extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Object preMask = null;
@@ -86,13 +86,22 @@ public class EffMove extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
+        BlockingSyntaxStringBuilder builder = new BlockingSyntaxStringBuilder(event, debug, isBlocking()).append("move ");
         if (preMask != null)
-            return "move blocks in " + wrappers.toString(event, debug) + " that match " + preMask.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "") + (isBlocking() ? "" : " lazily");
-        else
-            return "move " + wrappers.toString(event, debug) + (distance != null ? distance.toString(event, debug) + " blocks" : "") + getDirection(direction).toString() + " and fill the area with " + (prePattern != null ? prePattern.toString(event, debug) : "air") + (ignoreAir ? " while ignoring air" : "") + (copyEntities ? " while copying entities" : "") + (copyBiomes ? " while copying biomes" : "") + (isBlocking() ? "" : " lazily");
+            builder.append("blocks in ");
+        builder.append(wrappers);
+        if (preMask != null)
+            builder.append(" that match ", preMask);
+        if (distance != null)
+            builder.append(distance, " blocks ");
+        builder.append(getDirection(direction).toString()); // should never be null
+        builder.append(" and fill the area with ", (prePattern == null ? "air" : prePattern));
+        builder.append(ignoreAir ? "while ignoring air" : "");
+        builder.append(copyEntities ? "while copying entities" : "");
+        builder.append(copyBiomes ? "while copying biomes" : "");
+        return builder.toString();
     }
 
     private Direction getDirection(int mark) {
@@ -106,4 +115,5 @@ public class EffMove extends SkWEEffect {
             default -> null;
         };
     }
+
 }

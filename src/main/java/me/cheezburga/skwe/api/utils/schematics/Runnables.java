@@ -60,8 +60,8 @@ public class Runnables {
 
         return () -> {
             try (
-                    ClipboardWriter writer = format.getWriter(new FileOutputStream(filePath.toFile()));
-                    EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))
+				ClipboardWriter writer = format.getWriter(new FileOutputStream(filePath.toFile()));
+				EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))
             ) {
                 Clipboard clipboard = new BlockArrayClipboard(wrapper.region());
                 if (centre != null)

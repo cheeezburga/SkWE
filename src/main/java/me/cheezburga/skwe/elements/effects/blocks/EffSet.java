@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.blocks.Runnables;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Set Blocks")
 @Description("Sets the blocks in a region with a given pattern.")
 @Examples({
-        "use we to set blocks in {region} to \"33%%red_wool,33%blue_wool,33%green_wool\""
+    "use we to set blocks in {region} to \"33%%red_wool,33%blue_wool,33%green_wool\""
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -30,14 +31,14 @@ public class EffSet extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSet.class,
-                 Utils.PATTERN_PREFIX + " set [the] blocks in %worldeditregions% to [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY);
+             Utils.PATTERN_PREFIX + " set [the] blocks in %worldeditregions% to [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrapper;
     private Expression<?> prePattern;
 
     @Override
-    @SuppressWarnings({"NullableProblems","unchecked"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.wrapper = (Expression<RegionWrapper>) exprs[0];
         this.prePattern = exprs[1];
@@ -61,6 +62,9 @@ public class EffSet extends SkWEEffect {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "set blocks in " + wrapper.toString(event, debug) + " to " + prePattern.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("set blocks in ", wrapper, " to ", prePattern)
+            .toString();
     }
+
 }

@@ -29,7 +29,7 @@ public class EffDeleteSchematic extends SkWEEffect {
     private Expression<String> names;
 
     @Override
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         names = (Expression<String>) exprs[0];
         return true;

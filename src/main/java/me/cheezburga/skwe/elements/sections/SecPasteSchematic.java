@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import java.util.List;
@@ -59,7 +60,7 @@ public class SecPasteSchematic extends Section {
     private Expression<MaskWrapper> preMask;
     private Expression<Boolean> pasteEntities, pasteBiomes, ignoreAir;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         EntryValidator.EntryValidatorBuilder builder = EntryValidators.paste();
@@ -98,18 +99,16 @@ public class SecPasteSchematic extends Section {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        String builder = "paste schematic using " +
-                this.name.toString(event, debug) +
-                " at " + this.locations.toString(event, debug) +
-                (this.preMask == null ? " with no mask " : " with mask of " + this.preMask.toString(event, debug)) +
-                (this.rotation == null ? " with rotation of 0 " : " with rotation of " + this.rotation.toString(event, debug)) +
-                (Boolean.TRUE.equals(this.pasteEntities.getSingle(event)) ? " while pasting entities" : " while not pasting entities") +
-                (Boolean.TRUE.equals(this.pasteBiomes.getSingle(event)) ? " while pasting biomes" : " while not pasting biomes") +
-                (Boolean.TRUE.equals(this.ignoreAir.getSingle(event)) ? " while ignoring air" : " while not ignoring air");
-        return builder;
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug)
+            .append("paste schematic named ", name, " at ", locations);
+        builder.append(" with ", this.preMask == null ? "no " : preMask, "mask ");
+        builder.append(" with rotation of ", this.rotation == null ? "0 " : rotation);
+        builder.append(Boolean.TRUE.equals(this.pasteEntities.getSingle(event)) ? " while pasting entities" : " while not pasting entities");
+        builder.append(Boolean.TRUE.equals(this.pasteBiomes.getSingle(event)) ? " while pasting biomes" : " while not pasting biomes");
+        builder.append(Boolean.TRUE.equals(this.ignoreAir.getSingle(event)) ? " while ignoring air" : " while not ignoring air");
+        return builder.toString();
     }
 
 }

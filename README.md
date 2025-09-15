@@ -10,5 +10,5 @@ If you're just looking for a list of all the syntax with some examples, head on 
 ### Features
 - **Regions** - create and use them to run operations!
 - **Patterns and masks** - use these exactly like you would in WorldEdit, opening up so many options!
-- **Schematics** - save and paste schematics with ease!
+- **Schematics** - save, paste, and check the existence of schematics with ease!
 - **Shapes** - create an ellipsoid, cylinder, or pyramid, with a bunch of customizable properties!

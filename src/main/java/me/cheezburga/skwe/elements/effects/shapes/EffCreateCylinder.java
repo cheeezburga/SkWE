@@ -13,6 +13,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -35,7 +36,7 @@ public class EffCreateCylinder extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreateCylinder.class,
-                "create [a] [:hollow] cylinder ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%][,| and] [with height %-number%] at %locations%" + Utils.LAZILY);
+            "create [a] [:hollow] cylinder ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%][,| and] [with height %-number%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -43,7 +44,7 @@ public class EffCreateCylinder extends SkWEEffect {
     private Expression<Number> radius, height;
     private Expression<Location> locations;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         hollow = parseResult.hasTag("hollow");
@@ -55,7 +56,6 @@ public class EffCreateCylinder extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
@@ -83,9 +83,12 @@ public class EffCreateCylinder extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (hollow ? "hollow " : "") + "cylinder with radius " + radius.toString(event, debug) + " and height " + height.toString(event, debug) + " at locations " + locations.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("create a ", (hollow ? "hollow" : ""), "cylinder with radius ", radius,
+                    " and height ", height, " at locations ", locations)
+            .toString();
     }
+
 }

@@ -13,6 +13,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -23,8 +24,9 @@ import java.util.List;
 
 @Name("Create Spline")
 @Description({
-        "Create a spline using a set of locations. The order of the locations in this effect matter.",
-        "A rigid spline will create straight lines from location to location, whereas a non-rigid spline will create a curved line which goes through all the locations."
+    "Create a spline using a set of locations. The order of the locations in this effect matter.",
+    "A rigid spline will create straight lines from location to location, whereas a non-rigid spline will create" +
+    "a curved line which goes through all the locations."
 })
 @Examples("create a hollow spline using {locations::*} with pattern \"50%%quartz_block,50%%quartz_bricks\" and with thickness 2")
 @Since("1.0.3")
@@ -33,7 +35,7 @@ public class EffSpline extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffSpline.class,
-                "(create|place|make|generate) [a] [:hollow] [rigid:rigid|straight] (curve|spline|line) (with|using|from) %locations% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%]" + Utils.LAZILY);
+            "(create|place|make|generate) [a] [:hollow] [rigid:rigid|straight] (curve|spline|line) (with|using|from) %locations% (with|using) [pattern] " + Utils.PATTERN_TYPES + " [[and] with thickness %-number%]" + Utils.LAZILY);
     }
 
     private Expression<Location> locs;
@@ -42,7 +44,7 @@ public class EffSpline extends SkWEEffect {
     private boolean hollow, rigid;
 
     @Override
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         locs = (Expression<Location>) exprs[0];
         prePattern = exprs[1];
@@ -54,8 +56,7 @@ public class EffSpline extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected void execute(Event event) {
+	protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
         if (pattern == null)
             return;
@@ -73,6 +74,10 @@ public class EffSpline extends SkWEEffect {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (rigid ? "rigid " : "") + "spline using " + locs.toString(event, debug) + " using pattern " + prePattern.toString(event, debug) + " with thickness " + (thickness != null ? thickness.toString(event, debug) : "0") + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("create a ", (rigid ? "rigid" : ""), "spline using ", locs, " using pattern ", prePattern)
+            .append(" with thickness ", thickness == null ? "0" : thickness)
+            .toString();
     }
+
 }

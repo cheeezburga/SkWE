@@ -8,6 +8,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.platform.Capability;
@@ -57,8 +58,7 @@ public class EffSaveSchematic extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected void execute(Event event) {
+	protected void execute(Event event) {
         RegionWrapper wrapper = this.wrapper.getSingle(event);
         if (wrapper == null)
             return;
@@ -78,8 +78,13 @@ public class EffSaveSchematic extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public String toString(@Nullable Event event, boolean debug) {
-        return "save " + wrapper.toString(event, debug) + " as a schematic named \"" + this.name.toString(event, debug) + "\" with origin at " + (this.center != null ? this.center.toString(event, debug) : "default") + " and" + (this.overwrite ? "" : " not") + " overwriting the existing file";
+	public String toString(@Nullable Event event, boolean debug) {
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug)
+                .append("save ", wrapper, " as a schematic named \"", name, "\"")
+                .append(" with origin at ", center == null ? "default" : center);
+        if (overwrite)
+            builder.append(" and overwrite the existing file");
+        return builder.toString();
     }
+
 }

@@ -13,6 +13,7 @@ import com.sk89q.worldedit.function.pattern.Pattern;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.shape.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -35,7 +36,7 @@ public class EffCreateSphere extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreateSphere.class,
-                "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] at %locations%" + Utils.LAZILY);
+            "create [a] [:hollow] (sphere|ellipsoid) ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -43,7 +44,7 @@ public class EffCreateSphere extends SkWEEffect {
     private Expression<Number> radius;
     private Expression<Location> locations;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         hollow = parseResult.hasTag("hollow");
@@ -54,7 +55,6 @@ public class EffCreateSphere extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
@@ -78,9 +78,11 @@ public class EffCreateSphere extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "create a " + (hollow ? "hollow " : "") + "sphere with radius " + radius.toString(event, debug) + " at locations " + locations.toString(event, debug) + (isBlocking() ? "" : " lazily");
+        return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("create a ", (hollow ? "hollow " : ""), " sphere with radius ", radius, " at locations ", locations)
+            .toString();
     }
+
 }

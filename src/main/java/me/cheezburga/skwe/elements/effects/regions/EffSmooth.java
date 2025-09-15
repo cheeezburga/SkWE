@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class EffSmooth extends SkWEEffect {
     private Expression<RegionWrapper> wrappers;
     private Expression<Number> iterations;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         preMask = exprs[0];
@@ -48,7 +49,6 @@ public class EffSmooth extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         int iterations = (this.iterations == null) ? 1 : this.iterations.getOptionalSingle(event).orElse(1).intValue();
@@ -66,9 +66,14 @@ public class EffSmooth extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "smooth " + wrappers.toString(event, debug) + " " + (iterations != null ? iterations.toString(event, debug) : "1") + " times" + (preMask != null ? " with mask " + preMask.toString(event, debug) : "") + (isBlocking() ? "" : " lazily");
+        BlockingSyntaxStringBuilder builder = new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("smooth ", wrappers)
+            .append(" ", iterations == null ? "1" : iterations, " times");
+        if (preMask != null)
+            builder.append(" with mask ", preMask);
+        return builder.toString();
     }
+
 }

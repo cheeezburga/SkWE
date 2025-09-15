@@ -14,6 +14,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +39,7 @@ public class EffHollow extends SkWEEffect {
     private Expression<Number> thickness;
     private Expression<?> prePattern;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[0];
@@ -48,7 +49,6 @@ public class EffHollow extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         int thickness = (this.thickness == null) ? 1 : this.thickness.getOptionalSingle(event).orElse(1).intValue();
@@ -65,9 +65,14 @@ public class EffHollow extends SkWEEffect {
 
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "hollow out " + wrappers.toString(event, debug) + " with thickness " + (thickness != null ? thickness.toString(event, debug) : "1") + (prePattern != null ? " with pattern " + prePattern.toString(event, debug) : "") + (isBlocking() ? "" : " lazily");
+        BlockingSyntaxStringBuilder builder = new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("hollow out ", wrappers, " with thickness ")
+            .append(thickness == null ? "1" : thickness);
+        if (prePattern != null)
+            builder.append(" with pattern ", prePattern);
+        return builder.toString();
     }
+
 }

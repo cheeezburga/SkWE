@@ -70,7 +70,7 @@ public class SecCreateShape extends Section {
     private Expression<Boolean> hollow;
     private Expression<Number> radius, radiusY, radiusZ, height;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         shape = ((Expression<WorldEditShape>) exprs[0]).getSingle(ContextlessEvent.get());
@@ -156,7 +156,6 @@ public class SecCreateShape extends Section {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return "create worldedit shape";

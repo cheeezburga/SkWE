@@ -8,6 +8,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
@@ -36,7 +37,7 @@ public class EffPasteSchematic extends SkWEEffect {
     private boolean ignoreAir;
 
     @Override
-    @SuppressWarnings({"unchecked","NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         name = (Expression<String>) exprs[0];
         locations = (Expression<Location>) exprs[1];
@@ -46,8 +47,7 @@ public class EffPasteSchematic extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected void execute(Event event) {
+	protected void execute(Event event) {
         String name = this.name.getSingle(event);
         if (name == null)
             return;
@@ -60,8 +60,13 @@ public class EffPasteSchematic extends SkWEEffect {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public String toString(@Nullable Event event, boolean debug) {
-        return "paste schematic using " + this.name.toString(event, debug) + " at " + this.locations.toString(event, debug) + " with rotation " + (this.rotation == null ? "0" : this.rotation.toString(event, debug)) + (ignoreAir ? " while ignoring air" : "");
+	public String toString(@Nullable Event event, boolean debug) {
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug)
+            .append("paste schematic named \"", name, "\" at ", locations);
+        builder.append(" with rotation ", rotation == null ? 0 : rotation);
+        if (ignoreAir)
+            builder.append(" while ignoring air");
+        return builder.toString();
     }
+
 }

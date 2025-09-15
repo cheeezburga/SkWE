@@ -13,6 +13,7 @@ import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.regions.Runnables;
+import me.cheezburga.skwe.lang.BlockingSyntaxStringBuilder;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public class EffRegenerate extends SkWEEffect {
     private Expression<Number> seed;
     private boolean regenBiomes;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[0];
@@ -47,7 +48,6 @@ public class EffRegenerate extends SkWEEffect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         @Nullable Long seed = this.seed != null ? (Long) this.seed.getSingle(event) : null;
@@ -57,9 +57,14 @@ public class EffRegenerate extends SkWEEffect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "regen " + wrappers.toString(event, debug) + (seed != null ? " with seed " + seed.toString(event, debug) : "") + (regenBiomes ? " while regenerating biomes" : "") + (isBlocking() ? "" : " lazily");
+        BlockingSyntaxStringBuilder builder = new BlockingSyntaxStringBuilder(event, debug, isBlocking())
+            .append("regenerate ", wrappers);
+        if (seed != null)
+            builder.append(" with seed ", seed);
+        if (regenBiomes)
+            builder.append(" while regenerating biomes");
+        return builder.toString();
     }
 }

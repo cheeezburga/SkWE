@@ -63,7 +63,7 @@ public class SecSaveSchematic extends Section {
     private Expression<Boolean> copyEntities, copyBiomes, removeEntities, overwrite;
     private Expression<Location> origin;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         EntryValidatorBuilder builder = EntryValidators.save();
@@ -103,7 +103,6 @@ public class SecSaveSchematic extends Section {
         RunnableUtils.run(Runnables.getSaveRunnable(wrapper, name, origin, preMask, overwrite, copyEntities, copyBiomes, removeEntities));
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return new SyntaxStringBuilder(event, debug)
