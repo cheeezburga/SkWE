@@ -12,7 +12,6 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldedit.world.World;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import org.bukkit.Location;
@@ -59,13 +58,15 @@ public class Runnables {
         }
 
         return () -> {
-            try (ClipboardWriter writer = format.getWriter(new FileOutputStream(filePath.toFile()))) {
+            try (
+                    ClipboardWriter writer = format.getWriter(new FileOutputStream(filePath.toFile()));
+                    EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))
+            ) {
                 Clipboard clipboard = new BlockArrayClipboard(wrapper.region());
                 if (centre != null)
                     clipboard.setOrigin(Utils.toBlockVector3(centre));
 
-                World world = BukkitAdapter.adapt(wrapper.world());
-                ForwardExtentCopy copy = new ForwardExtentCopy(world, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
+                ForwardExtentCopy copy = new ForwardExtentCopy(session, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
                 copy.setSourceMask(Utils.maskFrom(preMask, null));
                 copy.setCopyingEntities(copyEntities);
                 copy.setCopyingBiomes(copyBiomes);
