@@ -273,10 +273,97 @@ If no size is provided, the effect will default to 5
 
 ---
 
+## Schematics
+
+Schematics allow for saving and pasting structures for later use, as well as deleting and checking their existence.
+
+### Effect - Save
+
+Saves a region as a schematic. The name shouldn't include any path, and an origin and overwrite behaviour can be set.
+
+Pattern(s): `save %worldeditregion% as [a] [schem[atic] (named|with name)] %string% [center:with [the] (cent(re|er)|origin) (at|of) %-location%] [overwrite:[and] overwrit(e|ing) existing]`
+
+Example(s): `save {region} as a schematic named "example_schematic" and overwrite existing`
+
+### Effect - Paste
+
+Pastes a schematic at a location(s). Can be rotated and set to ignore air.
+
+Pattern(s): `paste [schem[atic] [named|with name]] %string% at %locations% [(with rotation|rotated by) %-number% [degrees]] [air:[and] while ignoring air]`
+
+Example(s): `paste schematic "example_schematic" at {locations::*} rotated by 90 while ignoring air`
+
+### Section - Save
+
+Saves a region as a schematic with additional options.
+
+Pattern(s): `save %worldeditregion% as [a] [schem[atic] (named|with name)] %string%`
+
+Entries:
+* copy entities: whether the schematic should copy entities
+* copy biomes: whether the schematic should copy biomes
+* remove entities: whether the schematic should remove entities
+* overwrite: whether existing schematics of the same name should be overwritten
+* origin: where the origin of the saved schematic should be
+* mask: a mask which will only let matching blocks be copied
+
+Example(s):
+```
+save {region} as a schematic named "example":
+    copy entities: true
+    copy biomes: true
+    mask: mask from "stone,red_wool,blue_wool"
+    origin: location of (first element out of all players)
+    remove entities: true
+    overwrite: true
+```
+
+### Section - Paste
+
+Pastes a schematic with additional options.
+
+Pattern(s): `paste [schem[atic] (named|with name)] %string% at %locations%`
+
+Entries:
+* paste entities: whether the schematic should copy entities
+* paste biomes: whether the schematic should copy biomes
+* ignore air: whether the schematic should paste air blocks
+* rotation: the number of degrees the pasted schematic should be rotated by (around the y-axis)
+* mask: a mask which will only let matching blocks be pasted
+
+Example(s):
+```
+paste schematic named "example" at {location}:
+    paste entities: true
+    paste biomes: true
+    mask: mask from "stone,red_wool,blue_wool"
+    rotation: 45
+    ignore air: true
+```
+
+### Effect - Delete
+
+Deletes a schematic.
+
+Pattern(s): `delete schem[atic][s] [named|with name] %strings%`
+
+Example(s): `delete schematic "example_name"`
+
+### Condition - Exists
+
+Checks whether a schematic with a given name exists.
+
+Pattern(s):
+- `schem[atic] %string% exists`
+- `schem[atic] %string% does(n't| not) exist`
+
+Example(s): `if schematic "example" exists:`
+
+---
+
 ## Coming soon
 
--[ ] Schematic support (saving, pasting, deleting, maybe more?)
--[ ] More region stuff (moving, contracting, shifting, creating lines/curves, etc.)
+-[ ] More region stuff (contracting, shifting, creating lines/curves, etc.)
 -[ ] More flexibility with some of the already-existing region effects (e.g. choosing to adjust the region after using EffMove)
 -[ ] Generating arbitrary shapes (i.e. ones defined by a WorldEdit expression)
 -[ ] Generating forests and pumpkin patches
