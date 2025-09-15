@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import java.util.List;
@@ -105,17 +106,15 @@ public class SecSaveSchematic extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        String builder = "save " +
-                this.wrapper.toString(event, debug) +
-                " as a schematic named " +
-                this.name.toString(event, debug) +
-                (this.origin == null ? " with default origin " : " with origin at " + this.origin.toString(event, debug)) +
-                (this.preMask == null ? " with no mask " : " with mask of " + this.preMask.toString(event, debug)) +
-                (Boolean.TRUE.equals(this.overwrite.getSingle(event)) ? " while overwriting" : " while not overwriting") +
-                (Boolean.TRUE.equals(this.copyEntities.getSingle(event)) ? " while copying entities" : " while not copying entities") +
-                (Boolean.TRUE.equals(this.copyBiomes.getSingle(event)) ? " while copying biomes" : " while not copying biomes") +
-                (Boolean.TRUE.equals(this.removeEntities.getSingle(event)) ? " while removing entities" : " while not removing entities");
-        return builder;
+        return new SyntaxStringBuilder(event, debug)
+            .append("save ", wrapper, " as a schematic named " + name)
+            .append(this.origin == null ? " with default origin " : " with origin at " + origin)
+            .append(this.preMask == null ? " with no mask " : " with mask of " + preMask)
+            .append(Boolean.TRUE.equals(this.overwrite.getSingle(event)) ? " while overwriting" : " while not overwriting")
+            .append(Boolean.TRUE.equals(this.copyEntities.getSingle(event)) ? " while copying entities" : " while not copying entities")
+            .append(Boolean.TRUE.equals(this.copyBiomes.getSingle(event)) ? " while copying biomes" : " while not copying biomes")
+            .append(Boolean.TRUE.equals(this.removeEntities.getSingle(event)) ? " while removing entities" : " while not removing entities")
+            .toString();
     }
 
 }

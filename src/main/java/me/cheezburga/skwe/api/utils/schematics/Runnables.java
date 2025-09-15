@@ -107,7 +107,7 @@ public class Runnables {
                     Operation operation = holder
                             .createPaste(session)
                             .to(Utils.toBlockVector3(location))
-                            .maskSource(Utils.maskFrom(preMask, null)) // Utils.contextFrom(session, location.getWorld())
+                            .maskSource(Utils.maskFrom(preMask, Utils.contextFrom(session, location.getWorld())))
                             .ignoreAirBlocks(ignoreAir)
                             .copyEntities(pasteEntities)
                             .copyBiomes(pasteBiomes)
