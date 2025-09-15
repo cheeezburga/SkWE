@@ -10,6 +10,7 @@ import com.sk89q.worldedit.extent.clipboard.io.*;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.function.mask.Mask;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.cheezburga.skwe.api.utils.Utils;
@@ -67,7 +68,9 @@ public class Runnables {
                     clipboard.setOrigin(Utils.toBlockVector3(centre));
 
                 ForwardExtentCopy copy = new ForwardExtentCopy(session, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
-                copy.setSourceMask(Utils.maskFrom(preMask, null));
+				Mask mask = Utils.maskFrom(preMask, null);
+				if (mask != null)
+					copy.setSourceMask(mask);
                 copy.setCopyingEntities(copyEntities);
                 copy.setCopyingBiomes(copyBiomes);
                 copy.setRemovingEntities(removeEntities);
