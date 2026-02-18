@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.Location;
@@ -19,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Schematic - Paste")
 @Description({
-        "Pastes a schematic at a location(s). Can be rotated, and can choose whether it should ignore air or not.",
-        "There is also a section for pasting schematics, which features more options."
+    "Pastes a schematic at a location(s). Can be rotated, and can choose whether it should ignore air or not.",
+    "There is also a section for pasting schematics, which features more options."
 })
 @Examples("paste schematic \"example_schematic\" at {locations::*} rotated by 90 while ignoring air")
 @Since("1.1.0")
@@ -49,12 +50,20 @@ public class EffPasteSchematic extends SkWEEffect {
     @Override
 	protected void execute(Event event) {
         String name = this.name.getSingle(event);
-        if (name == null)
+        if (name == null) {
+            error("The provided name was not set!", Utils.toHighlight(this.name));
             return;
+        }
 
         int rotation = (this.rotation == null) ? 0 : this.rotation.getOptionalSingle(event).orElse(0).intValue();
 
-        for (Location loc : locations.getArray(event)) {
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length < 1) {
+            warning("No location(s) was provided!", Utils.toHighlight(this.locations));
+            return;
+        }
+
+        for (Location loc : locations) {
             RunnableUtils.run(Runnables.getPasteRunnable(name, loc, rotation, null, ignoreAir, false, false));
         }
     }

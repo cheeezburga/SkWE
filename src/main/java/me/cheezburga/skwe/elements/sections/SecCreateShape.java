@@ -113,7 +113,16 @@ public class SecCreateShape extends Section {
     private void execute(Event event) {
         Object prePattern = this.pattern.getSingle(event);
         Pattern pattern = Utils.patternFrom(prePattern);
-        if (pattern == null) return;
+        if (pattern == null) {
+            error("The provided pattern was not set!");
+            return;
+        }
+
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length < 1) {
+            warning("No location(s) was provided!", Utils.toHighlight(this.locations));
+            return;
+        }
 
         Number radius = null, radiusY = null, radiusZ = null, height = null;
         double rX, rY, rZ;
@@ -135,7 +144,10 @@ public class SecCreateShape extends Section {
                 break;
         }
 
-        if (radius == null) return;
+        if (radius == null) {
+            error("The provided radius was not set!");
+            return;
+        }
         rX = radius.doubleValue();
         rY = (radiusY == null) ? rX : radiusY.doubleValue();
         rZ = (radiusZ == null) ? rX : radiusZ.doubleValue();
@@ -143,7 +155,7 @@ public class SecCreateShape extends Section {
 
         boolean hollow = Boolean.TRUE.equals(this.hollow.getSingle(event));
 
-        for (Location loc : locations.getArray(event)) {
+        for (Location loc : locations) {
             Runnable runnable = null;
             switch (shape) {
                 case ELLIPSOID, ELLIPSE, SPHERE -> runnable = Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ);

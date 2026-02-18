@@ -23,9 +23,9 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Schematic - Save")
 @Description({
-        "Saves a region as a schematic.",
-        "The name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
-        "The centre of the schematic can be set, as well as whether or not it should overwrite an existing schematic of the same name."
+    "Saves a region as a schematic.",
+    "The name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
+    "The centre of the schematic can be set, as well as whether or not it should overwrite an existing schematic of the same name."
 })
 @Examples("save {region} as a schematic named \"example_schematic\" and overwrite existing")
 @Since("1.1.0")
@@ -60,18 +60,24 @@ public class EffSaveSchematic extends SkWEEffect {
     @Override
 	protected void execute(Event event) {
         RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null)
+        if (wrapper == null) {
+            error("The provided region was not set!", Utils.toHighlight(this.wrapper));
             return;
+        }
 
         String name = this.name.getSingle(event);
-        if (name == null)
+        if (name == null) {
+            error("The provided name was not set!", Utils.toHighlight(this.name));
             return;
+        }
 
         Location center = null;
         if (this.center != null) {
             center = this.center.getSingle(event);
-            if (center == null)
+            if (center == null) {
+                error("The provided center was not set!", Utils.toHighlight(this.center));
                 return;
+            }
         }
 
         RunnableUtils.run(Runnables.getSaveRunnable(wrapper, name, center, null, this.overwrite, false, false, false));
@@ -80,8 +86,8 @@ public class EffSaveSchematic extends SkWEEffect {
     @Override
 	public String toString(@Nullable Event event, boolean debug) {
         SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug)
-                .append("save ", wrapper, " as a schematic named \"", name, "\"")
-                .append(" with origin at ", center == null ? "default" : center);
+            .append("save ", wrapper, " as a schematic named \"", name, "\"")
+            .append(" with origin at ", center == null ? "default" : center);
         if (overwrite)
             builder.append(" and overwrite the existing file");
         return builder.toString();

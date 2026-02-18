@@ -36,7 +36,7 @@ public class EffCreateCylinder extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffCreateCylinder.class,
-            "create [a] [:hollow] cylinder ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%][,| and] [with height %-number%] at %locations%" + Utils.LAZILY);
+            "create [a] [:hollow] cylinder ([made] out of|with|using) [pattern] " + Utils.PATTERN_TYPES + " [with radi(us|i) %-numbers%][,| and] [[with] height %-number%] at %locations%" + Utils.LAZILY);
     }
 
     private boolean hollow;
@@ -59,8 +59,16 @@ public class EffCreateCylinder extends SkWEEffect {
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
-        if (pattern == null)
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
             return;
+        }
+
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length < 1) {
+            warning("No location(s) was provided!", Utils.toHighlight(this.locations));
+            return;
+        }
 
         double rX, rZ;
         if (this.radius == null) {
@@ -78,7 +86,7 @@ public class EffCreateCylinder extends SkWEEffect {
 
         int h = (this.height == null) ? 1 : height.getOptionalSingle(event).orElse(1).intValue(); //TODO: replace with config, or just fail
 
-        for (Location loc : this.locations.getArray(event)) {
+        for (Location loc : locations) {
             RunnableUtils.run(Runnables.getCylinderRunnable(loc, pattern, hollow, rX, rZ, h), isBlocking());
         }
     }

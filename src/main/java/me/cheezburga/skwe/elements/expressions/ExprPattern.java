@@ -33,18 +33,19 @@ public class ExprPattern extends SimpleExpression<PatternWrapper> {
 
     private Expression<?> prePattern;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.prePattern = exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable PatternWrapper[] get(Event event) {
         Object prePattern = this.prePattern.getSingle(event);
-        if (prePattern == null) return null;
+        if (prePattern == null) {
+            error("The provided pattern property was not set!", Utils.toHighlight(this.prePattern));
+            return null;
+        }
         Pattern pattern = Utils.patternFrom(prePattern);
         return (pattern == null) ? null : new PatternWrapper[]{new PatternWrapper(pattern, Utils.templateFrom(prePattern))};
     }

@@ -51,17 +51,25 @@ public class EffSmooth extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         int iterations = (this.iterations == null) ? 1 : this.iterations.getOptionalSingle(event).orElse(1).intValue();
 
         Mask mask = null;
         if (preMask != null) {
             mask = Utils.maskFrom(preMask.getSingle(event), null);
             // does this mask need more context (wrapper.world()?)
-            if (mask == null)
+            if (mask == null) {
+                error("The provided mask was not set!", Utils.toHighlight(this.preMask));
                 return;
+            }
         }
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, mask), isBlocking());
         }
     }

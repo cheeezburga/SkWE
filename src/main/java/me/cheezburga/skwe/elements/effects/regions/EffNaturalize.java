@@ -43,7 +43,13 @@ public class EffNaturalize extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getNaturalizeRunnable(wrapper), isBlocking());
         }
     }

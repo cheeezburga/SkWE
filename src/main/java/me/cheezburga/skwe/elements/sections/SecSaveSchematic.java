@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import java.util.List;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.api.utils.schematics.EntryValidators;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
@@ -89,8 +90,17 @@ public class SecSaveSchematic extends Section {
     }
 
     private void execute(Event event) {
-        String name = this.name.getSingle(event);
         RegionWrapper wrapper = this.wrapper.getSingle(event);
+        if (wrapper == null) {
+            error("The provided region was not set!", Utils.toHighlight(this.wrapper));
+            return;
+        }
+
+        String name = this.name.getSingle(event);
+        if (name == null) {
+            error("The provided name was not set!", Utils.toHighlight(this.name));
+            return;
+        }
 
         Object preMask = this.preMask == null ? null : this.preMask.getSingle(event);
         Location origin = this.origin == null ? null : this.origin.getSingle(event);

@@ -10,7 +10,8 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import me.cheezburga.skwe.api.utils.schematics.Utils;
+import me.cheezburga.skwe.api.utils.Utils;
+import me.cheezburga.skwe.api.utils.schematics.SchematicUtils;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,8 +24,8 @@ public class CondSchematicExists extends Condition {
 
 	static {
 		Skript.registerCondition(CondSchematicExists.class,
-			"schem[atic] %string% exists",
-			"schem[atic] %string% does(n't| not) exist");
+			"schem[atic] [named] %string% exists",
+			"schem[atic] [named] %string% does(n't| not) exist");
 	}
 
 	private Expression<String> name;
@@ -40,9 +41,11 @@ public class CondSchematicExists extends Condition {
 	@Override
 	public boolean check(Event event) {
 		String name = this.name.getSingle(event);
-		if (name == null)
+		if (name == null) {
+			error("The provided name was not set!", Utils.toHighlight(this.name));
 			return false;
-		boolean exists = Utils.findSchematicFile(name) != null;
+		}
+		boolean exists = SchematicUtils.findSchematicFile(name) != null;
 		return isNegated() != exists;
 	}
 

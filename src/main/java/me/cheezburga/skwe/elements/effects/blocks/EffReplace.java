@@ -53,14 +53,23 @@ public class EffReplace extends SkWEEffect {
         if (wrapper == null || prePattern == null || preMask == null) return;
 
         RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null) return;
+        if (wrapper == null) {
+            error("The provided region was not set!", Utils.toHighlight(this.wrapper));
+            return;
+        }
 
         Object prePattern = this.prePattern.getSingle(event);
         Pattern pattern = Utils.patternFrom(prePattern);
-        if (pattern == null) return;
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
+            return;
+        }
 
         Object preMask = this.preMask.getSingle(event);
-        if (preMask == null) return;
+        if (preMask == null) {
+            error("The provided mask was not set!", Utils.toHighlight(this.preMask));
+            return;
+        }
 
         RunnableUtils.run(Runnables.getReplaceRunnable(wrapper.world(), wrapper.region(), pattern, preMask), isBlocking());
     }

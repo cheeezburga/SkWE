@@ -51,11 +51,17 @@ public class EffSet extends SkWEEffect {
         if (wrapper == null || prePattern == null) return;
 
         RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null) return;
+        if (wrapper == null) {
+            error("The provided region was not set!", Utils.toHighlight(this.wrapper));
+            return;
+        }
 
         Object prePattern = this.prePattern.getSingle(event);
         Pattern pattern = Utils.patternFrom(prePattern);
-        if (pattern == null) return;
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
+            return;
+        }
 
         RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern), isBlocking());
     }

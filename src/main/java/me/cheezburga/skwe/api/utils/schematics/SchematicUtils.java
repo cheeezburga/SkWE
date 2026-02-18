@@ -9,7 +9,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Utils {
+public class SchematicUtils {
 
     public static @Nullable File findSchematicFile(String input) {
         File file = new File(input);

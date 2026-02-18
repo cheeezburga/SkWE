@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.schematics.Runnables;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
@@ -37,7 +38,13 @@ public class EffDeleteSchematic extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
-        for (String name : names.getArray(event)) {
+        String[] names = this.names.getArray(event);
+        if (names.length < 1) {
+            warning("No name(s) was provided!", Utils.toHighlight(this.names));
+            return;
+        }
+
+        for (String name : names) {
             RunnableUtils.run(Runnables.getDeleteRunnable(name));
         }
     }

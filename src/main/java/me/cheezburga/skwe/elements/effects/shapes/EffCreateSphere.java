@@ -58,8 +58,16 @@ public class EffCreateSphere extends SkWEEffect {
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
-        if (pattern == null)
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
             return;
+        }
+
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length < 1) {
+            warning("No location(s) was provided!", Utils.toHighlight(this.locations));
+            return;
+        }
 
         double rX, rY, rZ;
         double[] radii = Arrays.stream(radius.getArray(event)).mapToDouble(Number::doubleValue).toArray();
@@ -73,7 +81,7 @@ public class EffCreateSphere extends SkWEEffect {
             rX = radii[0]; rY = radii[1]; rZ = radii[2];
         }
 
-        for (Location loc : locations.getArray(event)) {
+        for (Location loc : locations) {
             RunnableUtils.run(Runnables.getSphereRunnable(loc, pattern, hollow, rX, rY, rZ), isBlocking());
         }
     }

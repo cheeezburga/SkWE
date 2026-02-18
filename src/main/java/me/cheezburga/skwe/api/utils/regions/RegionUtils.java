@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class Utils {
+public class RegionUtils {
 
     public static final Map<Class<?>, String> REGION_TYPES = new HashMap<>();
     static {

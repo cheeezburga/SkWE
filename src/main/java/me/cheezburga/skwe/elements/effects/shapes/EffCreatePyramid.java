@@ -56,12 +56,20 @@ public class EffCreatePyramid extends SkWEEffect {
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(prePattern.getSingle(event));
-        if (pattern == null)
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
             return;
+        }
+
+        Location[] locations = this.locations.getArray(event);
+        if (locations.length < 1) {
+            warning("No location(s) was provided!", Utils.toHighlight(this.locations));
+            return;
+        }
 
         int s = size.getOptionalSingle(event).orElse(5).intValue(); //TODO: replace with config, or just fail
 
-        for (Location loc : locations.getArray(event)) {
+        for (Location loc : locations) {
             RunnableUtils.run(Runnables.getPyramidRunnable(loc, pattern, hollow, s), isBlocking());
         }
     }

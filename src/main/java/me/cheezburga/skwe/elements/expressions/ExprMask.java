@@ -16,11 +16,11 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Mask")
 @Description(
-        "Gets a WorldEdit mask from a string or itemtype."
+    "Gets a WorldEdit mask from a string or itemtype."
 )
 @Examples({
-        "set {simpleMask} to mask of stone",
-        "set {complexMask} to mask from \"stone,cobblestone,stone_bricks\""
+    "set {simpleMask} to mask of stone",
+    "set {complexMask} to mask from \"stone,cobblestone,stone_bricks\""
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -28,23 +28,24 @@ public class ExprMask extends SimpleExpression<MaskWrapper> {
 
     static {
         Skript.registerExpression(ExprMask.class, MaskWrapper.class, ExpressionType.COMBINED,
-                "mask (of|from|that matches) %string/itemtype%");
+            "mask (of|from|that matches) %string/itemtype%");
     }
 
     private Expression<?> preMask;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.preMask = exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable MaskWrapper[] get(Event event) {
         Object preMask = this.preMask.getSingle(event);
-        if (preMask == null) return null;
+        if (preMask == null) {
+            error("The provided mask property was not set!", Utils.toHighlight(this.preMask));
+            return null;
+        }
         Mask mask = Utils.maskFrom(preMask, null); // TODO: should this use a context instead of just using null?
         return (mask == null) ? null : new MaskWrapper[]{new MaskWrapper(mask, Utils.templateFrom(preMask))};
     }
@@ -63,4 +64,5 @@ public class ExprMask extends SimpleExpression<MaskWrapper> {
     public @NotNull String toString(Event event, boolean debug) {
         return "mask from " + this.preMask.toString(event, debug);
     }
+
 }

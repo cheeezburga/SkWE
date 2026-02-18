@@ -51,10 +51,16 @@ public class EffForest extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         TreeType treeType = this.treeType.getSingle(event);
         double density = (this.density == null) ? 5 : this.density.getOptionalSingle(event).orElse(5).doubleValue();
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getForestRunnable(wrapper, treeType, density), isBlocking());
         }
     }

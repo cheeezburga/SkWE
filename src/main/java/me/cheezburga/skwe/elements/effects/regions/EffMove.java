@@ -37,7 +37,7 @@ public class EffMove extends SkWEEffect {
 
     static {
         Skript.registerEffect(EffMove.class,
-            "move [mask:(blocks that match|all) " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregions% (0:up|1:down|2:north|3:south|4:east|5:west) [%-number% (time|block)[s]] [and (fill the area with|leave behind) [pattern] " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air[,]] [entities:while copying entities[,| and]] [biomes:while copying biomes]" + Utils.LAZILY);
+            "move [mask:(blocks that match|all) " + Utils.MASK_TYPES_OPTIONAL + " in] %worldeditregions% (0:up|1:down|2:north|3:south|4:east|5:west) [[by] %-number% (time|block)[s]] [and (fill the area with|leave behind) [pattern] " + Utils.PATTERN_TYPES_OPTIONAL + "] [air:while ignoring air[,]] [entities:while copying entities[,| and]] [biomes:while copying biomes]" + Utils.LAZILY);
     }
 
     private static final int UP = 0, DOWN = 1, NORTH = 2, SOUTH = 3, EAST = 4, WEST = 5;
@@ -66,22 +66,32 @@ public class EffMove extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         Object preMask = null;
         Pattern pattern = null;
         if (this.preMask != null) {
             preMask = this.preMask.getSingle(event);
-            if (preMask == null)
+            if (preMask == null) {
+                error("The provided mask was not set!", Utils.toHighlight(this.preMask));
                 return;
+            }
         }
         if (this.prePattern != null) {
             pattern = Utils.patternFrom(this.prePattern.getSingle(event));
-            if (pattern == null)
+            if (pattern == null) {
+                error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
                 return;
+            }
         }
 
         int distance = (this.distance == null) ? 1 : this.distance.getOptionalSingle(event).orElse(1).intValue();
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getMoveRunnable(wrapper, pattern, preMask, getDirection(this.direction).toBlockVector(), distance, ignoreAir, copyEntities, copyBiomes), isBlocking());
         }
     }

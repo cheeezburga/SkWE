@@ -47,10 +47,18 @@ public class EffFaces extends SkWEEffect {
     @Override
     protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
-        if (pattern == null)
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
             return;
+        }
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getFacesRunnable(wrapper, pattern), isBlocking());
         }
     }

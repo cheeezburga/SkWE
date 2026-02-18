@@ -50,9 +50,15 @@ public class EffRegenerate extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         @Nullable Long seed = this.seed != null ? (Long) this.seed.getSingle(event) : null;
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getRegenRunnable(wrapper, seed, regenBiomes), isBlocking());
         }
     }
@@ -67,4 +73,5 @@ public class EffRegenerate extends SkWEEffect {
             builder.append(" while regenerating biomes");
         return builder.toString();
     }
+
 }

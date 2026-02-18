@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.sk89q.worldedit.util.Direction;
+import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
 import me.cheezburga.skwe.lang.SkWEEffect;
 import org.bukkit.event.Event;
@@ -55,8 +56,14 @@ public class EffExpandContract extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         if (vert) {
-            for (RegionWrapper wrapper : wrappers.getArray(event)) {
+            for (RegionWrapper wrapper : wrappers) {
                 wrapper.expandVert();
             }
         } else {
@@ -64,7 +71,7 @@ public class EffExpandContract extends SkWEEffect {
             int distance = (this.distance == null) ? 1 : this.distance.getOptionalSingle(event).orElse(1).intValue();
             int reverseDistance = (this.reverseDistance == null) ? 0 : this.reverseDistance.getOptionalSingle(event).orElse(0).intValue();
 
-            for (RegionWrapper wrapper : wrappers.getArray(event)) {
+            for (RegionWrapper wrapper : wrappers) {
                 if (expand) {
                     wrapper.expand(direction, distance, reverseDistance);
                 } else {

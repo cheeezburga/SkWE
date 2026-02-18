@@ -1,6 +1,7 @@
 package me.cheezburga.skwe.api.utils;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Expression;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extension.input.InputParseException;
@@ -213,4 +214,9 @@ public class Utils {
         String log = String.format(format, objects);
         Bukkit.getConsoleSender().sendMessage(getColouredString(PLUGIN_PREFIX + " " + log));
     }
+
+    public static String toHighlight(Expression<?> expr) {
+        return java.util.regex.Pattern.quote(expr.toString());
+    }
+
 }

@@ -58,14 +58,18 @@ public class EffSpline extends SkWEEffect {
     @Override
 	protected void execute(Event event) {
         Pattern pattern = Utils.patternFrom(this.prePattern.getSingle(event));
-        if (pattern == null)
+        if (pattern == null) {
+            error("The provided pattern was not set!", Utils.toHighlight(this.prePattern));
             return;
+        }
 
         int thickness = (this.thickness == null) ? 0 : this.thickness.getOptionalSingle(event).orElse(0).intValue();
 
         List<Location> locs = List.of(this.locs.getArray(event));
-        if (locs.size() <= 1)
+        if (locs.size() <= 1) {
+            warning("No locations were provided!", Utils.toHighlight(this.locs));
             return;
+        }
 
         World world = locs.getFirst().getWorld();
 

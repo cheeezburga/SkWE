@@ -45,9 +45,15 @@ public class EffFlora extends SkWEEffect {
 
     @Override
     protected void execute(Event event) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
         double density = (this.density == null) ? 5 : this.density.getOptionalSingle(event).orElse(5).doubleValue();
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getFloraRunnable(wrapper, density), isBlocking());
         }
     }

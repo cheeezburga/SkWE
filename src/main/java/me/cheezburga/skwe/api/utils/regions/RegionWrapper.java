@@ -12,13 +12,12 @@ import com.sk89q.worldedit.util.Direction;
 import com.sk89q.worldedit.world.block.BlockState;
 import me.cheezburga.skwe.api.utils.Utils;
 import org.bukkit.World;
-import org.bukkit.block.data.BlockData;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.cheezburga.skwe.api.utils.regions.Utils.REGION_TYPES;
-import static me.cheezburga.skwe.api.utils.regions.Utils.getChangesForEachDir;
+import static me.cheezburga.skwe.api.utils.regions.RegionUtils.REGION_TYPES;
+import static me.cheezburga.skwe.api.utils.regions.RegionUtils.getChangesForEachDir;
 
 public record RegionWrapper(Region region, World world) {
 

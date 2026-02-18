@@ -59,7 +59,13 @@ public class EffHollow extends SkWEEffect {
         if (pattern == null)
             pattern = Utils.AIR_PATTERN;
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getHollowRunnable(wrapper, pattern, null, thickness), isBlocking()); // TODO: make this accept a mask if FAWE is found
         }
 

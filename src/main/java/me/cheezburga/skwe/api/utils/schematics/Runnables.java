@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static me.cheezburga.skwe.api.utils.schematics.Utils.findSchematicFile;
+import static me.cheezburga.skwe.api.utils.schematics.SchematicUtils.findSchematicFile;
 
 public class Runnables {
 

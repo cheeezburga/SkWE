@@ -48,11 +48,19 @@ public class EffBiome extends SkWEEffect {
     @Override
     protected void execute(Event event) {
         Biome preBiome = this.biome.getSingle(event);
-        if (preBiome == null)
+        if (preBiome == null) {
+            error("The provided biome was not set!", Utils.toHighlight(this.biome));
             return;
+        }
         BiomeType biome = BukkitAdapter.adapt(preBiome);
 
-        for (RegionWrapper wrapper : wrappers.getArray(event)) {
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
+            return;
+        }
+
+        for (RegionWrapper wrapper : wrappers) {
             RunnableUtils.run(Runnables.getBiomeRunnable(wrapper, biome), isBlocking());
         }
 
