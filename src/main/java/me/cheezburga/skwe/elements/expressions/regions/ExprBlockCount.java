@@ -20,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 @Name("Region - Block Count")
 @Description("Gets the number of a certain type of block in a region. Can use a mask to specify more than one kind of block.")
 @Examples({
-        "set {stone} to the number of stone in {region}",
-        "set {multiple} to the number of blocks in {region} that match \"stone,diamond_block,oak_planks\""
+    "set {stone} to the number of stone in {region}",
+    "set {multiple} to the number of blocks in {region} that match \"stone,diamond_block,oak_planks\""
 })
 @Since("1.0.4")
 @RequiredPlugins("WorldEdit")
@@ -29,15 +29,15 @@ public class ExprBlockCount extends SimpleExpression<Number> {
 
     static {
         Skript.registerExpression(ExprBlockCount.class, Number.class, ExpressionType.COMBINED,
-                "[the] (count|number) of blocks in %worldeditregions% that match [mask] " + Utils.MASK_TYPES,
-                "[the] (count|number) of " + Utils.MASK_TYPES + " [blocks] in %worldeditregions%");
+            "[the] (count|number) of blocks in %worldeditregions% that match [mask] " + Utils.MASK_TYPES,
+            "[the] (count|number) of " + Utils.MASK_TYPES + " [blocks] in %worldeditregions%");
     }
 
     private Expression<RegionWrapper> wrappers;
     private Expression<?> preMask;
 
     @Override
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrappers = (Expression<RegionWrapper>) exprs[matchedPattern];
         preMask = exprs[matchedPattern ^ 1];
@@ -45,8 +45,7 @@ public class ExprBlockCount extends SimpleExpression<Number> {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    protected @Nullable Number[] get(Event event) {
+	protected @Nullable Number[] get(Event event) {
         Object preMask = this.preMask.getSingle(event);
         if (preMask == null)
             return null;
@@ -65,14 +64,14 @@ public class ExprBlockCount extends SimpleExpression<Number> {
     }
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public Class<? extends Number> getReturnType() {
+	public Class<? extends Number> getReturnType() {
         return Number.class;
     }
 
     @Override
-    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
+    @SuppressWarnings({"ConstantConditions"})
     public String toString(@Nullable Event event, boolean debug) {
         return "the count of " + preMask.toString(event, debug) + " in " + wrappers.toString(event, debug);
     }
+
 }

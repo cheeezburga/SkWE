@@ -15,9 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Mask")
-@Description(
-    "Gets a WorldEdit mask from a string or itemtype."
-)
+@Description("Gets a WorldEdit mask from a string or itemtype.")
 @Examples({
     "set {simpleMask} to mask of stone",
     "set {complexMask} to mask from \"stone,cobblestone,stone_bricks\""

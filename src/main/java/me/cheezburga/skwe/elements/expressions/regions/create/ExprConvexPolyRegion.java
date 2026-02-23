@@ -16,11 +16,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Convex Polyhedral")
-@Description(
-        "Creates a convex polyhedral region, which can be used for operations."
-)
+@Description("Creates a convex polyhedral region, which can be used for operations.")
 @Examples(
-        "set {convex} to a new convex polyhedral region using {locations::*}"
+    "set {convex} to a new convex polyhedral region using {locations::*}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -28,19 +26,18 @@ public class ExprConvexPolyRegion extends SimpleExpression<RegionWrapper> {
 
     static {
         Skript.registerExpression(ExprConvexPolyRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] convex [poly[hedral]] region (at|with|using) %locations%");
+            "[a] [new] convex [poly[hedral]] region (at|with|using) %locations%");
     }
 
     private Expression<Location> locations;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.locations = (Expression<Location>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
         if (this.locations == null) return null;

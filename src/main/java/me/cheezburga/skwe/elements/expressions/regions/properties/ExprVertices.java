@@ -18,11 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Vertices")
-@Description({
-        "Gets the vertices of a given region. This expression can only be used on convex polyhedral regions."
-})
+@Description("Gets the vertices of a given region. This expression can only be used on convex polyhedral regions.")
 @Examples(
-        "set {vertices::*} to region vertices of {convex}"
+    "set {vertices::*} to region vertices of {convex}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -32,12 +30,12 @@ public class ExprVertices extends SimpleExpression<Location> {
 
     static {
         Skript.registerExpression(ExprVertices.class, Location.class, ExpressionType.COMBINED,
-                "[the] region vert(ices|exes) of %worldeditregion%", "[the] %worldeditregion%'[s] vert(ices|exes)");
+            "[the] region vert(ices|exes) of %worldeditregion%", "[the] %worldeditregion%'[s] vert(ices|exes)");
     }
 
     private Expression<RegionWrapper> wrapper;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         wrapper = (Expression<RegionWrapper>) exprs[0];
@@ -73,4 +71,5 @@ public class ExprVertices extends SimpleExpression<Location> {
     public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "vertices of " + wrapper.toString(event, debug);
     }
+
 }

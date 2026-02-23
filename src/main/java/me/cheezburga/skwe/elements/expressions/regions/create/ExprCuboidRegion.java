@@ -17,11 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Cuboid")
-@Description(
-        "Creates a cuboid region, which can be used for operations."
-)
+@Description("Creates a cuboid region, which can be used for operations.")
 @Examples(
-        "set {cuboid} to a new cuboid region from {location1} to {location2}"
+    "set {cuboid} to a new cuboid region from {location1} to {location2}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -29,13 +27,13 @@ public class ExprCuboidRegion extends SimpleExpression<RegionWrapper> {
 
     static {
         Skript.registerExpression(ExprCuboidRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] [cuboid] region (between|within|from) %location% (and|to) %location%");
+            "[a] [new] [cuboid] region (between|within|from) %location% (and|to) %location%");
     }
 
     private Expression<Location> loc1;
     private Expression<Location> loc2;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.loc1 = (Expression<Location>) exprs[0];
@@ -43,7 +41,6 @@ public class ExprCuboidRegion extends SimpleExpression<RegionWrapper> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
         if (this.loc1 == null || this.loc2 == null) return null;

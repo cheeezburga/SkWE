@@ -17,11 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Ellipsoid")
-@Description(
-        "Creates an ellipsoid region, which can be used for operations."
-)
+@Description("Creates an ellipsoid region, which can be used for operations.")
 @Examples(
-        "set {ellipsoid} to a new ellipsoid region at {location} with radii (10,9,8)"
+    "set {ellipsoid} to a new ellipsoid region at {location} with radii (10,9,8)"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -29,13 +27,13 @@ public class ExprEllipsoidRegion extends SimpleExpression<RegionWrapper> {
 
     static {
         Skript.registerExpression(ExprEllipsoidRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] (ellips(e|oid)|spher(e|ical)) region at %location% with radi(i|us) %numbers%");
+            "[a] [new] (ellips(e|oid)|spher(e|ical)) region at %location% with radi(i|us) %numbers%");
     }
 
     private Expression<Location> center;
     private Expression<Number> radii;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.center = (Expression<Location>) exprs[0];
@@ -43,7 +41,6 @@ public class ExprEllipsoidRegion extends SimpleExpression<RegionWrapper> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
         if (this.center == null || this.radii == null) return null;

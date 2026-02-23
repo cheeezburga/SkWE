@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Types {
+
     static {
         EnumWrapper<WorldEditShape> SHAPE_ENUM = new EnumWrapper<>(WorldEditShape.class);
         Classes.registerClass(SHAPE_ENUM.getClassInfo("worldeditshape")
@@ -249,4 +250,5 @@ public class Types {
                     }
                 }));
     }
+
 }

@@ -12,12 +12,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Dimensions")
 @Description({
-        "Gets the dimensions of a given region."
+    "Gets the dimensions of a given region."
 })
 @Examples({
-        "set {_height} to height of {region}",
-        "set {_length} to length of {region}",
-        "set {_width} to width of {region}"
+    "set {_height} to height of {region}",
+    "set {_length} to length of {region}",
+    "set {_width} to width of {region}"
 })
 @Since("1.0.2")
 @RequiredPlugins("WorldEdit")
@@ -32,8 +32,7 @@ public class ExprDimensions extends SimplePropertyExpression<RegionWrapper, Numb
     private int dimension;
 
     @Override
-    @SuppressWarnings("NullableProblems")
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.dimension = parseResult.mark;
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }

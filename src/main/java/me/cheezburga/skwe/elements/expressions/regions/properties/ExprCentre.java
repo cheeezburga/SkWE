@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Centre")
 @Description(
-        "Gets the centre of a given region."
+    "Gets the centre of a given region."
 )
 @Examples(
-        "set {centre} to region centre of {region}"
+    "set {centre} to region centre of {region}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -37,4 +37,5 @@ public class ExprCentre extends SimplePropertyExpression<RegionWrapper, Location
     public @NotNull Class<? extends Location> getReturnType() {
         return Location.class;
     }
+
 }

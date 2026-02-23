@@ -30,25 +30,25 @@ import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 
 @Name("Schematic - Save")
 @Description({
-        "Saves a region as a schematic, with a bunch of configurable options (see below for a list of them).",
-        "Note that the name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
-        "",
-        "Entries:",
-        "* copy entities: whether the schematic should copy entities",
-        "* copy biomes: whether the schematic should copy biomes",
-        "* remove entities: whether the schematic should remove entities",
-        "* overwrite: whether the schematic should overwrite any schematics of the same name (if false, the schematic won't save if a schematic is found with the same name)",
-        "* origin: where the origin of the saved schematic should be",
-        "* mask: a mask which will only let matching blocks be copied"
+    "Saves a region as a schematic, with a bunch of configurable options (see below for a list of them).",
+    "Note that the name of the schematic shouldn't include any path, as skript-worldedit will always start at WorldEdit's schematics directory.",
+    "",
+    "Entries:",
+    "* copy entities: whether the schematic should copy entities",
+    "* copy biomes: whether the schematic should copy biomes",
+    "* remove entities: whether the schematic should remove entities",
+    "* overwrite: whether the schematic should overwrite any schematics of the same name (if false, the schematic won't save if a schematic is found with the same name)",
+    "* origin: where the origin of the saved schematic should be",
+    "* mask: a mask which will only let matching blocks be copied"
 })
 @Examples({
-        "save {region} as a schematic named \"example\":",
-            "\tcopy entities: true",
-            "\tcopy biomes: true",
-            "\tmask: mask from \"stone,red_wool,blue_wool\"",
-            "\torigin: location of (first element out of all players)",
-            "\tremove entities: true",
-            "\toverwrite: true"
+    "save {region} as a schematic named \"example\":",
+        "\tcopy entities: true",
+        "\tcopy biomes: true",
+        "\tmask: mask from \"stone,red_wool,blue_wool\"",
+        "\torigin: location of (first element out of all players)",
+        "\tremove entities: true",
+        "\toverwrite: true"
 })
 @Since("1.1.0")
 @RequiredPlugins("WorldEdit")

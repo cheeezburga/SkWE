@@ -15,12 +15,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Pattern")
-@Description(
-        "Gets a WorldEdit pattern from a string or itemtype."
-)
+@Description("Gets a WorldEdit pattern from a string or itemtype.")
 @Examples({
-        "set {simplePattern} to pattern of stone",
-        "set {complexPattern} to pattern from \"33%%stone,33%%cobblestone,33%%stone_bricks\""
+    "set {simplePattern} to pattern of stone",
+    "set {complexPattern} to pattern from \"33%%stone,33%%cobblestone,33%%stone_bricks\""
 })
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -28,7 +26,7 @@ public class ExprPattern extends SimpleExpression<PatternWrapper> {
 
     static {
         Skript.registerExpression(ExprPattern.class, PatternWrapper.class, ExpressionType.COMBINED,
-                "pattern (of|from|that matches) %string/itemtype%");
+            "pattern (of|from|that matches) %string/itemtype%");
     }
 
     private Expression<?> prePattern;

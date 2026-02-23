@@ -7,11 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Volume")
-@Description(
-        "Gets the volume of a given region."
-)
+@Description("Gets the volume of a given region.")
 @Examples(
-        "send region volume of {region}"
+    "send region volume of {region}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -35,4 +33,5 @@ public class ExprVolume extends SimplePropertyExpression<RegionWrapper, Number> 
     public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
+
 }

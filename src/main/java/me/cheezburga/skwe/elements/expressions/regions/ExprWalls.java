@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Walls")
 @Description({
-        "Gets the walls of a given region. This expression only works on cuboid regions.",
-        "This returns another region, which can be used in other operations."
+    "Gets the walls of a given region. This expression only works on cuboid regions.",
+    "This returns another region, which can be used in other operations."
 })
 @Examples(
-        "set {walls} to region walls of {cuboid}"
+    "set {walls} to region walls of {cuboid}"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -39,4 +39,5 @@ public class ExprWalls extends SimplePropertyExpression<RegionWrapper, RegionWra
     public @NotNull Class<? extends RegionWrapper> getReturnType() {
         return RegionWrapper.class;
     }
+
 }

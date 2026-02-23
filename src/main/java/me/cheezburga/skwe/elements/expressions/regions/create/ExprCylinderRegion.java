@@ -18,10 +18,10 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Cylinder")
 @Description(
-        "Creates a cylindrical region, which can be used for operations."
+    "Creates a cylindrical region, which can be used for operations."
 )
 @Examples(
-        "set {cylinder} to a new cylindrical region at {location} with radii (5,4) and with height 10"
+    "set {cylinder} to a new cylindrical region at {location} with radii (5,4) and with height 10"
 )
 @Since("1.0.0")
 @RequiredPlugins("WorldEdit")
@@ -29,13 +29,13 @@ public class ExprCylinderRegion extends SimpleExpression<RegionWrapper> {
 
     static {
         Skript.registerExpression(ExprCylinderRegion.class, RegionWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] cyl[ind(er|rical)] region at %location% with radi(i|us) %numbers% [and] with height %number%");
+            "[a] [new] cyl[ind(er|rical)] region at %location% with radi(i|us) %numbers% [and] with height %number%");
     }
 
     private Expression<Location> center;
     private Expression<Number> radii, height;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.center = (Expression<Location>) exprs[0];
@@ -44,7 +44,6 @@ public class ExprCylinderRegion extends SimpleExpression<RegionWrapper> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable RegionWrapper[] get(Event event) {
         if (this.center == null || this.radii == null || this.height == null) return null;
