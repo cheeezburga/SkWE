@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
-    compileOnly("com.github.SkriptLang:Skript:2.12.0") { transitive = false }
+    compileOnly("com.github.SkriptLang:Skript:2.16.0") { transitive = false }
 
     implementation("com.sk89q.worldedit:worldedit-core:7.2.20")
     implementation("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
