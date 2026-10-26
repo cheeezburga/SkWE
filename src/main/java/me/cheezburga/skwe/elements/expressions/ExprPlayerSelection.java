@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples(
 	"set {region} to current selection of {player}"
 )
-@Since("1.1.5")
+@Since("1.1.6")
 @RequiredPlugins("WorldEdit")
 public class ExprPlayerSelection extends SimplePropertyExpression<Player, RegionWrapper> {
 
@@ -33,7 +33,8 @@ public class ExprPlayerSelection extends SimplePropertyExpression<Player, Region
 	public @Nullable RegionWrapper convert(Player player) {
 		try {
 			Region selection = PlayerUtils.getSelection(player);
-			return new RegionWrapper(selection, BukkitAdapter.adapt(selection.getWorld())); // should never be null for a player's selection
+			// cloned so that changing the returned region doesn't change the player's actual selection
+			return new RegionWrapper(selection.clone(), BukkitAdapter.adapt(selection.getWorld())); // world should never be null for a player's selection
 		} catch (IncompleteRegionException e) {
 			error("Failed to retrieve the selection of " + getExpr() + ", as it was incomplete.", Utils.toHighlight(getExpr()));
 			return null;

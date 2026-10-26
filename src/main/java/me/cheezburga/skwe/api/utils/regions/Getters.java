@@ -18,7 +18,7 @@ public class Getters {
     }
 
     public static CylinderRegion getCylinderRegion(Location center, double radiusX, double radiusZ, int height) {
-        return new CylinderRegion(BukkitAdapter.adapt(center.getWorld()), Utils.toBlockVector3(center), Vector2.at(radiusX, radiusZ), center.getBlockY(), center.getBlockY() + height);
+        return new CylinderRegion(BukkitAdapter.adapt(center.getWorld()), Utils.toBlockVector3(center), Vector2.at(radiusX, radiusZ), center.getBlockY(), center.getBlockY() + Math.max(height, 1) - 1);
     }
 
     public static EllipsoidRegion getEllipsoidRegion(Location center, double radiusX, double radiusY, double radiusZ) {

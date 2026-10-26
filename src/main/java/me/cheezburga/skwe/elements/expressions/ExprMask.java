@@ -7,9 +7,12 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.mask.Mask;
 import me.cheezburga.skwe.api.utils.MaskWrapper;
 import me.cheezburga.skwe.api.utils.Utils;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +47,10 @@ public class ExprMask extends SimpleExpression<MaskWrapper> {
             error("The provided mask property was not set!", Utils.toHighlight(this.preMask));
             return null;
         }
-        Mask mask = Utils.maskFrom(preMask, null); // TODO: should this use a context instead of just using null?
+        // some masks (e.g. block masks on WorldEdit) can't be parsed without an extent, so this uses a world just to check the input is valid
+        // the mask is parsed again with the right extent when it's actually used
+        World world = Bukkit.getWorlds().get(0);
+        Mask mask = Utils.maskFrom(preMask, Utils.contextFrom(BukkitAdapter.adapt(world), world));
         return (mask == null) ? null : new MaskWrapper[]{new MaskWrapper(mask, Utils.templateFrom(preMask))};
     }
 

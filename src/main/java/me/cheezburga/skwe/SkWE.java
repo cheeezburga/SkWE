@@ -59,7 +59,7 @@ public class SkWE extends JavaPlugin {
     }
 
     private void checkUpdate(String version) {
-        UpdateChecker.checkForUpdate(version);
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> UpdateChecker.checkForUpdate(version));
     }
 
     private void preLoadRelighterFactory() {

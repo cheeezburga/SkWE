@@ -67,7 +67,7 @@ public class EffCreatePyramid extends SkWEEffect {
             return;
         }
 
-        int s = size.getOptionalSingle(event).orElse(5).intValue(); //TODO: replace with config, or just fail
+        int s = (this.size == null) ? 5 : this.size.getOptionalSingle(event).orElse(5).intValue(); //TODO: replace with config, or just fail
 
         for (Location loc : locations) {
             RunnableUtils.run(Runnables.getPyramidRunnable(loc, pattern, hollow, s), isBlocking());

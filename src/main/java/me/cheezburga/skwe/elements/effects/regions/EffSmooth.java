@@ -9,7 +9,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.sk89q.worldedit.function.mask.Mask;
 import me.cheezburga.skwe.api.utils.RunnableUtils;
 import me.cheezburga.skwe.api.utils.Utils;
 import me.cheezburga.skwe.api.utils.regions.RegionWrapper;
@@ -59,18 +58,17 @@ public class EffSmooth extends SkWEEffect {
 
         int iterations = (this.iterations == null) ? 1 : this.iterations.getOptionalSingle(event).orElse(1).intValue();
 
-        Mask mask = null;
-        if (preMask != null) {
-            mask = Utils.maskFrom(preMask.getSingle(event), null);
-            // does this mask need more context (wrapper.world()?)
-            if (mask == null) {
+        Object preMask = null;
+        if (this.preMask != null) {
+            preMask = this.preMask.getSingle(event);
+            if (preMask == null) {
                 error("The provided mask was not set!", Utils.toHighlight(this.preMask));
                 return;
             }
         }
 
         for (RegionWrapper wrapper : wrappers) {
-            RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, mask), isBlocking());
+            RunnableUtils.run(Runnables.getSmoothRunnable(wrapper, iterations, preMask), isBlocking());
         }
     }
 

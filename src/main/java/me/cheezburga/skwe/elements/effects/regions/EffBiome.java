@@ -22,15 +22,23 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Region - Biome")
-@Description("Sets the biome of given region.")
-@Examples("set biome of {region} to (random element out of all biomes)")
+@Description({
+    "Sets the biome of given region.",
+    "On older versions of Skript (e.g. 2.12), Skript's own biome syntax can take over the plain form when the region is stored in a variable, so use the `use worldedit to` form there."
+})
+@Examples({
+    "use worldedit to set biome of {region} to (random element out of all biomes)",
+    "set biome of (cuboid region from {pos1} to {pos2}) to plains"
+})
 @Since("1.0.3")
 @RequiredPlugins("WorldEdit")
 public class EffBiome extends SkWEEffect {
 
     static {
         // TODO: add the ability to set the biome at locations as well? would just create a cuboid region with pos,pos
-        Skript.registerEffect(EffBiome.class, "set biome of %worldeditregions% to %biome%" + Utils.LAZILY);
+        Skript.registerEffect(EffBiome.class,
+            "set biome of %worldeditregions% to %biome%" + Utils.LAZILY,
+            Utils.PATTERN_PREFIX + " set [the] biome of %worldeditregions% to %biome%" + Utils.LAZILY);
     }
 
     private Expression<RegionWrapper> wrappers;
