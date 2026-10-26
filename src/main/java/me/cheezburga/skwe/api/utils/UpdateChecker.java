@@ -43,10 +43,11 @@ public class UpdateChecker {
     private static void getLatestReleaseVersion(Consumer<String> consumer) {
         try {
             URL url = new URI("https://api.github.com/repos/cheeezburga/SkWE/releases/latest").toURL();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class);
-            String tag_name = jsonObject.get("tag_name").getAsString();
-            consumer.accept(tag_name);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+                JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class);
+                String tag_name = jsonObject.get("tag_name").getAsString();
+                consumer.accept(tag_name);
+            }
         } catch (IOException | URISyntaxException e) {
             Utils.log("&cFailed to check for update!");
             e.printStackTrace();

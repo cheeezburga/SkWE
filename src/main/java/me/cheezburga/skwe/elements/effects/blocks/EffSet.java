@@ -34,13 +34,13 @@ public class EffSet extends SkWEEffect {
              Utils.PATTERN_PREFIX + " set [the] blocks in %worldeditregions% to [pattern] " + Utils.PATTERN_TYPES + Utils.LAZILY);
     }
 
-    private Expression<RegionWrapper> wrapper;
+    private Expression<RegionWrapper> wrappers;
     private Expression<?> prePattern;
 
     @Override
     @SuppressWarnings({"unchecked"})
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.wrapper = (Expression<RegionWrapper>) exprs[0];
+        this.wrappers = (Expression<RegionWrapper>) exprs[0];
         this.prePattern = exprs[1];
         setBlocking(!parseResult.hasTag("lazily"));
         return true;
@@ -48,11 +48,11 @@ public class EffSet extends SkWEEffect {
 
     @Override
     protected void execute(@NotNull Event event) {
-        if (wrapper == null || prePattern == null) return;
+        if (wrappers == null || prePattern == null) return;
 
-        RegionWrapper wrapper = this.wrapper.getSingle(event);
-        if (wrapper == null) {
-            error("The provided region was not set!", Utils.toHighlight(this.wrapper));
+        RegionWrapper[] wrappers = this.wrappers.getArray(event);
+        if (wrappers.length < 1) {
+            warning("No region(s) was provided!", Utils.toHighlight(this.wrappers));
             return;
         }
 
@@ -63,13 +63,15 @@ public class EffSet extends SkWEEffect {
             return;
         }
 
-        RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern), isBlocking());
+        for (RegionWrapper wrapper : wrappers) {
+            RunnableUtils.run(Runnables.getSetRunnable(wrapper.world(), wrapper.region(), pattern), isBlocking());
+        }
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return new BlockingSyntaxStringBuilder(event, debug, isBlocking())
-            .append("set blocks in ", wrapper, " to ", prePattern)
+            .append("set blocks in ", wrappers, " to ", prePattern)
             .toString();
     }
 

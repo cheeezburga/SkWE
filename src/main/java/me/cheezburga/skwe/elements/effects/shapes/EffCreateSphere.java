@@ -70,7 +70,7 @@ public class EffCreateSphere extends SkWEEffect {
         }
 
         double rX, rY, rZ;
-        double[] radii = Arrays.stream(radius.getArray(event)).mapToDouble(Number::doubleValue).toArray();
+        double[] radii = (this.radius == null) ? new double[0] : Arrays.stream(this.radius.getArray(event)).mapToDouble(Number::doubleValue).toArray();
         if (radii.length == 0) {
             rX = rY = rZ = 5; // TODO: replace with config or make non-optional and fail
         } else if (radii.length == 1) {

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'me.cheezburga'
-version = '1.1.5'
+version = '1.1.6'
 
 repositories {
     mavenCentral()
@@ -21,8 +21,8 @@ dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT"
     compileOnly("com.github.SkriptLang:Skript:2.12.0") { transitive = false }
 
-    implementation("com.sk89q.worldedit:worldedit-core:7.2.20")
-    implementation("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
+    compileOnly("com.sk89q.worldedit:worldedit-core:7.2.20")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.20")
 
     implementation("com.github.javaparser:javaparser-core:3.25.4")
 
@@ -31,11 +31,13 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    // lets the Java 21 paper-api resolve while still compiling for Java 17
+    disableAutoTargetJvm()
 }
 
 def oldestJava = 17
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
+    options.release = oldestJava
 }
 
 processResources {

@@ -37,9 +37,11 @@ import java.util.List;
 
 public class Runnables {
 
-    public static Runnable getSmoothRunnable(RegionWrapper wrapper, int iterations, Mask mask) {
+    public static Runnable getSmoothRunnable(RegionWrapper wrapper, int iterations, @Nullable Object preMask) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
+                Mask mask = Utils.maskFrom(preMask, Utils.contextFrom(session, wrapper.world()));
+                if (preMask != null && mask == null) return;
                 HeightMap map = new HeightMap(session, wrapper.region(), mask);
                 HeightMapFilter filter = new HeightMapFilter(new GaussianKernel(5, 1.0));
                 map.applyFilter(filter, iterations);
@@ -101,7 +103,7 @@ public class Runnables {
     public static Runnable getRegenRunnable(RegionWrapper wrapper, @Nullable Long seed, boolean regenBiomes) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
-                RegenOptions options = RegenOptions.builder().seed(seed != null ? seed : wrapper.world().getSeed()).regenBiomes(regenBiomes).build();
+                RegenOptions options = RegenOptions.builder().seed(seed).regenBiomes(regenBiomes).build();
                 BukkitAdapter.adapt(wrapper.world()).regenerate(wrapper.region(), session, options);
             }
         };
@@ -137,7 +139,7 @@ public class Runnables {
     public static Runnable getFloraRunnable(RegionWrapper wrapper, double density) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
-                double d = Math.clamp(density, 0, 100);
+                double d = Math.max(0, Math.min(100, density));
                 d /= 100;
                 FloraGenerator generator = new FloraGenerator(session);
                 GroundFunction ground = new GroundFunction(new ExistingBlockMask(session), generator);
@@ -183,9 +185,9 @@ public class Runnables {
     public static Runnable getForestRunnable(RegionWrapper wrapper, TreeType treeType, double density) {
         return () -> {
             try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(wrapper.world()))) {
-                double d = Math.clamp(density, 0, 100);
+                double d = Math.max(0, Math.min(100, density));
                 d /= 100;
-                session.makeForest(wrapper.region(), density, treeType);
+                session.makeForest(wrapper.region(), d, treeType);
             } catch (MaxChangedBlocksException ignored) {}
         };
     }

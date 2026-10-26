@@ -68,7 +68,7 @@ public class Runnables {
                     clipboard.setOrigin(Utils.toBlockVector3(centre));
 
                 ForwardExtentCopy copy = new ForwardExtentCopy(session, wrapper.region(), clipboard, wrapper.region().getMinimumPoint());
-				Mask mask = Utils.maskFrom(preMask, null);
+				Mask mask = Utils.maskFrom(preMask, Utils.contextFrom(session, wrapper.world()));
 				if (mask != null)
 					copy.setSourceMask(mask);
                 copy.setCopyingEntities(copyEntities);
@@ -98,7 +98,8 @@ public class Runnables {
         }
 
         return () -> {
-            try (ClipboardReader reader = format.getReader(new FileInputStream(schematicFile))) {
+            // some readers (e.g. WorldEdit's sponge v3 reader) don't close the stream they're given, which keeps the file locked on Windows
+            try (FileInputStream stream = new FileInputStream(schematicFile); ClipboardReader reader = format.getReader(stream)) {
                 Clipboard clipboard = reader.read();
                 try (EditSession session = WorldEdit.getInstance().newEditSession(BukkitAdapter.adapt(location.getWorld()))) {
                     ClipboardHolder holder = new ClipboardHolder(clipboard);

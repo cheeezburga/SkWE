@@ -60,7 +60,7 @@ public class ExprBlockCount extends SimpleExpression<Number> {
 
     @Override
     public boolean isSingle() {
-        return wrappers.isSingle();
+        return true;
     }
 
     @Override

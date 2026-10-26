@@ -25,6 +25,8 @@ public class PlayerUtils {
 
 	public static Region getSelection(Player player) throws IncompleteRegionException {
 		LocalSession session = getLocalSession(player);
+		if (session == null)
+			throw new IncompleteRegionException();
 		World selectionWorld = session.getSelectionWorld();
 		if (selectionWorld == null)
 			throw new IncompleteRegionException();
@@ -51,6 +53,8 @@ public class PlayerUtils {
 
 	public static ClipboardHolder getClipboard(Player player) {
 		LocalSession session = getLocalSession(player);
+		if (session == null)
+			return null;
 		try {
 			return session.getClipboard();
 		} catch (EmptyClipboardException e) {
@@ -59,7 +63,7 @@ public class PlayerUtils {
 	}
 
 	public static void setClipboard(Player player, Clipboard clipboard) {
-		LocalSession session = getLocalSession(player);
+		LocalSession session = sessionManager.get(BukkitAdapter.adapt(player));
 		session.setClipboard(new ClipboardHolder(clipboard));
 	}
 

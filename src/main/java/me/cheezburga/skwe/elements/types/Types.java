@@ -33,20 +33,20 @@ public class Types {
 
     static {
         EnumWrapper<WorldEditShape> SHAPE_ENUM = new EnumWrapper<>(WorldEditShape.class);
-        Classes.registerClass(SHAPE_ENUM.getClassInfo("worldeditshape")
+        register(SHAPE_ENUM.getClassInfo("worldeditshape")
                 .user("world ?edit ?shapes?")
                 .name("World Edit Shapes")
                 .description("All the supported creatable shapes using WorldEdit.")
                 .since("1.0.0"));
 
         EnumWrapper<TreeGenerator.TreeType> TREE_ENUM = new EnumWrapper<>(TreeGenerator.TreeType.class);
-        Classes.registerClass(TREE_ENUM.getClassInfo("treetype")
-                .user("(world ?edit ?)?tree ?types?")
-                .name("Tree Types")
+        register(TREE_ENUM.getClassInfo("worldedittreetype")
+                .user("world ?edit ?tree ?types?")
+                .name("World Edit Tree Types")
                 .description("All the supported tree types that WorldEdit can use.")
                 .since("1.1.2"));
 
-        Classes.registerClass(new ClassInfo<>(PatternWrapper.class, "worldeditpattern")
+        register(new ClassInfo<>(PatternWrapper.class, "worldeditpattern")
                 .user("(world ?edit|fawe) ?patterns?")
                 .name("World Edit Pattern")
                 .description("Represents a pattern that can be used for WorldEdit operations.")
@@ -81,7 +81,7 @@ public class Types {
                     }
                 }));
 
-        Classes.registerClass(new ClassInfo<>(MaskWrapper.class, "worldeditmask")
+        register(new ClassInfo<>(MaskWrapper.class, "worldeditmask")
                 .user("(world ?edit|fawe) ?masks?")
                 .name("World Edit Mask")
                 .description("Represents a mask that can be used for WorldEdit operations.")
@@ -116,7 +116,7 @@ public class Types {
                     }
                 }));
 
-        Classes.registerClass(new ClassInfo<>(RegionWrapper.class, "worldeditregion")
+        register(new ClassInfo<>(RegionWrapper.class, "worldeditregion")
                 .user("(world ?edit|fawe) ?regions?")
                 .name("World Edit Region")
                 .description("Represents a region that can be used for WorldEdit operations.")
@@ -214,9 +214,9 @@ public class Types {
                             case "cyl" -> {
                                 int minY = f.getPrimitive("minY", int.class);
                                 int maxY = f.getPrimitive("maxY", int.class);
-                                BlockVector3 center = BlockVector3.at(f.getPrimitive("centerX", int.class), f.getPrimitive("centerY", int.class), f.getPrimitive("centerZ", int.class));
+                                BlockVector3 center = BlockVector3.at(f.getPrimitive("centerX", int.class), minY, f.getPrimitive("centerZ", int.class));
                                 Vector2 radius = Vector2.at(f.getPrimitive("radiusX", double.class), f.getPrimitive("radiusZ", double.class));
-                                region = Getters.getCylinderRegion(Utils.locationFrom(center, world), radius.getX(), radius.getZ(), (maxY - minY));
+                                region = Getters.getCylinderRegion(Utils.locationFrom(center, world), radius.getX(), radius.getZ(), (maxY - minY + 1));
                             }
                             case "ellipsoid" -> {
                                 BlockVector3 center = BlockVector3.at(f.getPrimitive("centerX", double.class), f.getPrimitive("centerY", double.class), f.getPrimitive("centerZ", double.class));
@@ -249,6 +249,15 @@ public class Types {
                         return false;
                     }
                 }));
+    }
+
+    private static void register(ClassInfo<?> classInfo) {
+        // Skript or another addon might already use this code name or class, and throwing here would stop the rest of the types from registering
+        if (Classes.getClassInfoNoError(classInfo.getCodeName()) != null || Classes.getExactClassInfo(classInfo.getC()) != null) {
+            Utils.log("&cCouldn't register the type '%s', as it's already registered by another plugin!", classInfo.getCodeName());
+            return;
+        }
+        Classes.registerClass(classInfo);
     }
 
 }
